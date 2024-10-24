@@ -15,4 +15,4 @@
 
  * O escanea el codigo QR
 
- ![alt text](image.png)
+ ![alt text](expo.png)
