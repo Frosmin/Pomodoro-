@@ -6,9 +6,12 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import CircularPomodoroTimer from '@/components/CircularPomodoroTimer';
 
+
 export default function HomeScreen() {
   return (
+    
     <CircularPomodoroTimer />
+    
   );
 }
 

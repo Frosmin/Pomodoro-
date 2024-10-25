@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
+//const icon = require('../../assets/cropped-pomodoro-solo.png');
+//const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 
 const TOTAL_TIME = 1500; // 25 minutes in seconds
 
