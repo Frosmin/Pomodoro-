@@ -4,7 +4,7 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import PomodoroTimer from '@/components/PomodoroTimer';
+import CircularPomodoroTimer from '@/components/CircularPomodoroTimer';
 
 export default function HomeScreen() {
   return (
@@ -22,7 +22,7 @@ export default function HomeScreen() {
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Pomodoro Timer</ThemedText>
-        <PomodoroTimer />
+        <CircularPomodoroTimer />
       </ThemedView>
     </ParallaxScrollView>
   );
