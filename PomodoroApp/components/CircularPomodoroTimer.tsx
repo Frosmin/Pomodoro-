@@ -1,3 +1,4 @@
+import { useGlobalContext } from '@/context/AppContext';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
@@ -21,6 +22,8 @@ const CircularPomodoroTimer = () => {
     }
     return () => clearInterval(interval!);
   }, [isActive, seconds]);
+
+
 
   const toggle = () => {
     setIsActive(!isActive);
@@ -65,7 +68,7 @@ const CircularPomodoroTimer = () => {
       </Svg>
       <Text style={styles.timer}>{formatTime(seconds)}</Text>
       <View style={styles.buttonContainer}>
-        <Button onPress={toggle} title={isActive ? 'Pause' : 'Start'} />
+        <Button onPress={toggle} title={isActive ? 'Pause' : 'Starts'} />
         <Button onPress={reset} title="Reset" />
       </View>
     </View>

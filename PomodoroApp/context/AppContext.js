@@ -4,7 +4,7 @@ import { createContext, useContext } from "react";
 const AppContext = createContext("");
 
 const AppProvider = ({children}) => {
-    return <AppContext.Provider value={{data:"hello"}}></AppContext.Provider>
+    return <AppContext.Provider value={{data:"hello"}}>{children}</AppContext.Provider>
 }
 
 

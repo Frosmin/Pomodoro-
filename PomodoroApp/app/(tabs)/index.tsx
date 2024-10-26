@@ -5,13 +5,12 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import CircularPomodoroTimer from '@/components/CircularPomodoroTimer';
+import {AppProvider} from "../../context/AppContext";
 
 
 export default function HomeScreen() {
   return (
-    
     <CircularPomodoroTimer />
-    
   );
 }
 
