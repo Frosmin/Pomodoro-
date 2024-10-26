@@ -1,7 +1,11 @@
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useReducer } from "react";
+import { reducer,AppState,PomodoroState,Action
+ } from "./reducer";
 
 interface AppContextType {
-        data : string
+        state: AppState,
+        dispatch : React.Dispatch<Action>
+
   }
 
 interface AppProviderProps {
@@ -10,15 +14,33 @@ interface AppProviderProps {
 
   const AppContext = createContext<AppContextType | undefined>(undefined);
 
+  //Estado inicial del pomodoro
+const initialState : AppState = {
+    timer : 3,
+    status: PomodoroState.FOCUS,
+    nIntervals: 1,
+    params: {
+        focusTime: 25,
+        breakTime: 5,
+        longBreakTime: 15,
+        intervals:4
+    }
+}
+
 
 const AppProvider : React.FC<AppProviderProps> = ({ children }) => {
+    const [state,dispatch] = useReducer(reducer,initialState);
     return (
-        <AppContext.Provider value={{data : "hello"}}>{children}</AppContext.Provider>
+        <AppContext.Provider value={{state,dispatch}}>{children}</AppContext.Provider>
     );
 }
 
 const useGlobalContext = () => {
-    return useContext(AppContext);
+    const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useGlobalContext must be used within an AppProvider');
+  }
+  return context;
 }
 
 export { AppContext, AppProvider, useGlobalContext };
