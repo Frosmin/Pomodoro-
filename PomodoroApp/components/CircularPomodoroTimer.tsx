@@ -1,33 +1,45 @@
+import { useGlobalContext } from '@/context/AppContext';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
+import { ActionKind } from '@/context/reducer';
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 
-const TOTAL_TIME = 1500; // 25 minutes in seconds
-
 const CircularPomodoroTimer = () => {
-  const [seconds, setSeconds] = useState(TOTAL_TIME);
   const [isActive, setIsActive] = useState(false);
+  const {state,dispatch} = useGlobalContext();
+  const [seconds, setSeconds] = useState(state.timer);
+
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isActive) {
-      interval = setInterval(() => {
-        setSeconds((seconds) => seconds - 1);
-      }, 1000);
+      if(seconds === 0 ){
+        dispatch({type: ActionKind.SWITCH})
+        setIsActive(false);
+      }else{
+        interval = setInterval(() => {
+          setSeconds((seconds) => seconds - 1);
+        }, 1000);
+      }
+      
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval!);
     }
     return () => clearInterval(interval!);
   }, [isActive, seconds]);
 
+  useEffect(() => {
+    setSeconds(state.timer)
+  },[state.timer])
+
   const toggle = () => {
     setIsActive(!isActive);
   };
 
   const reset = () => {
-    setSeconds(TOTAL_TIME);
+    setSeconds(state.timer);
     setIsActive(false);
   };
 
@@ -39,7 +51,7 @@ const CircularPomodoroTimer = () => {
 
   const radius = 100;
   const circumference = 2 * Math.PI * radius;
-  const progress = (seconds / TOTAL_TIME) * circumference;
+  const progress = (seconds / state.timer) * circumference;
 
   return (
     <View style={styles.container}>
