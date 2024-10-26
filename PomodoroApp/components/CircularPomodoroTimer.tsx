@@ -4,7 +4,7 @@ import { Svg, Circle } from 'react-native-svg';
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 
-const TOTAL_TIME = 60; // 25 minutes in seconds
+const TOTAL_TIME = 3; // 25 minutes in seconds
 
 const CircularPomodoroTimer = () => {
   const [seconds, setSeconds] = useState(TOTAL_TIME);
