@@ -1,7 +1,8 @@
-// PomodoroApp/components/CircularPomodoroTimer.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
+//const icon = require('../../assets/cropped-pomodoro-solo.png');
+//const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 
 const TOTAL_TIME = 60; // 25 minutes in seconds
 
@@ -63,8 +64,10 @@ const CircularPomodoroTimer = () => {
         />
       </Svg>
       <Text style={styles.timer}>{formatTime(seconds)}</Text>
-      <Button onPress={toggle} title={isActive ? 'Pause' : 'Start'} />
-      <Button onPress={reset} title="Reset" />
+      <View style={styles.buttonContainer}>
+        <Button onPress={toggle} title={isActive ? 'Pause' : 'Start'} />
+        <Button onPress={reset} title="Reset" />
+      </View>
     </View>
   );
 };
@@ -78,7 +81,14 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 48,
     marginVertical: 20,
-    color: '#333',
+    color: 'white',
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '40%',
+
   },
 });
 
