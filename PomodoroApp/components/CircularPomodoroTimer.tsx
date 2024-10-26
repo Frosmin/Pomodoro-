@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
 
-const TOTAL_TIME = 1500; // 25 minutes in seconds
+const TOTAL_TIME = 60; // 25 minutes in seconds
 
 const CircularPomodoroTimer = () => {
   const [seconds, setSeconds] = useState(TOTAL_TIME);
