@@ -67,12 +67,13 @@ return (
       <Circle
         stroke="#ff6347" // color del progreso
         fill="none"
-        cx={radius + 10}
-        cy={radius + 10}
+        cx={radius - 30}
+        cy={radius - 30}
         r={radius}
         strokeWidth="10"
         strokeDasharray={circumference}
         strokeDashoffset={progress}
+        transform="rotate(180 110 110)"
       />
     </Svg>
     <Text style={styles.timer}>{formatTime(seconds)}</Text>
