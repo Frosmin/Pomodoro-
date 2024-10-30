@@ -70,7 +70,7 @@ return (
         cx={radius - 30}
         cy={radius - 30}
         r={radius}
-        strokeWidth="10"
+        strokeWidth="13"
         strokeDasharray={circumference}
         strokeDashoffset={progress}
         transform="rotate(180 110 110)"
