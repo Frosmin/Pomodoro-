@@ -49,39 +49,40 @@ const CircularPomodoroTimer = () => {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
-  const radius = 100;
-  const circumference = 2 * Math.PI * radius;
-  const progress = (seconds / state.timer) * circumference;
+  const radius = 120; // Nuevo radio
+const circumference = 2 * Math.PI * radius;
+const progress = (seconds / state.timer) * circumference;
 
-  return (
-    <View style={styles.container}>
-      <Svg width={220} height={220}>
-        <Circle
-          stroke="#e6e6e6"
-          fill="none"
-          cx="110"
-          cy="110"
-          r={radius}
-          strokeWidth="10"
-        />
-        <Circle
-          stroke="#ff6347"
-          fill="none"
-          cx="110"
-          cy="110"
-          r={radius}
-          strokeWidth="10"
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference - progress}
-        />
-      </Svg>
-      <Text style={styles.timer}>{formatTime(seconds)}</Text>
-      <View style={styles.buttonContainer}>
-        <Button onPress={toggle} title={isActive ? 'Pause' : 'Start'} />
-        <Button onPress={reset} title="Reset" />
-      </View>
+return (
+  <View style={styles.container}>
+    <Svg width={radius * 2 + 20} height={radius * 2 + 20}>
+      <Circle
+        stroke="#566573" // color del circulo
+        fill="none"
+        cx={radius + 10}
+        cy={radius + 10}
+        r={radius}
+        strokeWidth="13"
+      />
+      <Circle
+        stroke="#ff6347" // color del progreso
+        fill="none"
+        cx={radius - 30}
+        cy={radius - 30}
+        r={radius}
+        strokeWidth="13"
+        strokeDasharray={circumference}
+        strokeDashoffset={progress}
+        transform="rotate(180 110 110)"
+      />
+    </Svg>
+    <Text style={styles.timer}>{formatTime(seconds)}</Text>
+    <View style={styles.buttonContainer}>
+      <Button onPress={toggle} title={isActive ? 'Pause' : 'Start'} />
+      <Button onPress={reset} title="Reset" />
     </View>
-  );
+  </View>
+);
 };
 
 const styles = StyleSheet.create({
@@ -91,8 +92,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   timer: {
-    fontSize: 48,
-    marginVertical: 20,
+    position: 'absolute',
+    fontSize: 60,
+    top: '43.4%',
     color: 'white',
   },
 
@@ -101,6 +103,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '40%',
 
+  },
+
+  circle: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'blue', // Cambia este valor al color que desees
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
