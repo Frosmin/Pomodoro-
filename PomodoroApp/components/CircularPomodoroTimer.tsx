@@ -1,6 +1,6 @@
 import { useGlobalContext } from '@/context/AppContext';
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Button, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
 import { ActionKind } from '@/context/reducer';
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
@@ -77,10 +77,17 @@ return (
       />
     </Svg>
     <Text style={styles.timer}>{formatTime(seconds)}</Text>
+
     <View style={styles.buttonContainer}>
-      <Button onPress={toggle} title={isActive ? 'Pause' : 'Start'} />
-      <Button onPress={reset} title="Reset" />
+     <TouchableOpacity style={styles.button} onPress={toggle}>
+      <Text style={styles.textButton}> {isActive ? 'Pause' : 'Start'} </Text>
+      </TouchableOpacity>
+    
+      <TouchableOpacity style={styles.button} onPress={reset}>
+          <Text style={styles.textButton}>Reset</Text>
+        </TouchableOpacity>
     </View>
+
   </View>
 );
 };
@@ -94,7 +101,7 @@ const styles = StyleSheet.create({
   timer: {
     position: 'absolute',
     fontSize: 60,
-    top: '43.4%',
+    top: '41%',
     color: 'white',
   },
 
@@ -102,8 +109,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '40%',
-
   },
+  button: {
+    marginHorizontal: 10,
+    borderRadius: 10,
+    flex: 1,
+    margin: 10,
+    color: 'red',
+    alignContent: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+  },
+  textButton: { 
+    color: 'white',
+    fontSize: 20,
+  },
+
 
   circle: {
     width: 200,
