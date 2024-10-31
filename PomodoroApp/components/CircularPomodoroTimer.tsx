@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Button, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Svg, Circle } from 'react-native-svg';
 import { ActionKind } from '@/context/reducer';
+import Button1 from './UI/Button1';
+import { PomodoroState } from '@/context/reducer';
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 
@@ -55,6 +57,15 @@ const progress = (seconds / state.timer) * circumference;
 
 return (
   <View style={styles.container}>
+    <View style={styles.status_container}>
+      {Object.values(PomodoroState).map((status) => (
+        <View key={status} style={[styles.status_box,state.status === status && styles.active_status]}>
+          <Text>
+            {status.charAt(0) + status.slice(1).toLowerCase().replace('_', ' ')}
+          </Text>
+        </View>
+      ))}
+    </View>
     <Svg width={radius * 2 + 20} height={radius * 2 + 20}>
       <Circle
         stroke="#566573" // color del circulo
@@ -135,6 +146,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  status_container:{
+    display: 'flex',
+    flexDirection:'row',
+    gap: 8,
+  },
+  status_box:{
+    backgroundColor: '#003a99',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  active_status:{
+    backgroundColor: '#005fcc'
+  }
+  
 });
 
 export default CircularPomodoroTimer;

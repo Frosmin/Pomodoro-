@@ -9,8 +9,11 @@ import {AppProvider} from "../../context/AppContext";
 
 
 export default function HomeScreen() {
+  
   return (
-    <CircularPomodoroTimer />
+    <>
+      <CircularPomodoroTimer />
+    </>
   );
 }
 

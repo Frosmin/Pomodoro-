@@ -16,7 +16,7 @@ interface AppProviderProps {
 
   //Estado inicial del pomodoro
 const initialState : AppState = {
-    timer : 3,
+    timer : 25,
     status: PomodoroState.FOCUS,
     nIntervals: 1,
     params: {
