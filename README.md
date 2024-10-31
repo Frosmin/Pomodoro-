@@ -4,7 +4,7 @@
 ## 1. Cambiar de directorio
 
 ` cd PomodoroApp `
-
+` npm i `
 ## 2. Inicializar applicacion movil con Expo
 
 ` npx expo start `

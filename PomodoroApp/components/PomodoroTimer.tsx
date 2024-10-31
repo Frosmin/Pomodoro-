@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 48,
     marginBottom: 20,
-    color: 'white',
+    color: '#000',
   },
   elapsedTime: {
     fontSize: 24,
