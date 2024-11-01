@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode, useReducer } from "react";
 import { reducer,AppState,PomodoroState,Action
  } from "./reducer";
+ import realm from "@/db";
 
 interface AppContextType {
         state: AppState,
