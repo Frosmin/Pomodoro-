@@ -14,6 +14,7 @@ class User extends Realm.Object {
     status!: UserStatus; // active or inactive
     list!: List[];
     plan?: Realm.BSON.ObjectID;
+    // projects?: Project[];
     createdAt!: Date;
     static generate(username: string, password: string) {
         return {
