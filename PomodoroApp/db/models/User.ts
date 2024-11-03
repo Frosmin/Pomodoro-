@@ -1,5 +1,6 @@
 import Realm from "realm";
 import { ObjectSchema } from "realm";
+import { List } from "./List";
 
 enum UserStatus  {
     ACTIVE = "active",
@@ -10,9 +11,9 @@ class User extends Realm.Object {
     _id!: Realm.BSON.ObjectId;
     username!: string;
     password!: string;
-    status!: string; // active or inactive
-    list!: Realm.BSON.ObjectId[];
-    plan!: Realm.BSON.ObjectID;
+    status!: UserStatus; // active or inactive
+    list!: List[];
+    plan?: Realm.BSON.ObjectID;
     createdAt!: Date;
     static generate(username: string, password: string) {
         return {
@@ -31,8 +32,8 @@ class User extends Realm.Object {
           username: 'string',
           password: 'string',
           status: { type: 'string',default: UserStatus.ACTIVE },
-          list: { type: 'list', objectType: 'objectId', default: [] },
-          plan: { type: "objectId", default: undefined},
+          list: { type: 'list',objectType:'List' ,default: [] },
+          plan: { type: "objectId", optional: true},
           createdAt: 'date',
         },
         
