@@ -99,11 +99,11 @@ return (
     <View style={styles.buttonContainer}>
       
      <TouchableOpacity style={styles.button} onPress={toggle}>
-      <Text style={styles.textButton}> {isActive ? 'Pause' : 'Start'} </Text>
+      <Text style={styles.textButton}> {isActive ? ' Pause' : '   Start'} </Text>
       </TouchableOpacity>
     
       <TouchableOpacity style={styles.button} onPress={reset}>
-          <Text style={styles.textButton}>Reset</Text>
+          <Text style={styles.textButton}>   Reset</Text>
         </TouchableOpacity>
     </View>
   </View>
@@ -134,10 +134,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '40%',
+    width: '50%',
+    height: '6%',
   },
   button: {
-    //backgroundColor: '#CFF4D2',
+    backgroundColor: '#ef6548',
     marginHorizontal: 10,
     borderRadius: 10,
     flex: 1,
@@ -148,10 +149,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingVertical: 0,
     opacity: 0.8,
+    shadowColor: 'white',
+    elevation: 5
   },
   textButton: { 
-    color: '#fc8d59',//texto Star Reset
-    fontSize: 20,
+    color: 'black',//texto Star Reset
+    fontSize: 25,
   },
 
 
