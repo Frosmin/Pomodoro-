@@ -31,6 +31,15 @@ export default function Navigation() {
           }}
         />
         <Tab.Screen
+          name="Home2"
+          component={HomeScreen}
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
           name="Explore"
           component={ExploreScreen}
           options={{
@@ -39,6 +48,7 @@ export default function Navigation() {
             ),
           }}
         />
+        
       </Tab.Navigator>
     </>
   );
