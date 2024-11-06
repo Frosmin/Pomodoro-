@@ -16,6 +16,18 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="explore"
+        options={{
+          title: "Explore",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "code-slash" : "code-slash-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: "Home",
@@ -33,19 +45,7 @@ export default function TabLayout() {
           title: "Settings",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "settings" : "person-outline"}  // icono tiene que ser unico
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+              name={focused ? "settings" : "person-outline"} // icono tiene que ser unico
               color={color}
             />
           ),
