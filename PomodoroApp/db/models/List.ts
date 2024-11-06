@@ -12,7 +12,7 @@ class List extends Realm.Object {
     name!: string;
     type!: ListTypes;
     status!: string; // active or inactive
-    tasks!: Realm.List<Realm.Object>;
+    tasks!: Realm.List<Realm.BSON.ObjectID>;
     static generate(name: string, type: string) {
         return {
             _id: new Realm.BSON.ObjectId(),
@@ -30,7 +30,7 @@ class List extends Realm.Object {
           name: 'string',
           type: { type: 'string', },
           status: { type: 'string' },
-          tasks: { type: 'list', objectType: 'Task' },
+          tasks: { type: 'list', objectType: 'objectId' },
         },
       }
 

@@ -12,7 +12,7 @@ class User extends Realm.Object {
     username!: string;
     password!: string;
     status!: UserStatus; // active or inactive
-    list!: List[];
+    list!: Realm.List<Realm.BSON.ObjectID>;
     plan?: Realm.BSON.ObjectID;
     // projects?: Project[];
     createdAt!: Date;
