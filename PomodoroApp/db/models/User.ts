@@ -21,6 +21,8 @@ class User extends Realm.Object {
             _id: new Realm.BSON.ObjectId(),
             username,
             password,
+            status: UserStatus.ACTIVE,
+            list : new Realm.List<Realm.BSON.ObjectID>(),
             createdAt: new Date(),
         };
     }
@@ -32,8 +34,8 @@ class User extends Realm.Object {
           _id: 'objectId',
           username: 'string',
           password: 'string',
-          status: { type: 'string',default: UserStatus.ACTIVE },
-          list: { type: 'list',objectType:'List' ,default: [] },
+          status: 'string',
+          list: { type: 'list',objectType:'objectId' },
           plan: { type: "objectId", optional: true},
           createdAt: 'date',
         },

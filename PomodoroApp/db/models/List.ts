@@ -11,7 +11,6 @@ class List extends Realm.Object {
     _id!: Realm.BSON.ObjectId;
     name!: string;
     type!: ListTypes;
-    status!: string; // active or inactive
     tasks!: Realm.List<Realm.BSON.ObjectID>;
     static generate(name: string, type: string) {
         return {
@@ -38,7 +37,6 @@ class List extends Realm.Object {
       static validateListType(list_type: string) {
         return list_type === ListTypes.MAIN || list_type === ListTypes.OTHER;
       }
-      // Then, use `TaskSchema` wherever you're defining the Task object.
   }
 
 export {List}
