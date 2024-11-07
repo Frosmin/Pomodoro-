@@ -15,7 +15,7 @@ export default function HomeScreen() {
     
     <>
       <CircularPomodoroTimer />
-      <TaskList />
+      {/* <TaskList /> */}
     </>
     
   );
