@@ -24,9 +24,18 @@ const CircularPomodoroTimer = () => {
     uri: "https://img.freepik.com/premium-photo/abstract-square-picture-form-glowing-red-circle-isolated-black-background_1028938-468836.jpg",
   };
 //----------------------------
+interface Task {
+  id: number;
+  name: string;
+  completedPomodoros: number;
+  totalPomodoros: number;
+}
 const [tasks, setTasks] = useState<Task[]>([
   { id: 1, name: 'tarea 1', completedPomodoros: 0, totalPomodoros: 2 },
-  //{ id: 2, name: 'tarea 2', completedPomodoros: 0, totalPomodoros: 2 },
+  //{ id: 2, name: 'tarea 2', completedPomodoros: 0, totalPomodoros: 6 },
+  //{ id: 3, name: 'tarea 3', completedPomodoros: 0, totalPomodoros: 6 },
+  //{ id: 4, name: 'tarea 4', completedPomodoros: 0, totalPomodoros: 7 },
+  //{ id: 5, name: 'tarea 5', completedPomodoros: 0, totalPomodoros: 3 },
 ]);
 
 //----------------------------
@@ -152,20 +161,20 @@ const [tasks, setTasks] = useState<Task[]>([
             <Text style={styles.textButton}> Reset</Text>
           </TouchableOpacity>
         </View>
-      </View>
-      {/* vista de tareas */}
+        {/* vista de tareas */}
         <View>
-          {tasks.map((task) => (
-            <View key={task.id} style={styles.taskContainer}>
-              <Text>{task.name}</Text>
-              <Text>
-                {task.completedPomodoros} / {task.totalPomodoros}
-              </Text>
-            </View>
-          ))}
+            {tasks.map((task) => (
+              <View key={task.id} style={styles.taskContainer}>
+                <Text>{task.name}</Text>
+                  <Text>
+                    {task.completedPomodoros} / {task.totalPomodoros}
+                  </Text>
+              </View>
+              ))}
         </View>
-
-      {/* --------------- */}
+        {/* --------------- */}
+      </View>
+      
     </ImageBackground>
   );
 };
@@ -244,7 +253,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   taskContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     padding: 10,
     marginBottom: 5,

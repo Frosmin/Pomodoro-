@@ -6,14 +6,18 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import CircularPomodoroTimer from '@/components/CircularPomodoroTimer';
 import {AppProvider} from "../../context/AppContext";
+import TaskList from '@/components/TaskList';
 
 
 export default function HomeScreen() {
   
   return (
+    
     <>
       <CircularPomodoroTimer />
+      <TaskList />
     </>
+    
   );
 }
 
