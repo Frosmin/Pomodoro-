@@ -23,10 +23,21 @@ const CircularPomodoroTimer = () => {
   const imagenBackg = {
     uri: "https://img.freepik.com/premium-photo/abstract-square-picture-form-glowing-red-circle-isolated-black-background_1028938-468836.jpg",
   };
+//----------------------------
+const [tasks, setTasks] = useState<Task[]>([
+  { id: 1, name: 'tarea 1', completedPomodoros: 0, totalPomodoros: 2 },
+  //{ id: 2, name: 'tarea 2', completedPomodoros: 0, totalPomodoros: 2 },
+]);
+
+//----------------------------
+
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isActive) {
       if (seconds === 0) {
+        if (state.status === PomodoroState.BREAK || state.status === PomodoroState.LONG_BREAK) {
+          incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
+        }
         dispatch({ type: ActionKind.SWITCH });
         setIsActive(false);
       } else {
@@ -37,6 +48,7 @@ const CircularPomodoroTimer = () => {
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval!);
     }
+    
     return () => clearInterval(interval!);
   }, [isActive, seconds]);
 
@@ -58,6 +70,19 @@ const CircularPomodoroTimer = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
+  //--------------------------
+  const incrementPomodoro = () => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task, index) =>
+        index === 0 // Suponiendo que solo se actualiza la tarea activa (la primera)
+          ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+          : task
+      )
+    );
+  }; 
+  
+  //--------------------------
+
 
   const radius = 120; // Nuevo radio
   const circumference = 2 * Math.PI * radius;
@@ -128,6 +153,19 @@ const CircularPomodoroTimer = () => {
           </TouchableOpacity>
         </View>
       </View>
+      {/* vista de tareas */}
+        <View>
+          {tasks.map((task) => (
+            <View key={task.id} style={styles.taskContainer}>
+              <Text>{task.name}</Text>
+              <Text>
+                {task.completedPomodoros} / {task.totalPomodoros}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+      {/* --------------- */}
     </ImageBackground>
   );
 };
@@ -204,6 +242,14 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "center",
+  },
+  taskContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    marginBottom: 5,
+    backgroundColor: '#f1f1f1',
+    borderRadius: 5,
   },
 });
 
