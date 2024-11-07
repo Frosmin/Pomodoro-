@@ -24,13 +24,14 @@ export default function TabTwoScreen() {
 
   const handleProjectPress = (projectName: string) => {
     router.push({
-      pathname: "/(tabs)/projectDetails",
-      params: { projectName }
+      pathname: "../projectDetails",
+      params: { projectName },
     });
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Proyectos</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -55,6 +56,10 @@ export default function TabTwoScreen() {
         )}
         keyExtractor={(item, index) => index.toString()}
       />
+
+      <TouchableOpacity style={styles.button} onPress={addProject}>
+        <Text style={styles.buttonText}>Guardar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -92,5 +97,12 @@ const styles = StyleSheet.create({
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+  },
+
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginTop: 5,
   },
 });
