@@ -1,11 +1,15 @@
-import { createContext, useContext, ReactNode, useReducer } from "react";
+import { createContext, useContext, ReactNode, useReducer, useEffect, useState,Dispatch,SetStateAction } from "react";
 import { reducer,AppState,PomodoroState,Action
  } from "./reducer";
  import realm from "@/db";
+import { useObject, useRealm } from "@realm/react";
+import { User } from "@/db/models/User";
 
 interface AppContextType {
         state: AppState,
         dispatch : React.Dispatch<Action>
+        user: User | null,
+        setUser: Dispatch<SetStateAction<User | null>>,
 
   }
 
@@ -30,9 +34,14 @@ const initialState : AppState = {
 
 
 const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
+    const [user,setUser] = useState<User|null>(null);
     const [state,dispatch] = useReducer(reducer,initialState);
+
+    useEffect(() => {
+      console.log(user,"user");
+    },[])
     return (
-        <AppContext.Provider value={{state,dispatch}}>{children}</AppContext.Provider>
+        <AppContext.Provider value={{state,dispatch,user,setUser}}>{children}</AppContext.Provider>
     );
 }
 
