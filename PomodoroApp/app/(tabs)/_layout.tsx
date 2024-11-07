@@ -5,6 +5,7 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
+
 /**
  * TabLayout component renders a tab navigator with three screens: Explore, Home, and Settings.
  * Each screen has a unique name, title, and icon.
@@ -32,9 +33,9 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="explore"
+        name="projects" //tad de projescts
         options={{
-          title: "Explore",
+          title: "Projects",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}
@@ -65,6 +66,14 @@ export default function TabLayout() {
               color={color}
             />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="projectDetails"
+        options={{
+          href: null,
+          headerShown: false,
+          tabBarStyle: { display: "none" },
         }}
       />
     </Tabs>
