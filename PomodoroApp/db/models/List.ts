@@ -1,23 +1,23 @@
 import Realm from "realm";
 import { ObjectSchema } from "realm";
+import { Task } from "./Task";
 
 
-enum ListTypes  {
+export enum ListTypes  {
     MAIN = "main",
-    OTHER= "other"
+    OTHER= "other",
+    RECORD= "record"
 }
 
 class List extends Realm.Object {
     _id!: Realm.BSON.ObjectId;
     name!: string;
     type!: ListTypes;
-    tasks!: Realm.List<Realm.BSON.ObjectID>;
-    static generate(name: string, type: string) {
+    static generate(name: string, type: ListTypes) {
         return {
             _id: new Realm.BSON.ObjectId(),
             name,
             type,
-            createdAt: new Date(),
         };
     }
   
@@ -27,9 +27,7 @@ class List extends Realm.Object {
         properties: {
           _id: 'objectId',
           name: 'string',
-          type: { type: 'string', },
-          status: { type: 'string' },
-          tasks: { type: 'list', objectType: 'objectId' },
+          type: 'string',
         },
       }
 

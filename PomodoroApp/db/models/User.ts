@@ -1,6 +1,9 @@
 import Realm from "realm";
 import { ObjectSchema } from "realm";
 import { List } from "./List";
+import { Project } from "./Project";
+import { Task } from "./Task";
+import { Pomodoro } from "./Pomodoro";
 
 enum UserStatus  {
     ACTIVE = "active",
@@ -12,17 +15,22 @@ class User extends Realm.Object {
     username!: string;
     password!: string;
     status!: UserStatus; // active or inactive
-    list!: Realm.List<Realm.BSON.ObjectID>;
+    lists!: Realm.List<List>;
     plan?: Realm.BSON.ObjectID;
-    // projects?: Project[];
+    projects?: Realm.List<Project>;
+    tasks!: Realm.List<Task>;
+    pomodoros!: Realm.List<Pomodoro>;
     createdAt!: Date;
-    static generate(username: string, password: string) {
+    static generate(user_id: Realm.BSON.ObjectID,username: string, password: string,lists: List[],project: Project) {
         return {
-            _id: new Realm.BSON.ObjectId(),
+            _id: user_id,
             username,
             password,
             status: UserStatus.ACTIVE,
-            list : new Realm.List<Realm.BSON.ObjectID>(),
+            lists : lists,
+            projects: [project],
+            tasks : [],
+            pomodoros: [],
             createdAt: new Date(),
         };
     }
@@ -35,7 +43,10 @@ class User extends Realm.Object {
           username: 'string',
           password: 'string',
           status: 'string',
-          list: { type: 'list',objectType:'objectId' },
+          lists: { type: 'list',objectType:'List' },
+          projects: {type: 'list', objectType:'Project'},
+          tasks: {type : 'list', objectType: 'Task'},
+          pomodoros: {type: 'list', objectType: 'Pomodoro'},
           plan: { type: "objectId", optional: true},
           createdAt: 'date',
         },

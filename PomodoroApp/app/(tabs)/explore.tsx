@@ -6,8 +6,27 @@ import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Button } from 'react-native';
+import { useQuery, useRealm } from '@realm/react';
+import { addUser } from '@/db/Controllers/UserController';
+import { useEffect } from 'react';
+import { User } from '@/db/models/User';
 
 export default function TabTwoScreen() {
+
+  const realm = useRealm();
+
+  const onPressAdduser = () => {
+    addUser(realm,{username:"Deforme", password: "1234"})
+  }
+
+  const users = useQuery(User);
+
+  useEffect(() => {
+    const user = users[1]
+    console.log(user._id,"\n", user.lists, "\n", user.projects);
+  },[users])
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -84,6 +103,8 @@ export default function TabTwoScreen() {
           ),
         })}
       </Collapsible>
+      <ThemedText type='title'>Tests</ThemedText>
+      <Button title='Add User' onPress={onPressAdduser}></Button>
     </ParallaxScrollView>
   );
 }

@@ -1,4 +1,4 @@
-import Realm from "realm";
+import Realm, { ObjectSchema } from "realm";
 
 
 enum PomodoroStatus {
@@ -9,38 +9,36 @@ enum PomodoroStatus {
     CANCELED = "CANCELED",
 }
 
-export class Pomodoro extends Realm.Object {
+class Pomodoro extends Realm.Object {
   _id!: Realm.BSON.ObjectId;
-  user_id!: Realm.BSON.ObjectID;
   task_id!: Realm.BSON.ObjectID;
   status!: PomodoroStatus;
-  started_at?: Date;
+  started_at!: Date;
   ended_at?: Date;
   internal_distraction!: number;
   external_distraction!: number;
 
-  static generate(user_id: Realm.BSON.ObjectID, task_id?: Realm.BSON.ObjectID) {
+  static generate( task_id: Realm.BSON.ObjectID) {
     task_id = task_id ? task_id : new Realm.BSON.ObjectID(0);
     return {
       _id: new Realm.BSON.ObjectId(),
-      user_id,
       task_id,
       status: PomodoroStatus.NOT_STARTED,
+      started_at: new Date(),
       internal_distraction: 0,
       external_distraction: 0,
     };
   }
 
-  static schema = {
+  static schema: ObjectSchema = {
     name: 'Pomodoro',
     primaryKey: '_id',
     properties: {
       _id: 'objectId',
-      user_id: 'objetId',
       task_id: 'objectId',
       status: 'string',
-      started_at: { type: 'date' },
-      ended_at: { type: 'date' },
+      started_at: 'date',
+      ended_at: { type: 'date' , optional: true},
       internal_distraction: { type: 'int', default: 0 },
       external_distraction: { type: 'int', default: 0 },
     },
@@ -51,3 +49,5 @@ export class Pomodoro extends Realm.Object {
   }
 
 }
+
+export {Pomodoro}

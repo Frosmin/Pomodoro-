@@ -29,7 +29,7 @@ const initialState : AppState = {
 }
 
 
-const AppProvider : React.FC<AppProviderProps> = ({ children }) => {
+const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
     const [state,dispatch] = useReducer(reducer,initialState);
     return (
         <AppContext.Provider value={{state,dispatch}}>{children}</AppContext.Provider>
@@ -44,5 +44,5 @@ const useGlobalContext = () => {
   return context;
 }
 
-export { AppContext, AppProvider, useGlobalContext };
+export { AppContext, AppContextProvider, useGlobalContext };
 
