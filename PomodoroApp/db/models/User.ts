@@ -17,7 +17,7 @@ class User extends Realm.Object {
     status!: UserStatus; // active or inactive
     lists!: Realm.List<List>;
     plan?: Realm.BSON.ObjectID;
-    projects?: Realm.List<Project>;
+    projects!: Realm.List<Project>;
     tasks!: Realm.List<Task>;
     pomodoros!: Realm.List<Pomodoro>;
     createdAt!: Date;
