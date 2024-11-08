@@ -8,37 +8,32 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Button } from 'react-native';
 import { useQuery, useRealm } from '@realm/react';
-import { addUser } from '@/db/Controllers/UserController';
 import { useEffect } from 'react';
 import { User } from '@/db/models/User';
-import { addTask, getTasksByList } from '@/db/Controllers/TaskController';
-import { getMainListID } from '@/db/Controllers/ListController';
 import { useGlobalContext } from '@/context/AppContext';
 
 export default function TabTwoScreen() {
 
 
-  const {user} = useGlobalContext();
-
-  const realm = useRealm();
+  const {user, controllers: {TaskController: {getTasksByList, addTask},ListController:{getMainListID}}} = useGlobalContext();
 
   const users = useQuery(User);
-  const tasks = getTasksByList(user,realm,getMainListID(user,realm));
+  const tasks = getTasksByList(getMainListID());
   const onPressAddUser = () => {
     // addUser(realm,{username:"Mario", password: "1234"})
   }
 
   const onPressAddTask = () => {
-    addTask(user,realm,{name: `task${Math.round(Math.random()*100)}`, estimated_effort: 1, list_id: getMainListID(user,realm)})
+    addTask({name: `task${Math.round(Math.random()*100)}`, estimated_effort: 1, list_id: getMainListID()})
   }
 
 
 
   useEffect(() => {
-    // console.log(users,"users");
-    // tasks.forEach(task => {
-    //   console.log(task._id.toString(),task.name);
-    // })
+    console.log(users,"users");
+    tasks.forEach(task => {
+      console.log(task._id.toString(),task.name);
+    })
     
   })
 
