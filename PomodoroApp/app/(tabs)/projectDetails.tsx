@@ -1,3 +1,28 @@
+
+/**
+ * ProjectDetails component displays the details of a project and allows the user to add tasks to the project.
+ * 
+ * @returns {JSX.Element} The rendered component.
+ * 
+ * @remarks
+ * This component uses React Native components such as View, Text, TextInput, TouchableOpacity, and FlatList.
+ * It also uses hooks from 'expo-router' and React.
+ * 
+ * @component
+ * 
+ * @example
+ * // Example usage:
+ * // <ProjectDetails />
+ * 
+ * @function
+ * @name ProjectDetails
+ * 
+ * @description
+ * The ProjectDetails component fetches the project name from the local search parameters and maintains a list of tasks.
+ * It provides an input field to add new tasks and displays the list of tasks. Each task can be pressed to navigate to the task details screen.
+ * 
+ * @returns {JSX.Element} The rendered component.
+ */
 import { View, Text, StyleSheet,TextInput,TouchableOpacity,FlatList, } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from "react";
