@@ -3,9 +3,11 @@ import { User } from "../models/User";
 import { useGlobalContext } from "@/context/AppContext";
 import { Task } from "../models/Task";
 import { useObject } from "@realm/react";
+import { getDefaultProjectId } from "./ProjectController";
+import 'react-native-get-random-values'
 
 
-const {user,realm} = useGlobalContext();
+
 
 /**
  * Agrega una tarea a la lista de tareas del usuario y a la lista de tareas del proyecto.
@@ -18,14 +20,24 @@ const {user,realm} = useGlobalContext();
  * @returns {{status: string,message: string}} Un objeto con propiedades de estatus y mensaje, indicando si la tarea se agreg  con  xito o no.
  */
 export const addTask = (
-    name: string,
-    estimated_effort: number = 1,
-    list_id: Realm.BSON.ObjectID,
-    project_id?: Realm.BSON.ObjectID,
+    user : User | null,
+    realm : Realm ,
+    body: {
+        name: string,
+        estimated_effort: number,
+        list_id: Realm.BSON.ObjectID | undefined,
+        project_id?: Realm.BSON.ObjectID,
+    }
+   
 ) => {
     
-    if(!project_id && user && user.projects[0]){
-        project_id = user.projects[0]._id
+    let {name,estimated_effort,list_id,project_id} = body;
+    if(!list_id){
+        return {status : "error", message: "List not found"}
+    }
+
+    if(!project_id && user){
+        project_id = getDefaultProjectId(user,realm);
     } else{
         return {status : "error", message: "Project not found"}
     }
@@ -43,8 +55,14 @@ export const addTask = (
 }
 
 
-export const getTasksByList = (list_id: Realm.BSON.ObjectID) => {
-
+export const getTasksByList = (
+    user : User | null,
+    realm : Realm ,
+    list_id: Realm.BSON.ObjectID | undefined
+) => {
+    if (!list_id) {
+        return []
+    }
     if(realm && user){
         let tasks : Task[]= [];
 

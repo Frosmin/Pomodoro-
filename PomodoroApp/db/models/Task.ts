@@ -24,6 +24,7 @@ class Task extends Realm.Object {
             real_effort : 0,
             project_id,
             list_id,
+            started_at: new Date(),
             status: TaskStatus.NOT_STARTED
         };
     }

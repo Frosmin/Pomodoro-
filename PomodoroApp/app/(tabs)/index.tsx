@@ -7,7 +7,7 @@ import { ThemedView } from '@/components/ThemedView';
 import CircularPomodoroTimer from '@/components/CircularPomodoroTimer';
 import { useGlobalContext } from '@/context/AppContext';
 import { useEffect } from 'react';
-import { useObject, useRealm } from '@realm/react';
+import { useObject, useQuery, useRealm } from '@realm/react';
 import { User } from '@/db/models/User';
 import { Realm } from '@realm/react';
 
@@ -15,7 +15,7 @@ import { Realm } from '@realm/react';
 export default function HomeScreen() {
 
   // const realm = useRealm();
-  const newUser = useObject(User, new Realm.BSON.ObjectID("672d338c26e765ae29cfad16"))
+  const newUser = useQuery(User)[0];
   const {user,setUser,setRealm,realm} = useGlobalContext();
   const myRealm = useRealm();
 
