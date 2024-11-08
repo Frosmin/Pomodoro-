@@ -29,8 +29,12 @@ export default function HomeScreen() {
     
     if(!user){    
       if(!newUser){
+        console.log("creating User");
+        
         addUser("Mario","1234")
       }else{
+        console.log("setting User");
+        
         setUser(newUser)
       }  
     }

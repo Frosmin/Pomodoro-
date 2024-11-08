@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
+import util_styles from "@/styles/utils";
 
 export default function TabTwoScreen() {
   const navigation = useNavigation();
@@ -35,7 +36,7 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Proyectos</Text>
+      <Text style={util_styles.title}>Proyectos</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -103,10 +104,4 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
   },
 
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    marginTop: 20,
-  },
 });

@@ -57,9 +57,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings" //nombre unico
+        name="tareas" //nombre unico
         options={{
-          title: "Settings",
+          title: "Tareas",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "settings" : "person-outline"} // icono tiene que ser unico
