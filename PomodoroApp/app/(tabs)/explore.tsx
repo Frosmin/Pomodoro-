@@ -36,9 +36,9 @@ export default function TabTwoScreen() {
 
   useEffect(() => {
     // console.log(users,"users");
-    tasks.forEach(task => {
-      console.log(task._id.toString(),task.name);
-    })
+    // tasks.forEach(task => {
+    //   console.log(task._id.toString(),task.name);
+    // })
     
   })
 
