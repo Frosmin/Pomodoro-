@@ -22,6 +22,10 @@ export default function TabTwoScreen() {
     }
   };
 
+  const Save = () => {
+    console.log("Proyectos guardados:", projects);
+  }
+
   const handleProjectPress = (projectName: string) => {
     router.push({
       pathname: "../projectDetails",
@@ -57,7 +61,7 @@ export default function TabTwoScreen() {
         keyExtractor={(item, index) => index.toString()}
       />
 
-      <TouchableOpacity style={styles.button} onPress={addProject}>
+      <TouchableOpacity style={styles.button} onPress={Save}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
     </View>
