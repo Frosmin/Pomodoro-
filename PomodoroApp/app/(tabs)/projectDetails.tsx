@@ -1,33 +1,38 @@
-
 /**
  * ProjectDetails component displays the details of a project and allows the user to add tasks to the project.
- * 
+ *
  * @returns {JSX.Element} The rendered component.
- * 
+ *
  * @remarks
  * This component uses React Native components such as View, Text, TextInput, TouchableOpacity, and FlatList.
  * It also uses hooks from 'expo-router' and React.
- * 
+ *
  * @component
- * 
+ *
  * @example
  * // Example usage:
  * // <ProjectDetails />
- * 
+ *
  * @function
  * @name ProjectDetails
- * 
+ *
  * @description
  * The ProjectDetails component fetches the project name from the local search parameters and maintains a list of tasks.
  * It provides an input field to add new tasks and displays the list of tasks. Each task can be pressed to navigate to the task details screen.
- * 
+ *
  * @returns {JSX.Element} The rendered component.
  */
-import { View, Text, StyleSheet,TextInput,TouchableOpacity,FlatList, } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { router } from "expo-router";
-
 
 export default function ProjectDetails() {
   const { projectName } = useLocalSearchParams<{ projectName: string }>();
@@ -41,11 +46,15 @@ export default function ProjectDetails() {
     }
   };
 
+  const Save = () => {
+    console.log("Proyectos guardados:", tasks);
+  };
+
   const handleTaskPress = (Taskname: string) => {
-    console.log('Tarea seleccionada:', Taskname);
+    console.log("Tarea seleccionada:", Taskname);
     router.push({
       pathname: "../taskDetails",
-      params: { Taskname }
+      params: { Taskname },
     });
   };
 
@@ -78,10 +87,10 @@ export default function ProjectDetails() {
         )}
         keyExtractor={(item, index) => index.toString()}
       />
-  
+      <TouchableOpacity style={styles.button} onPress={Save}>
+        <Text style={styles.buttonText}>Guardar</Text>
+      </TouchableOpacity>
     </View>
-
-    
   );
 }
 
@@ -89,11 +98,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fee8c8',
+    backgroundColor: "#fee8c8",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
     marginTop: 20,
   },
@@ -123,12 +132,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
+    justifyContent: "center",
   },
   projectItem: {
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
-
-  
 });

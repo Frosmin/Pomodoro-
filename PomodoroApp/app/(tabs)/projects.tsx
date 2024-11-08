@@ -73,12 +73,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#fee8c8",
-    //marginTop: 50,
+    //marginTop: 10,
   },
   inputContainer: {
     flexDirection: "row",
     marginBottom: 20,
-    marginTop: 25,
+    //marginTop: 10,
   },
   input: {
     flex: 1,
@@ -107,6 +107,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    marginTop: 5,
+    marginTop: 20,
   },
 });
