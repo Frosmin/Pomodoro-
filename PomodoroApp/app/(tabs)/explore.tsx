@@ -18,11 +18,15 @@ export default function TabTwoScreen() {
   const {user, controllers: {TaskController: {getTasksByList, addTask},ListController:{getMainListID}}} = useGlobalContext();
 
   const users = useQuery(User);
+  
+
+  // Ejemplo de como obtener las tareas
   const tasks = getTasksByList(getMainListID());
   const onPressAddUser = () => {
     // addUser(realm,{username:"Mario", password: "1234"})
   }
 
+  // Ejemplo de como agregar una tarea
   const onPressAddTask = () => {
     addTask({name: `task${Math.round(Math.random()*100)}`, estimated_effort: 1, list_id: getMainListID()})
   }
