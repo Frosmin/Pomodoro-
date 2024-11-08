@@ -7,6 +7,16 @@ import { useObject } from "@realm/react";
 
 const {user,realm} = useGlobalContext();
 
+/**
+ * Adds a task to the user's tasks list, and the task's project list.
+ * If no project is given, the task will be added to the user's first project.
+ * If no user is given, the task will be added to the user's tasks list.
+ * @param {string} name The name of the task
+ * @param {number} estimated_effort The estimated effort of the task, defaults to 1
+ * @param {Realm.BSON.ObjectID} list_id The id of the list where the task will be added
+ * @param {Realm.BSON.ObjectID} project_id The id of the project where the task will be added
+ * @returns {{status: string,message: string}} An object with status and message properties, indicating whether the task was successfully added or not.
+ */
 export const addTask = (
     name: string,
     estimated_effort: number = 1,
@@ -20,9 +30,12 @@ export const addTask = (
         return {status : "error", message: "Project not found"}
     }
     if(realm && user){
-        //        
+        let taskId = new Realm.BSON.ObjectId();
+        while(user.tasks[taskId.toString()]){
+            taskId = new Realm.BSON.ObjectId();
+        }
         realm.write(() => {
-            user.tasks.push(Task.generate(name,estimated_effort,project_id,list_id) as Task)
+            user.tasks[taskId.toString()] = (Task.generate(taskId,name,estimated_effort,project_id,list_id) as Task)
         })
         return {status : "success",message: "Tarea agregada correctamente"}
     }

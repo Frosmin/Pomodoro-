@@ -16,9 +16,9 @@ class Task extends Realm.Object {
     started_at?: Date;
     status!: TaskStatus; // Assuming CHAR translates to a single character string
 
-    static generate(name: string, estimated_effort: number, project_id: Realm.BSON.ObjectID,list_id: Realm.BSON.ObjectID) {
+    static generate(taskId: Realm.BSON.ObjectID,name: string, estimated_effort: number, project_id: Realm.BSON.ObjectID,list_id: Realm.BSON.ObjectID) {
         return {
-            _id: new Realm.BSON.ObjectId(),
+            _id: taskId,
             name,
             estimated_effort,
             real_effort : 0,
