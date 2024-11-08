@@ -12,40 +12,65 @@ import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
 import Button1 from "./UI/Button1";
 import { PomodoroState } from "@/context/reducer";
+import { Task } from "@/db/models/Task";
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 
+
+interface NewTask {
+  name: string;
+  estimated_effort: number;
+}
+
 const CircularPomodoroTimer = () => {
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [newTask, setNewTask] = useState<NewTask>({
+    name: "",
+    estimated_effort: 1,
+  });
+  const [render, setRender] = useState<boolean>(false);
+
+
   const [isActive, setIsActive] = useState(false);
-  const { state, dispatch } = useGlobalContext();
+  const {
+    state,
+    dispatch,
+    user,
+    controllers: {
+      TaskController: { getTasksByList, deleteTask, addTask },
+      ListController: { getMainListID },
+    },
+  } = useGlobalContext();
   const [seconds, setSeconds] = useState(state.timer);
   //const imagenBackg = {source: require("@/assets/images/cropped-pomodoro-solo.png")};
   const imagenBackg = {
     uri: "https://img.freepik.com/premium-photo/abstract-square-picture-form-glowing-red-circle-isolated-black-background_1028938-468836.jpg",
   };
 
-  //----------------------------
-  interface Task {
-    id: number;
-    name: string;
-    completedPomodoros: number;
-    totalPomodoros: number;
-  }
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, name: 'tarea 1', completedPomodoros: 0, totalPomodoros: 2 },
-    { id: 2, name: 'tarea 2', completedPomodoros: 0, totalPomodoros: 6 },
-    { id: 3, name: 'tarea 3', completedPomodoros: 0, totalPomodoros: 6 },
-    { id: 4, name: 'tarea 4', completedPomodoros: 0, totalPomodoros: 7 },
-    { id: 5, name: 'tarea 5', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 6, name: 'tarea 6', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 7, name: 'tarea 7', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 8, name: 'tarea 8', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 9, name: 'tarea 9', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 10, name: 'tarea 10', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 11, name: 'tarea 11', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 12, name: 'tarea 12', completedPomodoros: 0, totalPomodoros: 3 },
-    //{ id: 13, name: 'tarea 13', completedPomodoros: 0, totalPomodoros: 3 },
-  ]);
+  const handleAddTask = () => {
+    if (newTask.name.trim() !== "") {
+      console.log("Añadiendo Tarea");
+      addTask({
+        name: newTask.name,
+        estimated_effort: 1,
+        list_id: getMainListID(),
+      });
+      setNewTask({ name: "", estimated_effort: 1 });
+      setRender(!render);
+    }
+  };
+
+  const handleDeleteTask = (taskId: Realm.BSON.ObjectID) => {
+    console.log(taskId.toString(), "Eliminando Tarea");
+    setRender(!render);
+    deleteTask(taskId);
+  };
+
+
+
+  //----------------------------lPomodoros: number;
+  
 
   //----------------------------
 
@@ -54,7 +79,7 @@ const CircularPomodoroTimer = () => {
     if (isActive) {
       if (seconds === 0) {
         if (state.status === PomodoroState.BREAK || state.status === PomodoroState.LONG_BREAK) {
-          incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
+          // incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
         }
         dispatch({ type: ActionKind.SWITCH });
         setIsActive(false);
@@ -73,6 +98,13 @@ const CircularPomodoroTimer = () => {
     setSeconds(state.timer);
   }, [state.timer]);
 
+  useEffect(() => {
+    if ((user?.tasks, tasks)) {
+      // Only update tasks if there's a change in user.tasks
+      setTasks(getTasksByList(getMainListID()));
+    }
+  }, [render]); // Watch for changes in user.tasks
+
   const toggle = () => {
     setIsActive(!isActive);
   };
@@ -89,15 +121,15 @@ const CircularPomodoroTimer = () => {
   };
 
   //--------------------------
-  const incrementPomodoro = () => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task, index) =>
-        index === 0 // Suponiendo que solo se actualiza la tarea activa (la primera)
-          ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-          : task
-      )
-    );
-  }; 
+  // const incrementPomodoro = () => {
+  //   setTasks((prevTasks) =>
+  //     prevTasks.map((task, index) =>
+  //       index === 0 // Suponiendo que solo se actualiza la tarea activa (la primera)
+  //         ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+  //         : task
+  //     )
+  //   );
+  // }; 
   
   //--------------------------
 
@@ -172,10 +204,10 @@ const CircularPomodoroTimer = () => {
         {/* vista de tareas */}
         <View style={styles.taskCon}>
             {tasks.map((task) => (
-              <View key={task.id} style={styles.taskContainer}>
+              <View key={task._id.toString()} style={styles.taskContainer}>
                 <Text>{task.name}</Text>
                   <Text>
-                    {task.completedPomodoros} / {task.totalPomodoros}
+                    {task.real_effort} / {task.estimated_effort}
                   </Text>
               </View>
               ))}
