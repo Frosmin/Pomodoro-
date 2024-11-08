@@ -37,7 +37,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     };
 
     const getTasksByList = (list_id: Realm.BSON.ObjectID | undefined) => {
-        if (!realm || !user || !list_id) {
+        if ( !user || !list_id) {
             console.log("Error retrieving tasks");
             return [];
         }
@@ -47,9 +47,26 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         );
     };
 
+
+/**
+ * Elimina una tarea del diccionario de tareas del usuario.
+ * 
+ * @param {Realm.BSON.ObjectID | undefined} task_id - El ID de la tarea a eliminar.
+ * @returns {void} No devuelve ningún valor, pero registra un error si falta el realm, el usuario o el task_id.
+ */
+    const deleteTask = (task_id: Realm.BSON.ObjectID | undefined) => {
+        if (!realm || !user || !task_id) {
+            console.log("Error retrieving tasks");
+            return [];
+        }
+        realm.write(() => {
+            delete user.tasks[task_id.toString()];
+        })
+    }
     return {
         addTask,
         getTasksByList,
+        deleteTask
     };
 };
 
