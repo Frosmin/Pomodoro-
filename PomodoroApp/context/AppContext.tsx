@@ -1,7 +1,7 @@
 import { createContext, useContext, ReactNode, useReducer, useEffect, useState,Dispatch,SetStateAction, useMemo } from "react";
 import { reducer,AppState,PomodoroState,Action
  } from "./reducer";
-import { useObject, useRealm } from "@realm/react";
+import { useObject, useQuery, useRealm } from "@realm/react";
 import { User } from "@/db/models/User";
 import { Realm } from "@realm/react";
 import {  createTaskController } from "../db/Controllers/TaskController";
@@ -13,8 +13,6 @@ interface AppContextType {
         dispatch : React.Dispatch<Action>
         user: User | null,
         setUser: Dispatch<SetStateAction<User | null>>,
-        realm : Realm | null,
-        setRealm: Dispatch<SetStateAction<Realm | null>>,
         controllers: {
           TaskController: ReturnType<typeof createTaskController>;
           UserController:  ReturnType<typeof createUserController>
@@ -45,8 +43,8 @@ const initialState : AppState = {
 
 const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
     const [user,setUser] = useState<User|null>(null);
-    const [realm,setRealm] = useState<Realm|null>(null);
     const [state,dispatch] = useReducer(reducer,initialState);
+    const realm = useRealm();
 
     // Use useMemo to avoid recreating controllers on every render
     const controllers = useMemo(() => ({
@@ -56,17 +54,34 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
       ListController: createListController(user, realm)
   }), [user, realm]);
 
-    useEffect(() => {
-      console.log(user,"user");
-    },[])
+  const newUser = useQuery(User)[0];
+
+  useEffect(() => {
+    // if(realm){
+    //   realm.write(() => {
+    //     realm.deleteAll();
+    //     console.log("delete All");
+    //   });
+    // }
+    
+    if(!user){    
+      if(!newUser){
+        console.log("creating User");
+        
+        controllers.UserController.addUser("Mario","1234")
+      }else{
+        console.log("setting User");
+        
+        setUser(newUser)
+      }  
+    }
+  },[user,realm])
     return (
         <AppContext.Provider value={
           {state,
             dispatch,
             user,
             setUser,
-            realm,
-            setRealm,
             controllers,
           }}>{children}</AppContext.Provider>
     );
