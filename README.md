@@ -20,10 +20,3 @@ Para poder hacer correr la aplicacion en en dispositivo movil debes asegurarte d
 * Al conectar ponerlo en modo "Transferencia de archivos"
 * Tener depuracion mediante usb activada en la configuracion de desarrolador en el celular
 
-## 4. Escanear Codigo QR generado por expo con la aplicacion de expo para celular
-
- * Para descargar la aplicacion ve a la Play Store y buscar por "Expo GO"
-
- * O escanea el codigo QR
-
- ![alt text](expo.png)
