@@ -1,60 +1,67 @@
-/**
- * ProjectDetails component displays the details of a project and allows the user to add tasks to the project.
- *
- * @returns {JSX.Element} The rendered component.
- *
- * @remarks
- * This component uses React Native components such as View, Text, TextInput, TouchableOpacity, and FlatList.
- * It also uses hooks from 'expo-router' and React.
- *
- * @component
- *
- * @example
- * // Example usage:
- * // <ProjectDetails />
- *
- * @function
- * @name ProjectDetails
- *
- * @description
- * The ProjectDetails component fetches the project name from the local search parameters and maintains a list of tasks.
- * It provides an input field to add new tasks and displays the list of tasks. Each task can be pressed to navigate to the task details screen.
- *
- * @returns {JSX.Element} The rendered component.
- */
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import { router } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { useLocalSearchParams, router } from "expo-router";
+import util_styles from "@/styles/utils";
+import taskList_styles from "@/styles/taskList";
+import { useGlobalContext } from "@/context/AppContext";
+import { Task } from "@/db/models/Task";
+
+interface NewTask {
+  name: string;
+  estimated_effort: number;
+}
 
 export default function ProjectDetails() {
   const { projectName } = useLocalSearchParams<{ projectName: string }>();
-  const [tasks, setTask] = useState<string[]>([]);
-  const [newTask, setNewTask] = useState("");
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [newTask, setNewTask] = useState<NewTask>({ name: "", estimated_effort: 1 });
+  const [render, setRender] = useState<boolean>(false);
+  const { user, controllers: { TaskController: { getTasksByList, deleteTask, addTask }, ListController: { getMainListID } } } = useGlobalContext();
 
-  const addTask = () => {
-    if (newTask.trim()) {
-      setTask([...tasks, newTask.trim()]);
-      setNewTask("");
+  const handleAddTask = () => {
+    if (newTask.name.trim() !== "") {
+      console.log("Añadiendo Tarea");
+      addTask({
+        name: newTask.name,
+        estimated_effort: 1,
+        list_id: getMainListID(),
+      });
+      setNewTask({ name: "", estimated_effort: 1 });
+      setRender(!render);
     }
   };
 
-  const Save = () => {
-    console.log("Proyectos guardados:", tasks);
+  const handleDeleteTask = (taskId: Realm.BSON.ObjectID) => {
+    console.log(taskId.toString(), "Eliminando Tarea");
+    setRender(!render);
+    deleteTask(taskId);
   };
+
+  const getTasks = useCallback(() => {}, [user?.tasks, tasks]);
+
+  useEffect(() => {
+    if ((user?.tasks, tasks)) {
+      // Only update tasks if there's a change in user.tasks
+      setTasks(getTasksByList(getMainListID()));
+    }
+  }, [render]); // Watch for changes in user.tasks
 
   const handleTaskPress = (Taskname: string) => {
     console.log("Tarea seleccionada:", Taskname);
     router.push({
       pathname: "../taskDetails",
       params: { Taskname },
+    });
+  };
+
+  const Save = () => {
+    console.log("Proyectos guardados:", tasks);
+    tasks.forEach(task => {
+      addTask({
+        name: task.name,
+        estimated_effort: task.estimated_effort,
+        list_id: getMainListID()
+      });
     });
   };
 
@@ -66,12 +73,12 @@ export default function ProjectDetails() {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          value={newTask}
-          onChangeText={setNewTask}
+          value={newTask.name}
+          onChangeText={(text) => setNewTask({ ...newTask, name: text })}
           placeholder="Nombre de la Tarea"
         />
-        <TouchableOpacity style={styles.button} onPress={addTask}>
-          <Text style={styles.buttonText}>Añadir Proyecto</Text>
+        <TouchableOpacity style={styles.button} onPress={handleAddTask}>
+          <Text style={styles.buttonText}>Añadir Tarea</Text>
         </TouchableOpacity>
       </View>
 
@@ -80,12 +87,18 @@ export default function ProjectDetails() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.projectItem}
-            onPress={() => handleTaskPress(item)}
+            onPress={() => handleTaskPress(item.name)}
           >
-            <Text>{item}</Text>
+            <Text>{item.name}</Text>
+            <Text>{item.real_effort}</Text>
+            <Text>{item.estimated_effort}</Text>
+            <Button
+              title="Eliminar"
+              onPress={() => handleDeleteTask(item._id)}
+            />
           </TouchableOpacity>
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item._id.toString()}
       />
       <TouchableOpacity style={styles.button} onPress={Save}>
         <Text style={styles.buttonText}>Guardar</Text>
@@ -110,7 +123,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
   },
-
   inputContainer: {
     flexDirection: "row",
     marginBottom: 20,
