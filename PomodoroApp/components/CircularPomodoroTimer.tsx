@@ -38,7 +38,7 @@ const CircularPomodoroTimer = () => {
     dispatch,
     user,
     controllers: {
-      TaskController: { getTasksByList, deleteTask, addTask },
+      TaskController: { getTasksByList, deleteTask, addTask,incrementEffort },
       ListController: { getMainListID },
     },
   } = useGlobalContext();
@@ -78,8 +78,8 @@ const CircularPomodoroTimer = () => {
     let interval: NodeJS.Timeout | null = null;
     if (isActive) {
       if (seconds === 0) {
-        if (state.status === PomodoroState.BREAK || state.status === PomodoroState.LONG_BREAK) {
-          // incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
+        if (state.status !== PomodoroState.BREAK && state.status !== PomodoroState.LONG_BREAK) {
+            incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
         }
         dispatch({ type: ActionKind.SWITCH });
         setIsActive(false);
@@ -121,17 +121,17 @@ const CircularPomodoroTimer = () => {
   };
 
   //--------------------------
-  // const incrementPomodoro = () => {
-  //   setTasks((prevTasks) =>
-  //     prevTasks.map((task, index) =>
-  //       index === 0 // Suponiendo que solo se actualiza la tarea activa (la primera)
-  //         ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
-  //         : task
-  //     )
-  //   );
-  // }; 
+  const incrementPomodoro = () => {
+    incrementEffort(state.activeTask);
+  }; 
   
   //--------------------------
+
+  const selectActiveTask = (task_id: Realm.BSON.ObjectID) => {
+    console.log("selecting", task_id.toString());
+    
+    dispatch({ type: ActionKind.SET_CURRENT, payload: task_id.toString() });
+  };
 
   const radius = 120; // Nuevo radio
   const circumference = 2 * Math.PI * radius;
@@ -204,13 +204,16 @@ const CircularPomodoroTimer = () => {
         {/* vista de tareas */}
         <View style={styles.taskCon}>
             {tasks.map((task) => (
-              <View key={task._id.toString()} style={styles.taskContainer}>
+              <View key={task._id.toString()} style={[styles.taskContainer,state.activeTask === task._id.toString() ? styles.active_task : null]} onStartShouldSetResponder={() => {selectActiveTask(task._id)}}>
                 <Text>{task.name}</Text>
                   <Text>
                     {task.real_effort} / {task.estimated_effort}
                   </Text>
               </View>
               ))}
+              <View style={styles.addBtn}>
+                <Text style={{color: "#fff"}}>Agregar Tarea +</Text>
+              </View>
         </View>
         {/* --------------- */}
       </View>
@@ -294,16 +297,30 @@ const styles = StyleSheet.create({
   taskContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     marginBottom: 5,
     backgroundColor: '#ef6548', //color tareas
     borderRadius: 5,
   },
   taskCon: {
     display: "flex",
-    width: "50%",
-    height: "6%",
-  }
+    width: "60%",
+  },
+  active_task:{
+    backgroundColor: "#c53f27",
+  },
+  addBtn: {
+    backgroundColor: "#ef6538",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderStyle: "dashed",
+    borderColor:"#fff",
+    borderWidth: 1,
+
+  },
 });
 
 export default CircularPomodoroTimer;
