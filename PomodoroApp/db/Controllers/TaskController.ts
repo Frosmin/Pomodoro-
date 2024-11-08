@@ -39,6 +39,5 @@ export const addTask = (
         })
         return {status : "success",message: "Tarea agregada correctamente"}
     }
-
-    
+    return {status : "error", message: "No se pudo agregar la tarea"}
 }
