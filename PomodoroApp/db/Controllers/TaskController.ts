@@ -47,7 +47,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         );
     };
 
-    const updateTask = (taskId: Realm.BSON.ObjectID, updatedTask: { name: string; estimated_effort: number }) => {
+    const updateTask = (taskId: Realm.BSON.ObjectID, updatedTask: { name: string; estimated_effort: number}) => {
         if (!realm || !user) {
           console.log("Error updating task");
           return;
@@ -60,6 +60,20 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
           }
         });
       };
+
+      const incrementEffort = (taskId: string) => {
+        if (!realm || !user) {
+          console.log("Error updating task");
+          return;
+        }
+        const taskId_realm = new Realm.BSON.ObjectId(taskId);
+        realm.write(() => {
+          const task = user.tasks[taskId_realm.toString()];
+          if (task) {
+            task.real_effort += 1;
+          }
+        });
+      }
 
 
 /**
@@ -81,7 +95,8 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         addTask,
         getTasksByList,
         deleteTask,
-        updateTask
+        updateTask,
+        incrementEffort,
     };
 
 
