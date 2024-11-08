@@ -14,12 +14,17 @@ export const addTask = (
     project_id?: Realm.BSON.ObjectID,
 ) => {
     
-    if(!project_id && user && user.projects.length > 0) project_id = user.projects[0]._id
+    if(!project_id && user && user.projects[0]){
+        project_id = user.projects[0]._id
+    } else{
+        return {status : "error", message: "Project not found"}
+    }
     if(realm && user){
         //        
         realm.write(() => {
             user.tasks.push(Task.generate(name,estimated_effort,project_id,list_id) as Task)
         })
+        return {status : "success",message: "Tarea agregada correctamente"}
     }
 
     
