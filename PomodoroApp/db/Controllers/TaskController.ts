@@ -47,6 +47,20 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         );
     };
 
+    const updateTask = (taskId: Realm.BSON.ObjectID, updatedTask: { name: string; estimated_effort: number }) => {
+        if (!realm || !user) {
+          console.log("Error updating task");
+          return;
+        }
+        realm.write(() => {
+          const task = user.tasks[taskId.toString()];
+          if (task) {
+            task.name = updatedTask.name;
+            task.estimated_effort = updatedTask.estimated_effort;
+          }
+        });
+      };
+
 
 /**
  * Elimina una tarea del diccionario de tareas del usuario.
@@ -66,8 +80,12 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     return {
         addTask,
         getTasksByList,
-        deleteTask
+        deleteTask,
+        updateTask
     };
+
+
+    
 };
 
 export { createTaskController };
