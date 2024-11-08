@@ -64,6 +64,7 @@ export default function TaskDetails() {
         onChangeText={(text) => setEditedTask({ ...editedTask, name: text })}
         placeholder="Nombre de la Tarea"
       />
+      
       <Text style={styles.subtitle}>Efort</Text>
       <TextInput
         style={styles.input}
