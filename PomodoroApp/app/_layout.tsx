@@ -14,6 +14,8 @@ import { Project } from '@/db/models/Project';
 import { AppContext, AppContextProvider } from '@/context/AppContext';
 import 'react-native-get-random-values';
 import { schemaVersion } from 'realm';
+import 'react-native-get-random-values'
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -42,7 +44,7 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           {/* <AppProvider id={"MY_APP_KEY"}  > */}
           {/* <UserProvider > */}
-            <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={4}
+            <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={5}
                             // sync={{
                             //   flexible: true,
                             //   initialSubscriptions: {

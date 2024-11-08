@@ -17,8 +17,8 @@ class User extends Realm.Object {
     status!: UserStatus; // active or inactive
     lists!: Realm.List<List>;
     plan?: Realm.BSON.ObjectID;
-    projects?: Realm.List<Project>;
-    tasks!: Realm.List<Task>;
+    projects!: Realm.List<Project>;
+    tasks!: Realm.Dictionary<Task>;
     pomodoros!: Realm.List<Pomodoro>;
     createdAt!: Date;
     static generate(user_id: Realm.BSON.ObjectID,username: string, password: string,lists: List[],project: Project) {
@@ -29,7 +29,8 @@ class User extends Realm.Object {
             status: UserStatus.ACTIVE,
             lists : lists,
             projects: [project],
-            tasks : [],
+            tasks : {},
+            plan: undefined,
             pomodoros: [],
             createdAt: new Date(),
         };
@@ -45,7 +46,7 @@ class User extends Realm.Object {
           status: 'string',
           lists: { type: 'list',objectType:'List' },
           projects: {type: 'list', objectType:'Project'},
-          tasks: {type : 'list', objectType: 'Task'},
+          tasks: {type : 'dictionary', objectType: 'Task'},
           pomodoros: {type: 'list', objectType: 'Pomodoro'},
           plan: { type: "objectId", optional: true},
           createdAt: 'date',

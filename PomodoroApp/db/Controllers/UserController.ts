@@ -12,7 +12,7 @@ const addUser = (realm : Realm, body: { username : string, password: string}) =>
         const record = List.generate("Record", ListTypes.RECORD) as List;
         const defaultProject = Project.generate("No Project") as Project;
         const newUser = realm.create('User', User.generate(user_id,body.username,body.password,[mainList,activities,record],defaultProject));
-        return newUser
+        return newUser 
     })
 }
 

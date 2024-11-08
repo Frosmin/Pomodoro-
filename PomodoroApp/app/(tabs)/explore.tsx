@@ -11,21 +11,38 @@ import { useQuery, useRealm } from '@realm/react';
 import { addUser } from '@/db/Controllers/UserController';
 import { useEffect } from 'react';
 import { User } from '@/db/models/User';
+import { addTask, getTasksByList } from '@/db/Controllers/TaskController';
+import { getMainListID } from '@/db/Controllers/ListController';
+import { useGlobalContext } from '@/context/AppContext';
 
 export default function TabTwoScreen() {
 
+
+  const {user} = useGlobalContext();
+
   const realm = useRealm();
 
-  const onPressAdduser = () => {
-    addUser(realm,{username:"Deforme", password: "1234"})
+  const users = useQuery(User);
+  const tasks = getTasksByList(user,realm,getMainListID(user,realm));
+  const onPressAddUser = () => {
+    // addUser(realm,{username:"Mario", password: "1234"})
   }
 
-  const users = useQuery(User);
+  const onPressAddTask = () => {
+    addTask(user,realm,{name: `task${Math.round(Math.random()*100)}`, estimated_effort: 1, list_id: getMainListID(user,realm)})
+  }
+
+
 
   useEffect(() => {
-    const user = users[1]
-    console.log(user._id,"\n", user.lists, "\n", user.projects);
-  },[users])
+    // console.log(users,"users");
+    tasks.forEach(task => {
+      console.log(task._id.toString(),task.name);
+    })
+    
+  })
+
+
 
   return (
     <ParallaxScrollView
@@ -104,7 +121,9 @@ export default function TabTwoScreen() {
         })}
       </Collapsible>
       <ThemedText type='title'>Tests</ThemedText>
-      <Button title='Add User' onPress={onPressAdduser}></Button>
+      <Button title='Add User' onPress={onPressAddUser}></Button>
+      <Button title='Add Task' onPress={onPressAddTask}></Button>
+
     </ParallaxScrollView>
   );
 }
