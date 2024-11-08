@@ -23,10 +23,39 @@ const CircularPomodoroTimer = () => {
   const imagenBackg = {
     uri: "https://img.freepik.com/premium-photo/abstract-square-picture-form-glowing-red-circle-isolated-black-background_1028938-468836.jpg",
   };
+
+  //----------------------------
+  interface Task {
+    id: number;
+    name: string;
+    completedPomodoros: number;
+    totalPomodoros: number;
+  }
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: 1, name: 'tarea 1', completedPomodoros: 0, totalPomodoros: 2 },
+    { id: 2, name: 'tarea 2', completedPomodoros: 0, totalPomodoros: 6 },
+    { id: 3, name: 'tarea 3', completedPomodoros: 0, totalPomodoros: 6 },
+    { id: 4, name: 'tarea 4', completedPomodoros: 0, totalPomodoros: 7 },
+    { id: 5, name: 'tarea 5', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 6, name: 'tarea 6', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 7, name: 'tarea 7', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 8, name: 'tarea 8', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 9, name: 'tarea 9', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 10, name: 'tarea 10', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 11, name: 'tarea 11', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 12, name: 'tarea 12', completedPomodoros: 0, totalPomodoros: 3 },
+    //{ id: 13, name: 'tarea 13', completedPomodoros: 0, totalPomodoros: 3 },
+  ]);
+
+  //----------------------------
+
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isActive) {
       if (seconds === 0) {
+        if (state.status === PomodoroState.BREAK || state.status === PomodoroState.LONG_BREAK) {
+          incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
+        }
         dispatch({ type: ActionKind.SWITCH });
         setIsActive(false);
       } else {
@@ -58,6 +87,19 @@ const CircularPomodoroTimer = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
+
+  //--------------------------
+  const incrementPomodoro = () => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task, index) =>
+        index === 0 // Suponiendo que solo se actualiza la tarea activa (la primera)
+          ? { ...task, completedPomodoros: task.completedPomodoros + 1 }
+          : task
+      )
+    );
+  }; 
+  
+  //--------------------------
 
   const radius = 120; // Nuevo radio
   const circumference = 2 * Math.PI * radius;
@@ -127,6 +169,18 @@ const CircularPomodoroTimer = () => {
             <Text style={styles.textButton}> Reset</Text>
           </TouchableOpacity>
         </View>
+        {/* vista de tareas */}
+        <View style={styles.taskCon}>
+            {tasks.map((task) => (
+              <View key={task.id} style={styles.taskContainer}>
+                <Text>{task.name}</Text>
+                  <Text>
+                    {task.completedPomodoros} / {task.totalPomodoros}
+                  </Text>
+              </View>
+              ))}
+        </View>
+        {/* --------------- */}
       </View>
     </ImageBackground>
   );
@@ -205,6 +259,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  taskContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    marginBottom: 5,
+    backgroundColor: '#ef6548', //color tareas
+    borderRadius: 5,
+  },
+  taskCon: {
+    display: "flex",
+    width: "50%",
+    height: "6%",
+  }
 });
 
 export default CircularPomodoroTimer;
