@@ -32,6 +32,7 @@ const initialState : AppState = {
     timer : 25,
     status: PomodoroState.FOCUS,
     nIntervals: 1,
+    activeTask: "",
     params: {
         focusTime: 25,
         breakTime: 5,
