@@ -40,11 +40,7 @@ export default function RootLayout() {
   }
 
   return (
-    <AppContextProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          {/* <AppProvider id={"MY_APP_KEY"}  > */}
-          {/* <UserProvider > */}
-            <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={5}
+    <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={5}
                             // sync={{
                             //   flexible: true,
                             //   initialSubscriptions: {
@@ -58,15 +54,16 @@ export default function RootLayout() {
                             //   },
                             // }}
                             >
+    <AppContextProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>  
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
-            </RealmProvider>
-          {/* </UserProvider> */}
-          {/* </AppProvider> */}
       </ThemeProvider>
     </AppContextProvider>
+    </RealmProvider>
+
 
     
   );

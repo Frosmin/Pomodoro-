@@ -15,34 +15,8 @@ import { Realm } from '@realm/react';
 export default function HomeScreen() {
 
   // const realm = useRealm();
-  let newUser = useQuery(User)[0];
-  const {user,setUser,setRealm,realm, controllers: {UserController:{addUser}}} = useGlobalContext();
-  const myRealm = useRealm();
 
-  useEffect(() => {
-    // if(realm){
-    //   realm.write(() => {
-    //     realm.deleteAll();
-    //     console.log("delete All");
-    //   });
-    // }
-    
-    if(!user){    
-      if(!newUser){
-        console.log("creating User");
-        
-        addUser("Mario","1234")
-      }else{
-        console.log("setting User");
-        
-        setUser(newUser)
-      }  
-    }
-
-    if(!realm){
-      setRealm(myRealm)
-    }
-  },[user,realm])
+  
   
   return (
     <>
