@@ -62,8 +62,8 @@ export default function TabLayout() {
           title: "Tareas",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "settings" : "person-outline"} // icono tiene que ser unico
-              color={color}
+             name={focused ? "settings" : "person-outline"} // icono tiene que ser unico
+             color={color}
             />
           ),
         }}

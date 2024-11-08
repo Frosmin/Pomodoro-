@@ -62,9 +62,9 @@ export default function TabTwoScreen() {
         keyExtractor={(item, index) => index.toString()}
       />
 
-      <TouchableOpacity style={styles.button} onPress={Save}>
+      {/* <TouchableOpacity style={styles.button} onPress={Save}>
         <Text style={styles.buttonText}>Guardar</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
