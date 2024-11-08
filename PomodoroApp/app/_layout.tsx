@@ -14,6 +14,8 @@ import { Project } from '@/db/models/Project';
 import { AppContext, AppContextProvider } from '@/context/AppContext';
 import 'react-native-get-random-values';
 import { schemaVersion } from 'realm';
+import 'react-native-get-random-values'
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

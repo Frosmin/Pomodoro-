@@ -16,10 +16,16 @@ export default function TabTwoScreen() {
 
   const realm = useRealm();
 
-  const onPressAddTask = () => {
-    addUser(realm,{username:"Mario", password: "1234"})
+  const users = useQuery(User);
+  const onPressAddUser = () => {
+    // addUser(realm,{username:"Mario", password: "1234"})
   }
 
+  
+
+  useEffect(() => {
+    console.log(users,"users");
+  })
 
 
 
@@ -100,7 +106,7 @@ export default function TabTwoScreen() {
         })}
       </Collapsible>
       <ThemedText type='title'>Tests</ThemedText>
-      <Button title='Add Task' onPress={onPressAddTask}></Button>
+      <Button title='Add Task' onPress={onPressAddUser}></Button>
     </ParallaxScrollView>
   );
 }
