@@ -42,7 +42,7 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           {/* <AppProvider id={"MY_APP_KEY"}  > */}
           {/* <UserProvider > */}
-            <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={4}
+            <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={5}
                             // sync={{
                             //   flexible: true,
                             //   initialSubscriptions: {

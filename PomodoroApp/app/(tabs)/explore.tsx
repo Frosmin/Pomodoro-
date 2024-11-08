@@ -17,8 +17,7 @@ export default function TabTwoScreen() {
   const realm = useRealm();
 
   const onPressAddTask = () => {
-    
-    // addUser(realm,{username:"Deforme", password: "1234"})
+    addUser(realm,{username:"Mario", password: "1234"})
   }
 
 

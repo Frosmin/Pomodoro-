@@ -8,14 +8,14 @@ import { useObject } from "@realm/react";
 const {user,realm} = useGlobalContext();
 
 /**
- * Adds a task to the user's tasks list, and the task's project list.
- * If no project is given, the task will be added to the user's first project.
- * If no user is given, the task will be added to the user's tasks list.
- * @param {string} name The name of the task
- * @param {number} estimated_effort The estimated effort of the task, defaults to 1
- * @param {Realm.BSON.ObjectID} list_id The id of the list where the task will be added
- * @param {Realm.BSON.ObjectID} project_id The id of the project where the task will be added
- * @returns {{status: string,message: string}} An object with status and message properties, indicating whether the task was successfully added or not.
+ * Agrega una tarea a la lista de tareas del usuario y a la lista de tareas del proyecto.
+ * Si no se proporciona un proyecto, la tarea se agregar  al primer proyecto del usuario.
+ * Si no se proporciona un usuario, la tarea se agregar  a la lista de tareas del usuario.
+ * @param {string} name El nombre de la tarea
+ * @param {number} estimated_effort El esfuerzo estimado de la tarea, por defecto es 1
+ * @param {Realm.BSON.ObjectID} list_id El id de la lista donde se agregar  la tarea
+ * @param {Realm.BSON.ObjectID} project_id El id del proyecto donde se agregar  la tarea
+ * @returns {{status: string,message: string}} Un objeto con propiedades de estatus y mensaje, indicando si la tarea se agreg  con  xito o no.
  */
 export const addTask = (
     name: string,
@@ -40,4 +40,23 @@ export const addTask = (
         return {status : "success",message: "Tarea agregada correctamente"}
     }
     return {status : "error", message: "No se pudo agregar la tarea"}
+}
+
+
+export const getTasksByList = (list_id: Realm.BSON.ObjectID) => {
+
+    if(realm && user){
+        let tasks : Task[]= [];
+
+        for (const taskId in user.tasks) {
+            const task = user.tasks[taskId];
+            if(task.list_id.toString() === list_id.toString()){
+                tasks.push(task)
+            }
+        }
+        return tasks
+    }else{
+        console.log("Error al obtener las tareas");
+        return []
+    }
 }
