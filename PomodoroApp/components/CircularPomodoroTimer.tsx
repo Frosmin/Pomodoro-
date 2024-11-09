@@ -68,13 +68,6 @@ const CircularPomodoroTimer = () => {
     deleteTask(taskId);
   };
 
-
-
-  //----------------------------lPomodoros: number;
-  
-
-  //----------------------------
-
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isActive) {
@@ -204,7 +197,7 @@ const CircularPomodoroTimer = () => {
         </View>
         {/* vista de tareas */}
         <View style={styles.taskCon}>
-            {tasks.map((task) => (
+            {tasks.length > 0 && tasks.map((task) => (
               <View key={task._id.toString()} style={[styles.taskContainer,state.activeTask === task._id.toString() ? styles.active_task : null]} onStartShouldSetResponder={() => {selectActiveTask(task._id)}}>
                 <Text>{task.name}</Text>
                   <Text>
