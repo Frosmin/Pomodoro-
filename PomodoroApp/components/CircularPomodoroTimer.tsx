@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Text,
   ImageBackground,
+  TextInput
 } from "react-native";
 import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
@@ -66,13 +67,6 @@ const CircularPomodoroTimer = () => {
     setRender(!render);
     deleteTask(taskId);
   };
-
-
-
-  //----------------------------lPomodoros: number;
-  
-
-  //----------------------------
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -203,7 +197,7 @@ const CircularPomodoroTimer = () => {
         </View>
         {/* vista de tareas */}
         <View style={styles.taskCon}>
-            {tasks.map((task) => (
+            {tasks.length > 0 && tasks.map((task) => (
               <View key={task._id.toString()} style={[styles.taskContainer,state.activeTask === task._id.toString() ? styles.active_task : null]} onStartShouldSetResponder={() => {selectActiveTask(task._id)}}>
                 <Text>{task.name}</Text>
                   <Text>
@@ -211,8 +205,15 @@ const CircularPomodoroTimer = () => {
                   </Text>
               </View>
               ))}
-              <View style={styles.addBtn}>
-                <Text style={{color: "#fff"}}>Agregar Tarea +</Text>
+              <View style={styles.addBtnContainer}>
+                <TextInput
+                  placeholder="Nueva Tarea"
+                  value={newTask.name}
+                  onChangeText={(text) => setNewTask({ name: text, estimated_effort: 1 })}
+                />
+                <TouchableOpacity style={styles.addBtn}  onPress={handleAddTask}>
+                  <Text>+</Text>
+                </TouchableOpacity>
               </View>
         </View>
         {/* --------------- */}
@@ -310,17 +311,21 @@ const styles = StyleSheet.create({
   active_task:{
     backgroundColor: "#c53f27",
   },
-  addBtn: {
+  addBtnContainer: {
     backgroundColor: "#ef6538",
     display: "flex",
+    flexDirection: "row",
+    gap: 75,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
     borderStyle: "dashed",
     borderColor:"#fff",
     borderWidth: 1,
-
   },
+  addBtn: {
+    backgroundColor: "transparent"
+  }
 });
 
 export default CircularPomodoroTimer;
