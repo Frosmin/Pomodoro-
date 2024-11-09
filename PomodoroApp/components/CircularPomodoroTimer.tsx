@@ -17,6 +17,7 @@ import { Task } from "@/db/models/Task";
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface NewTask {
   name: string;
@@ -206,7 +207,7 @@ const CircularPomodoroTimer = () => {
                       {task.real_effort} / {task.estimated_effort}
                     </Text>
                   <TouchableOpacity onPress={() => handleDeleteTask(task._id)}>
-                    <FontAwesome5 name="pencil-alt" size={16} color="black" />
+                  <Ionicons name="trash" size={16} color="black" />
                   </TouchableOpacity>
                   </View>      
               </View>
