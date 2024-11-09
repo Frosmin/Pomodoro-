@@ -80,6 +80,13 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
       }  
     }
   },[user,realm])
+
+
+  useEffect(() => {
+    console.log(render);
+    
+  },[render])
+
     return (
         <AppContext.Provider value={
           {state,
@@ -92,6 +99,8 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
           }}>{children}</AppContext.Provider>
     );
 }
+
+
 
 const useGlobalContext = () => {
     const context = useContext(AppContext);
