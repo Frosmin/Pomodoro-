@@ -16,7 +16,7 @@ import { PomodoroState } from "@/context/reducer";
 import { Task } from "@/db/models/Task";
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
-
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 interface NewTask {
   name: string;
@@ -200,9 +200,14 @@ const CircularPomodoroTimer = () => {
             {tasks.length > 0 && tasks.map((task) => (
               <View key={task._id.toString()} style={[styles.taskContainer,state.activeTask === task._id.toString() ? styles.active_task : null]} onStartShouldSetResponder={() => {selectActiveTask(task._id)}}>
                 <Text>{task.name}</Text>
+                <View style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", gap: 10 }}>
                   <Text>
-                    {task.real_effort} / {task.estimated_effort}
-                  </Text>
+                      {task.real_effort} / {task.estimated_effort}
+                    </Text>
+                  <TouchableOpacity onPress={() => handleDeleteTask(task._id)}>
+                    <FontAwesome5 name="pencil-alt" size={16} color="black" />
+                  </TouchableOpacity>
+                  </View>      
               </View>
               ))}
               <View style={styles.addBtnContainer}>
