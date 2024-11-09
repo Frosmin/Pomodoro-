@@ -41,10 +41,9 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     if ((user?.tasks, tasks)) {
-      // Only update tasks if there's a change in user.tasks
       setTasks(getTasksByList(getMainListID()));
     }
-  }, [render]); // Watch for changes in user.tasks
+  }, [render]); 
 
   const handleTaskPress = (Taskname: string) => {
     console.log("Tarea seleccionada:", Taskname);
@@ -100,9 +99,9 @@ export default function ProjectDetails() {
         )}
         keyExtractor={(item) => item._id.toString()}
       />
-      <TouchableOpacity style={styles.button} onPress={Save}>
+      {/* <TouchableOpacity style={styles.button} onPress={Save}>
         <Text style={styles.buttonText}>Guardar</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
