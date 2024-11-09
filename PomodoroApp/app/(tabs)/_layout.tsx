@@ -5,7 +5,6 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
-
 /**
  * TabLayout component renders a tab navigator with three screens: Explore, Home, and Settings.
  * Each screen has a unique name, title, and icon.
@@ -35,13 +34,16 @@ export default function TabLayout() {
       <Tabs.Screen
         name="projects" //tad de projescts
         options={{
-          title: "Projects",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
-            />
-          ),
+          // title: "Projects",
+          // tabBarIcon: ({ color, focused }) => (
+          //   <TabBarIcon
+          //     name={focused ? "code-slash" : "code-slash-outline"}
+          //     color={color}
+          //   />
+          // ),
+
+          href: null,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -59,20 +61,31 @@ export default function TabLayout() {
       <Tabs.Screen
         name="tareas" //nombre unico
         options={{
-          title: "Tareas",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-             name={focused ? "settings" : "person-outline"} // icono tiene que ser unico
-             color={color}
-            />
-          ),
+          // title: "Tareas",
+          // tabBarIcon: ({ color, focused }) => (
+          //   <TabBarIcon
+          //    name={focused ? "settings" : "person-outline"} // icono tiene que ser unico
+          //    color={color}
+          //   />
+          // ),
+
+          href: null,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
         name="projectDetails"
         options={{
-          href: null,
-          headerShown: false,
+          title: "Task",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "code-slash" : "code-slash-outline"}
+              color={color}
+            />
+          ),
+
+          // href: null,
+          // headerShown: false,
           //tabBarStyle: { display: "none" },
         }}
       />
