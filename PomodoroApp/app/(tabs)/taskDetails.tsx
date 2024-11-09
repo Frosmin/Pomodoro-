@@ -41,10 +41,10 @@ export default function TaskDetails() {
 
    const handleTaskPress = (Taskname: string) => {
     console.log("Tarea seleccionada:", Taskname);
-    router.push({
-      pathname: "../taskDetails",
-      params: { Taskname },
-    });
+    // router.push({
+    //   pathname: "../taskDetails",
+    //   params: { Taskname },
+    // });
   };
 
 
