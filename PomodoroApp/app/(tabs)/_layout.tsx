@@ -47,6 +47,36 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="explore" //tad de projescts
+        options={{
+          // title: "Projects",
+          // tabBarIcon: ({ color, focused }) => (
+          //   <TabBarIcon
+          //     name={focused ? "code-slash" : "code-slash-outline"}
+          //     color={color}
+          //   />
+          // ),
+
+          href: null,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="settings" //tad de projescts
+        options={{
+          title: "settings",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "settings" : "settings-outline"}
+              color={color}
+            />
+          ),
+
+          // href: null,
+          // headerShown: false,
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: "Home",
