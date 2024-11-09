@@ -30,7 +30,6 @@ const CircularPomodoroTimer = () => {
     name: "",
     estimated_effort: 1,
   });
-  const [render, setRender] = useState<boolean>(false);
 
 
   const [isActive, setIsActive] = useState(false);
@@ -38,6 +37,8 @@ const CircularPomodoroTimer = () => {
     state,
     dispatch,
     user,
+    render,
+    setRender,
     controllers: {
       TaskController: { getTasksByList, deleteTask, addTask,incrementEffort },
       ListController: { getMainListID },

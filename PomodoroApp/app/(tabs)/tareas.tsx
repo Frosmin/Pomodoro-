@@ -16,9 +16,9 @@ const tareas = () => {
     name: "",
     estimated_effort: 1,
   });
-  const [render, setRender] = useState<boolean>(false);
   const {
     user,
+    render,setRender,
     controllers: {
       TaskController: { getTasksByList, deleteTask, addTask },
       ListController: { getMainListID },
