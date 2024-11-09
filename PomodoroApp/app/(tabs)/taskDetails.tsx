@@ -39,13 +39,13 @@ export default function TaskDetails() {
     }
   }, [Taskname, user]);
 
-  //  const handleTaskPress = (Taskname: string) => {
-  //   console.log("Tarea seleccionada:", Taskname);
-  //   router.push({
-  //     pathname: "../taskDetails",
-  //     params: { Taskname },
-  //   });
-  // };
+   const handleTaskPress = (Taskname: string) => {
+    console.log("Tarea seleccionada:", Taskname);
+    router.push({
+      pathname: "../taskDetails",
+      params: { Taskname },
+    });
+  };
 
 
 
@@ -90,6 +90,7 @@ export default function TaskDetails() {
           keyboardType="numeric"
         />
       </View>
+      
       {/* <TouchableOpacity style={styles.button} onPress={Save}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity> */}
