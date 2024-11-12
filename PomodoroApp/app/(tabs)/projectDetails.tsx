@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import util_styles from "@/styles/utils";
 import taskList_styles from "@/styles/taskList";
@@ -14,15 +21,31 @@ interface NewTask {
 export default function ProjectDetails() {
   const { projectName } = useLocalSearchParams<{ projectName: string }>();
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState<NewTask>({ name: "", estimated_effort: 1 });
+  const [newTask, setNewTask] = useState<NewTask>({
+    name: "",
+    estimated_effort: 1,
+  });
   const [render, setRender] = useState<boolean>(false);
-  const { user, controllers: { TaskController: { getTasksByList, deleteTask, addTask,getTasksByProject}, ListController: { getMainListID } } } = useGlobalContext();
+  const {
+    user,
+    controllers: {
+      TaskController: {
+        getTasksByList,
+        deleteTask,
+        addTask,
+        getTasksByProject,
+      },
+      ListController: { getMainListID },
+    },
+  } = useGlobalContext();
 
   const handleAddTask = () => {
     if (newTask.name.trim() !== "") {
       console.log("Añadiendo Tarea");
       if (user) {
-        const project_id = user.projects.find(project => project.name === projectName)?._id;
+        const project_id = user.projects.find(
+          (project) => project.name === projectName
+        )?._id;
         addTask({
           name: newTask.name,
           estimated_effort: 1,
@@ -39,7 +62,9 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     if (user) {
-      const project = user.projects.find(project => project.name === projectName);
+      const project = user.projects.find(
+        (project) => project.name === projectName
+      );
       if (project) {
         const project_id = project._id;
         setTasks(getTasksByProject(project_id));
@@ -49,16 +74,11 @@ export default function ProjectDetails() {
     }
   }, [render, user, projectName]);
 
-
   const handleDeleteTask = (taskId: Realm.BSON.ObjectID) => {
     console.log(taskId.toString(), "Eliminando Tarea");
     setRender(!render);
     deleteTask(taskId);
   };
-
-  const getTasks = useCallback(() => {}, [user?.tasks, tasks]);
-
-  
 
   const handleTaskPress = (Taskname: string) => {
     console.log("Tarea seleccionada:", Taskname);
@@ -67,17 +87,6 @@ export default function ProjectDetails() {
       params: { Taskname },
     });
   };
-
-  // const Save = () => {
-  //   console.log("Proyectos guardados:", tasks);
-  //   tasks.forEach(task => {
-  //     addTask({
-  //       name: task.name,
-  //       estimated_effort: task.estimated_effort,
-  //       list_id: getMainListID()
-  //     });
-  //   });
-  // };
 
   return (
     <View style={styles.container}>
@@ -97,28 +106,25 @@ export default function ProjectDetails() {
       </View>
 
       <FlatList
-  data={tasks}
-  renderItem={({ item }) => (
-    <TouchableOpacity
-      style={styles.projectItem}
-      onPress={() => handleTaskPress(item.name)}
-    >
-      <Text>{item.name}</Text>
-      <Text>{item.real_effort}</Text>
-      <Text>{item.estimated_effort}</Text>
-      <TouchableOpacity 
-        style={styles.deleteButton} 
-        onPress={() => handleDeleteTask(item._id)}
-      >
-        <Text style={styles.deleteButtonText}>Eliminar</Text>
-      </TouchableOpacity>
-    </TouchableOpacity>
-  )}
-  keyExtractor={(item) => item._id.toString()}
-/>
-      {/* <TouchableOpacity style={styles.button} onPress={Save}>
-        <Text style={styles.buttonText}>Guardar</Text>
-      </TouchableOpacity> */}
+        data={tasks}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.projectItem}
+            onPress={() => handleTaskPress(item.name)}
+          >
+            <Text>{item.name}</Text>
+            <Text>{item.real_effort}</Text>
+            <Text>{item.estimated_effort}</Text>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => handleDeleteTask(item._id)}
+            >
+              <Text style={styles.deleteButtonText}>Eliminar</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item._id.toString()}
+      />
     </View>
   );
 }
@@ -168,14 +174,14 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
   },
   deleteButton: {
-    backgroundColor: '#ff4444',
+    backgroundColor: "#ff4444",
     padding: 8,
     borderRadius: 5,
     marginTop: 5,
   },
   deleteButtonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     fontSize: 14,
   },
 });
