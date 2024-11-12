@@ -34,20 +34,20 @@ export default function TabLayout() {
       <Tabs.Screen
         name="projects" //tad de projescts
         options={{
-          // title: "Projects",
-          // tabBarIcon: ({ color, focused }) => (
-          //   <TabBarIcon
-          //     name={focused ? "code-slash" : "code-slash-outline"}
-          //     color={color}
-          //   />
-          // ),
+          title: "Projects",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "code-slash" : "code-slash-outline"}
+              color={color}
+            />
+          ),
 
-          href: null,
-          headerShown: false,
+          // href: null,
+          // headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="explore" //tad de projescts
+        name="explore" 
         options={{
           // title: "Projects",
           // tabBarIcon: ({ color, focused }) => (
@@ -62,7 +62,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings" //tad de projescts
+        name="settings" //settings
         options={{
           title: "settings",
           tabBarIcon: ({ color, focused }) => (
@@ -104,18 +104,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="projectDetails"
+        
+        name="projectDetails"  //lista de tareas de un proyecto
         options={{
-          title: "Task",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
-            />
-          ),
+          // title: "Task",
+          // tabBarIcon: ({ color, focused }) => (
+          //   <TabBarIcon
+          //     name={focused ? "code-slash" : "code-slash-outline"}
+          //     color={color}
+          //   />
+          // ),
 
-          // href: null,
-          // headerShown: false,
+          href: null,
+          headerShown: false,
           //tabBarStyle: { display: "none" },
         }}
       />
