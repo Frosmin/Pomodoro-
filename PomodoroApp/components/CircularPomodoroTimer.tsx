@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Text,
   ImageBackground,
-  TextInput
+  TextInput,
+  ScrollView
 } from "react-native";
 import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
@@ -18,6 +19,9 @@ import { Task } from "@/db/models/Task";
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { FlatList } from "react-native-gesture-handler";
 
 interface NewTask {
   name: string;
@@ -59,7 +63,7 @@ const CircularPomodoroTimer = () => {
         estimated_effort: 1,
         list_id: getMainListID(),
       });
-      setNewTask({ name: "", estimated_effort: 1 });
+      setNewTask({ name: "", estimated_effort: 1});
       setRender(!render);
     }
   };
@@ -69,6 +73,9 @@ const CircularPomodoroTimer = () => {
     setRender(!render);
     deleteTask(taskId);
   };
+
+  
+
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -100,6 +107,9 @@ const CircularPomodoroTimer = () => {
       setTasks(getTasksByList(getMainListID()));
     }
   }, [render]); // Watch for changes in user.tasks
+
+  
+  
 
   const toggle = () => {
     setIsActive(!isActive);
@@ -189,7 +199,7 @@ const CircularPomodoroTimer = () => {
           <TouchableOpacity style={styles.button} onPress={toggle}>
             <Text style={styles.textButton}>
               {" "}
-              {isActive ? " Pause" : "   Start"}{" "}
+              {isActive ? " Pause" : " Start"}{" "}
             </Text>
           </TouchableOpacity>
 
@@ -199,19 +209,25 @@ const CircularPomodoroTimer = () => {
         </View>
         {/* vista de tareas */}
         <View style={styles.taskCon}>
+          <ScrollView style={styles.taskScroll}>
             {tasks.length > 0 && tasks.map((task) => (
-              <View key={task._id.toString()} style={[styles.taskContainer,state.activeTask === task._id.toString() ? styles.active_task : null]} onStartShouldSetResponder={() => {selectActiveTask(task._id)}}>
-                <Text>{task.name}</Text>
-                <View style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", gap: 10 }}>
-                  <Text>
-                      {task.real_effort} / {task.estimated_effort}
-                    </Text>
+                <View key={task._id.toString()} style={[styles.taskContainer,state.activeTask === task._id.toString() ? styles.active_task : null]} onStartShouldSetResponder={(event) => {selectActiveTask(task._id);return true;}}>
                   <TouchableOpacity onPress={() => handleDeleteTask(task._id)}>
-                  <Ionicons name="trash" size={16} color="black" />
+                    <MaterialCommunityIcons name={"checkbox-marked-circle-outline"}  size={24} color="black" />
                   </TouchableOpacity>
-                  </View>      
-              </View>
+                
+                  <Text>{task.name}</Text>
+                  <View style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", gap: 10 }}>
+                    <Text>
+                        {task.real_effort} / {task.estimated_effort}
+                      </Text>
+                    <TouchableOpacity onPress={() => handleDeleteTask(task._id)}>
+                      <Ionicons name="trash" size={16} color="black" />
+                    </TouchableOpacity>
+                    </View>      
+                </View>
               ))}
+              </ScrollView>
               <View style={styles.addBtnContainer}>
                 <TextInput
                   placeholder="Nueva Tarea"
@@ -219,7 +235,7 @@ const CircularPomodoroTimer = () => {
                   onChangeText={(text) => setNewTask({ name: text, estimated_effort: 1 })}
                 />
                 <TouchableOpacity style={styles.addBtn}  onPress={handleAddTask}>
-                  <Text>+</Text>
+                  <MaterialIcons name="add-task" size={24} color="black" />
                 </TouchableOpacity>
               </View>
         </View>
@@ -258,7 +274,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#ef6548",
     marginHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 5,
+    marginBottom: 5,
     flex: 1,
     margin: 10,
     color: "red",
@@ -292,7 +309,8 @@ const styles = StyleSheet.create({
     //backgroundColor: '#ef6548',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 8,
+    borderRadius: 5,
+    marginBottom: 5,
     opacity: 0.8,
   },
   active_status: {
@@ -312,8 +330,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   taskCon: {
-    display: "flex",
+    height: 200, // Ajusta esta altura según lo necesario
     width: "60%",
+    //backgroundColor: "white",
+    paddingTop: 20,
+  },
+  list: {
+    flexGrow: 0,
+  },
+  taskScroll: {
+    height: 200, // Limitar el tamaño del área de scroll
   },
   active_task:{
     backgroundColor: "#c53f27",
