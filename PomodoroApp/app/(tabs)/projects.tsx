@@ -6,26 +6,38 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
 import util_styles from "@/styles/utils";
+import { useGlobalContext } from "@/context/AppContext";
 
 export default function TabTwoScreen() {
   const navigation = useNavigation();
   const [projects, setProjects] = useState<string[]>([]);
   const [newProject, setNewProject] = useState("");
+  const { user, controllers: { ProjectController: { addProject, getDefaultProjectId, getProjects } } } = useGlobalContext();
 
-  const addProject = () => {
-    if (newProject.trim()) {
-      setProjects([...projects, newProject.trim()]);
-      setNewProject("");
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const projects = await getProjects();
+      setProjects(projects.map(project => project.name));
+    };
+    fetchProjects();
+  }, []);
+
+  const handleAddProject = async () => {
+    if (newProject.trim() !== "") {
+      console.log("Añadiendo Proyecto");
+      const result = await addProject(newProject.trim());
+      if (result.status === "success") {
+        setProjects([...projects, newProject.trim()]);
+        setNewProject("");
+      } else {
+        console.error(result.message);
+      }
     }
   };
-
-  const Save = () => {
-    console.log("Proyectos guardados:", projects);
-  }
 
   const handleProjectPress = (projectName: string) => {
     router.push({
@@ -44,7 +56,7 @@ export default function TabTwoScreen() {
           onChangeText={setNewProject}
           placeholder="Nombre del proyecto"
         />
-        <TouchableOpacity style={styles.button} onPress={addProject}>
+        <TouchableOpacity style={styles.button} onPress={handleAddProject}>
           <Text style={styles.buttonText}>Añadir Proyecto</Text>
         </TouchableOpacity>
       </View>

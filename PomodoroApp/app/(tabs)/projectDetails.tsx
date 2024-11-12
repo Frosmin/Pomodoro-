@@ -53,16 +53,16 @@ export default function ProjectDetails() {
     });
   };
 
-  const Save = () => {
-    console.log("Proyectos guardados:", tasks);
-    tasks.forEach(task => {
-      addTask({
-        name: task.name,
-        estimated_effort: task.estimated_effort,
-        list_id: getMainListID()
-      });
-    });
-  };
+  // const Save = () => {
+  //   console.log("Proyectos guardados:", tasks);
+  //   tasks.forEach(task => {
+  //     addTask({
+  //       name: task.name,
+  //       estimated_effort: task.estimated_effort,
+  //       list_id: getMainListID()
+  //     });
+  //   });
+  // };
 
   return (
     <View style={styles.container}>

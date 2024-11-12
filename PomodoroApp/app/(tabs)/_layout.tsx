@@ -121,7 +121,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="taskDetails"
+        name="taskDetails"  //detalles de una tarea o edicion de tarea
         options={{
           href: null,
           headerShown: false,
