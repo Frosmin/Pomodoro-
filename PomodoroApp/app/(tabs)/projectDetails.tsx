@@ -97,23 +97,25 @@ export default function ProjectDetails() {
       </View>
 
       <FlatList
-        data={tasks}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.projectItem}
-            onPress={() => handleTaskPress(item.name)}
-          >
-            <Text>{item.name}</Text>
-            <Text>{item.real_effort}</Text>
-            <Text>{item.estimated_effort}</Text>
-            <Button
-              title="Eliminar"
-              onPress={() => handleDeleteTask(item._id)}
-            />
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item._id.toString()}
-      />
+  data={tasks}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      style={styles.projectItem}
+      onPress={() => handleTaskPress(item.name)}
+    >
+      <Text>{item.name}</Text>
+      <Text>{item.real_effort}</Text>
+      <Text>{item.estimated_effort}</Text>
+      <TouchableOpacity 
+        style={styles.deleteButton} 
+        onPress={() => handleDeleteTask(item._id)}
+      >
+        <Text style={styles.deleteButtonText}>Eliminar</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  )}
+  keyExtractor={(item) => item._id.toString()}
+/>
       {/* <TouchableOpacity style={styles.button} onPress={Save}>
         <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity> */}
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   button: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#ef6548",
     padding: 10,
     borderRadius: 5,
     justifyContent: "center",
@@ -164,5 +166,16 @@ const styles = StyleSheet.create({
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+  },
+  deleteButton: {
+    backgroundColor: '#ff4444',
+    padding: 8,
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  deleteButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 14,
   },
 });
