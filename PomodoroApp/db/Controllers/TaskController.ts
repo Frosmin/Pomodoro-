@@ -48,6 +48,17 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         );
     };
 
+    const getTasksByProject = (project_id: Realm.BSON.ObjectID) => {
+      if (!user) {
+        console.log("Error retrieving tasks");
+        return [];
+      }
+  
+      return Object.values(user.tasks).filter(
+        (task) => task.project_id.toString() === project_id.toString()
+      );
+    };
+
     const updateTask = (taskId: Realm.BSON.ObjectID, updatedTask: { name: string; estimated_effort: number}) => {
         if (!realm || !user) {
           console.log("Error updating task");
@@ -98,6 +109,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         deleteTask,
         updateTask,
         incrementEffort,
+        getTasksByProject,
     };
 
 

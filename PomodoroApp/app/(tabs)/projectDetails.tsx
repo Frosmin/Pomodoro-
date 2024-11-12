@@ -16,20 +16,39 @@ export default function ProjectDetails() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState<NewTask>({ name: "", estimated_effort: 1 });
   const [render, setRender] = useState<boolean>(false);
-  const { user, controllers: { TaskController: { getTasksByList, deleteTask, addTask }, ListController: { getMainListID } } } = useGlobalContext();
+  const { user, controllers: { TaskController: { getTasksByList, deleteTask, addTask,getTasksByProject}, ListController: { getMainListID } } } = useGlobalContext();
 
   const handleAddTask = () => {
     if (newTask.name.trim() !== "") {
       console.log("Añadiendo Tarea");
-      addTask({
-        name: newTask.name,
-        estimated_effort: 1,
-        list_id: getMainListID(),
-      });
-      setNewTask({ name: "", estimated_effort: 1 });
-      setRender(!render);
+      if (user) {
+        const project_id = user.projects.find(project => project.name === projectName)?._id;
+        addTask({
+          name: newTask.name,
+          estimated_effort: 1,
+          list_id: getMainListID(),
+          project_id: project_id,
+        });
+        setNewTask({ name: "", estimated_effort: 1 });
+        setRender(!render);
+      } else {
+        console.error("User is null");
+      }
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      const project = user.projects.find(project => project.name === projectName);
+      if (project) {
+        const project_id = project._id;
+        setTasks(getTasksByProject(project_id));
+      } else {
+        console.error("Project not found");
+      }
+    }
+  }, [render, user, projectName]);
+
 
   const handleDeleteTask = (taskId: Realm.BSON.ObjectID) => {
     console.log(taskId.toString(), "Eliminando Tarea");
@@ -39,11 +58,7 @@ export default function ProjectDetails() {
 
   const getTasks = useCallback(() => {}, [user?.tasks, tasks]);
 
-  useEffect(() => {
-    if ((user?.tasks, tasks)) {
-      setTasks(getTasksByList(getMainListID()));
-    }
-  }, [render]); 
+  
 
   const handleTaskPress = (Taskname: string) => {
     console.log("Tarea seleccionada:", Taskname);

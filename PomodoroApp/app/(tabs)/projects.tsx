@@ -26,7 +26,7 @@ export default function TabTwoScreen() {
     fetchProjects();
   }, []);
 
-  const handleAddProject = async () => {
+  const handleAddProject = async () => {  //al ser pulsado el boton de añadir proyecto añade un nuevo proyecto a la DB
     if (newProject.trim() !== "") {
       console.log("Añadiendo Proyecto");
       const result = await addProject(newProject.trim());

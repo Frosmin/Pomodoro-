@@ -41,6 +41,8 @@ const createProjectController = (user: User | null, realm: Realm | null) => {
         }
     };
 
+    
+
     return { getDefaultProjectId, addProject , getProjects};
 };
 
