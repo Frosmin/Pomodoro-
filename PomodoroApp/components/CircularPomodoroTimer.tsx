@@ -12,21 +12,27 @@ import {
 } from "react-native";
 import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
-import Button1 from "./UI/Button1";
 import { PomodoroState } from "@/context/reducer";
 import { Task } from "@/db/models/Task";
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { FlatList } from "react-native-gesture-handler";
 
 interface NewTask {
   name: string;
   estimated_effort: number;
 }
+//
+interface Task {
+  _id: Realm.BSON.ObjectID;
+  name: string;
+  estimated_effort: number;
+  real_effort: number;
+  completed?: boolean; // Nueva propiedad
+}
+//
 
 const CircularPomodoroTimer = () => {
 
@@ -73,6 +79,15 @@ const CircularPomodoroTimer = () => {
     setRender(!render);
     deleteTask(taskId);
   };
+  //
+  const handleToggleTaskCompletion = (taskId: Realm.BSON.ObjectID) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task._id.equals(taskId) ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+  //
 
   
 
@@ -199,7 +214,7 @@ const CircularPomodoroTimer = () => {
           <TouchableOpacity style={styles.button} onPress={toggle}>
             <Text style={styles.textButton}>
               {" "}
-              {isActive ? " Pause" : " Start"}{" "}
+              {isActive ? " Pause" : "  Start"}{" "}
             </Text>
           </TouchableOpacity>
 
@@ -212,11 +227,11 @@ const CircularPomodoroTimer = () => {
           <ScrollView style={styles.taskScroll}>
             {tasks.length > 0 && tasks.map((task) => (
                 <View key={task._id.toString()} style={[styles.taskContainer,state.activeTask === task._id.toString() ? styles.active_task : null]} onStartShouldSetResponder={(event) => {selectActiveTask(task._id);return true;}}>
-                  <TouchableOpacity onPress={() => handleDeleteTask(task._id)}>
-                    <MaterialCommunityIcons name={"checkbox-marked-circle-outline"}  size={24} color="black" />
+                  <TouchableOpacity onPress={() => handleToggleTaskCompletion(task._id)}>
+                    <MaterialCommunityIcons name={task.completed ? "checkbox-marked-circle-outline" : "checkbox-blank-circle-outline"}  size={24} color="black" />
                   </TouchableOpacity>
                 
-                  <Text>{task.name}</Text>
+                  <Text style={task.completed ? { textDecorationLine: 'line-through' } : {}}>{task.name}</Text>
                   <View style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", gap: 10 }}>
                     <Text>
                         {task.real_effort} / {task.estimated_effort}
