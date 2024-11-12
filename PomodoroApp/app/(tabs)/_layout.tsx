@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore" 
+        name="explore"
         options={{
           // title: "Projects",
           // tabBarIcon: ({ color, focused }) => (
@@ -59,6 +59,19 @@ export default function TabLayout() {
 
           href: null,
           headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "home" : "home-outline"}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -76,18 +89,7 @@ export default function TabLayout() {
           // headerShown: false,
         }}
       />
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
+
       <Tabs.Screen
         name="tareas" //nombre unico
         options={{
@@ -104,8 +106,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        
-        name="projectDetails"  //lista de tareas de un proyecto
+        name="projectDetails" //lista de tareas de un proyecto
         options={{
           // title: "Task",
           // tabBarIcon: ({ color, focused }) => (
@@ -121,7 +122,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="taskDetails"  //detalles de una tarea o edicion de tarea
+        name="taskDetails" //detalles de una tarea o edicion de tarea
         options={{
           href: null,
           headerShown: false,
