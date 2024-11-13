@@ -13,19 +13,20 @@ import {
 import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
 import { PomodoroState } from "@/context/reducer";
-import { Task } from "@/db/models/Task";
+import { Task} from "@/db/models/Task";
 //const icon = require('../../assets/cropped-pomodoro-solo.png');
 //const icon = require('../../assets/images/cropped-pomodoro-solo.png');
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useObject } from "@realm/react";
 
 interface NewTask {
   name: string;
   estimated_effort: number;
 }
 //
-interface Task {
+interface TaskData {
   _id: Realm.BSON.ObjectID;
   name: string;
   estimated_effort: number;
@@ -36,7 +37,7 @@ interface Task {
 
 const CircularPomodoroTimer = () => {
 
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<TaskData[]>([]);
   const [newTask, setNewTask] = useState<NewTask>({
     name: "",
     estimated_effort: 1,
@@ -48,13 +49,14 @@ const CircularPomodoroTimer = () => {
     state,
     dispatch,
     user,
-    render,
-    setRender,
     controllers: {
       TaskController: { getTasksByList, deleteTask, addTask,incrementEffort },
       ListController: { getMainListID },
     },
   } = useGlobalContext();
+
+
+
   const [seconds, setSeconds] = useState(state.timer);
   //const imagenBackg = {source: require("@/assets/images/cropped-pomodoro-solo.png")};
   const imagenBackg = {
@@ -64,19 +66,18 @@ const CircularPomodoroTimer = () => {
   const handleAddTask = () => {
     if (newTask.name.trim() !== "") {
       console.log("Añadiendo Tarea");
-      addTask({
+      addTask(
+        {
         name: newTask.name,
         estimated_effort: 1,
         list_id: getMainListID(),
       });
       setNewTask({ name: "", estimated_effort: 1});
-      setRender(!render);
     }
   };
 
   const handleDeleteTask = (taskId: Realm.BSON.ObjectID) => {
     console.log(taskId.toString(), "Eliminando Tarea");
-    setRender(!render);
     deleteTask(taskId);
   };
   //
@@ -120,8 +121,10 @@ const CircularPomodoroTimer = () => {
     if ((user?.tasks, tasks)) {
       // Only update tasks if there's a change in user.tasks
       setTasks(getTasksByList(getMainListID()));
+      console.log("rendering tasks");
+      
     }
-  }, [render]); // Watch for changes in user.tasks
+  }, [user]); // Watch for changes in user.tasks
 
   
   
