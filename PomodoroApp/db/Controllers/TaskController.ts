@@ -1,6 +1,6 @@
 import { User } from "../models/User";
 import Realm from "realm";
-import { Task } from "../models/Task";
+import { Task ,TaskStatus} from "../models/Task";
 import { createProjectController} from "./ProjectController";
 import { useObject } from "@realm/react";
 
@@ -90,6 +90,20 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         });
       }
 
+      const changeTaskStatus = (taskId: string) => {
+        if (!realm || !user) {
+          console.log("Error updating task");
+          return;
+        }
+        const taskId_realm = new Realm.BSON.ObjectId(taskId);
+        realm.write(() => {
+          const task = user.tasks[taskId_realm.toString()];
+          if (task.status) {
+            task.status = task.status === TaskStatus.NOT_STARTED ? TaskStatus.FINISHED : TaskStatus.NOT_STARTED;
+          }
+        });
+      }
+
 
 /**
  * Elimina una tarea del diccionario de tareas del usuario.
@@ -113,6 +127,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         updateTask,
         incrementEffort,
         getTasksByProject,
+        changeTaskStatus,
     };
 
 
