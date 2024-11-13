@@ -2,6 +2,7 @@ import { User } from "../models/User";
 import Realm from "realm";
 import { Task } from "../models/Task";
 import { createProjectController} from "./ProjectController";
+import { useObject } from "@realm/react";
 
 const createTaskController = (user: User | null, realm: Realm | null) => {
     const addTask = (body: {
@@ -22,9 +23,14 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
 
         project_id = project_id || getDefaultProjectId();
 
+        // const realUser = useObject(User, user._id);
+        
+        if (!realUser) {
+            return { status: "error", message: "User not found" };
+        }
         realm.write(() => {
             const taskId = new Realm.BSON.ObjectId();
-            user.tasks[taskId.toString()] = Task.generate(
+            realUser.tasks[taskId.toString()] = Task.generate(
                 taskId,
                 name,
                 estimated_effort,
