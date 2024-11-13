@@ -20,18 +20,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useObject } from "@realm/react";
+import { getPomodoroDuration } from "@/utils/pomodoroCalculations";
 
 interface NewTask {
   name: string;
   estimated_effort: number;
-}
-//
-interface TaskData {
-  _id: Realm.BSON.ObjectID;
-  name: string;
-  estimated_effort: number;
-  real_effort: number;
-  completed?: boolean; // Nueva propiedad
 }
 //
 
@@ -87,6 +80,33 @@ const CircularPomodoroTimer = () => {
   //
 
   
+  const toggle = () => {
+    setIsActive(!isActive);
+  };
+
+  const reset = () => {
+    setSeconds(state.timer);
+    setIsActive(false);
+  };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
+
+  //--------------------------
+  const incrementPomodoro = () => {
+    incrementEffort(state.activeTask);
+  }; 
+  
+  //--------------------------
+
+  const selectActiveTask = (task_id: Realm.BSON.ObjectID) => {
+    console.log("selecting", task_id.toString());
+    
+    dispatch({ type: ActionKind.SET_CURRENT, payload: task_id.toString() });
+  };
 
 
   useEffect(() => {
@@ -123,35 +143,11 @@ const CircularPomodoroTimer = () => {
   }, [user]); // Watch for changes in user.tasks
 
   
+  useEffect(() => {
+    getPomodoroDuration(tasks, state);
+  },[tasks])
+
   
-
-  const toggle = () => {
-    setIsActive(!isActive);
-  };
-
-  const reset = () => {
-    setSeconds(state.timer);
-    setIsActive(false);
-  };
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-  };
-
-  //--------------------------
-  const incrementPomodoro = () => {
-    incrementEffort(state.activeTask);
-  }; 
-  
-  //--------------------------
-
-  const selectActiveTask = (task_id: Realm.BSON.ObjectID) => {
-    console.log("selecting", task_id.toString());
-    
-    dispatch({ type: ActionKind.SET_CURRENT, payload: task_id.toString() });
-  };
 
   const radius = 120; // Nuevo radio
   const circumference = 2 * Math.PI * radius;
