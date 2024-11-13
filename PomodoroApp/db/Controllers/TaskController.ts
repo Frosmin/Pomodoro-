@@ -5,7 +5,8 @@ import { createProjectController} from "./ProjectController";
 import { useObject } from "@realm/react";
 
 const createTaskController = (user: User | null, realm: Realm | null) => {
-    const addTask = (body: {
+    
+  const addTask = (body: {
         name: string;
         estimated_effort: number;
         list_id: Realm.BSON.ObjectID | undefined;
@@ -51,6 +52,17 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         return Object.values(user.tasks).filter(
             (task) => task.list_id.toString() === list_id.toString()
         );
+    };
+
+    const getTasksByProject = (project_id: Realm.BSON.ObjectID) => {
+      if (!user) {
+        console.log("Error retrieving tasks");
+        return [];
+      }
+  
+      return Object.values(user.tasks).filter(
+        (task) => task.project_id.toString() === project_id.toString()
+      );
     };
 
     const updateTask = (taskId: Realm.BSON.ObjectID, updatedTask: { name: string; estimated_effort: number}) => {
@@ -103,6 +115,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         deleteTask,
         updateTask,
         incrementEffort,
+        getTasksByProject,
     };
 
 
