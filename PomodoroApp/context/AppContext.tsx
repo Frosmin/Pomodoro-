@@ -59,6 +59,18 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
   }), [user, realm]);
 
   const newUser = useQuery(User)[0];
+  const users = realm.objects("User");
+
+  const onUserChange = () => {
+    console.log("Change Detected");
+    setUser(newUser);
+  };
+
+  try{
+    users.addListener(onUserChange);
+  }catch(error){
+    console.error(error);
+  }
 
   useEffect(() => {
     // if(realm){
@@ -75,7 +87,6 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
         controllers.UserController.addUser("Mario","1234")
       }else{
         console.log("setting User");
-        
         setUser(newUser)
       }  
     }

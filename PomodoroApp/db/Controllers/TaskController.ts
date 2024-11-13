@@ -24,14 +24,11 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
 
         project_id = project_id || getDefaultProjectId();
 
-        // const realUser = useObject(User, user._id);
         
-        if (!realUser) {
-            return { status: "error", message: "User not found" };
-        }
+      
         realm.write(() => {
             const taskId = new Realm.BSON.ObjectId();
-            realUser.tasks[taskId.toString()] = Task.generate(
+            user.tasks[taskId.toString()] = Task.generate(
                 taskId,
                 name,
                 estimated_effort,
