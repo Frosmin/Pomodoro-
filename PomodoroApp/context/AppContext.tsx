@@ -8,6 +8,7 @@ import {  createTaskController } from "../db/Controllers/TaskController";
 import {  createUserController } from "../db/Controllers/UserController"; // Example
 import {  createProjectController } from "../db/Controllers/ProjectController"; // Example
 import {createListController} from "../db/Controllers/ListController";
+import { createPomodoroController } from "@/db/Controllers/PomodoroController";
 interface AppContextType {
         state: AppState,
         dispatch : React.Dispatch<Action>
@@ -20,6 +21,7 @@ interface AppContextType {
           UserController:  ReturnType<typeof createUserController>
           ProjectController: ReturnType<typeof createProjectController>;
           ListController: ReturnType<typeof createListController>;
+          PomodoroController: ReturnType<typeof createPomodoroController>;
       };
   }
 
@@ -35,6 +37,7 @@ const initialState : AppState = {
     status: PomodoroState.FOCUS,
     nIntervals: 1,
     activeTask: "",
+    currentPomodoro: "",
     params: {
         focusTime: 25,
         breakTime: 5,
@@ -55,7 +58,8 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
       TaskController: createTaskController(user, realm),
       UserController: createUserController(realm),
       ProjectController: createProjectController(user, realm),
-      ListController: createListController(user, realm)
+      ListController: createListController(user, realm),
+      PomodoroController: createPomodoroController(user, realm)
   }), [user, realm]);
 
   const newUser = useQuery(User)[0];

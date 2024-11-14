@@ -3,6 +3,7 @@
 enum ActionKind {
     SWITCH = "SWITCH",
     SET_CURRENT = "SET_CURRENT",
+    START_POMODORO = "START_POMODORO",
 }
 
 interface Action
@@ -28,7 +29,8 @@ interface AppState{
     nIntervals: number,
     status: PomodoroState,
     params: Params,
-    activeTask: string
+    activeTask: string,
+    currentPomodoro: string
 }
 
 const reducer = (state : AppState,action: Action
@@ -60,7 +62,8 @@ const reducer = (state : AppState,action: Action
             }
         case ActionKind.SET_CURRENT:
             return {...state,activeTask: action.payload};
-        break;
+        case ActionKind.START_POMODORO:
+            return {...state, currentPomodoro: action.payload};
     }
 }
 
