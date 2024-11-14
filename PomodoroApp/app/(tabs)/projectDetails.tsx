@@ -113,8 +113,10 @@ export default function ProjectDetails() {
             onPress={() => handleTaskPress(item.name)}
           >
             <Text>{item.name}</Text>
-            <Text>{item.real_effort}</Text>
-            <Text>{item.estimated_effort}</Text>
+            <Text>Iniciado: {item.status}</Text>
+            <Text>Pomodoros estimados: {item.estimated_effort}</Text>
+            <Text>Pomodoros realizados: {item.real_effort}</Text>
+            {/* <Text>Fecha de inicio: {item.started_at}</Text> */}
             <TouchableOpacity
               style={styles.deleteButton}
               onPress={() => handleDeleteTask(item._id)}
