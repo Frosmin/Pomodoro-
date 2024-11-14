@@ -49,4 +49,4 @@ class Pomodoro extends Realm.Object {
 
 }
 
-export {Pomodoro}
+export {Pomodoro,PomodoroStatus}

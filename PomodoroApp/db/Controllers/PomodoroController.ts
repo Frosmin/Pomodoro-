@@ -1,10 +1,10 @@
 import Realm from "realm";
 import {User} from "../models/User";
-import { Pomodoro } from "../models/Pomodoro";
+import { Pomodoro ,PomodoroStatus} from "../models/Pomodoro";
 import { PomodoroState } from "@/context/reducer";
 
 
-export const createPomodoroController = (user: User | null, realm: Realm | null) => {
+const createPomodoroController = (user: User | null, realm: Realm | null) => {
     const addPomodoro = (task_id: Realm.BSON.ObjectID) => {
         if (!realm || !user) {
             return { status: "error", message: "Missing user or realm" };
@@ -26,7 +26,24 @@ export const createPomodoroController = (user: User | null, realm: Realm | null)
         }
     };
 
-    const changePomodoroStatus = (pomodoro_id: string, status: PomodoroState) => {}
+    const changePomodoroStatus = (pomodoro_id: string, status: PomodoroStatus) => {
+        if (!realm || !user) {
+            console.log("Error updating pomodoro");
+            return {message:"Error updating pomodoro",type:"error"};
+        }
+        const pomodoro_id_realm = new Realm.BSON.ObjectId(pomodoro_id);
+        realm.write(() => {
+            const pomodoro = user.pomodoros[pomodoro_id_realm.toString()];
+            if (pomodoro.status) {
+                pomodoro.status = status;
+            }
+        });
+        return {message:"Pomodoro updated successfully",type:"success"}
+    }
 
-    return { addPomodoro };
+    
+
+    return { addPomodoro, changePomodoroStatus };
 };
+
+export {createPomodoroController};
