@@ -18,7 +18,7 @@ class Pomodoro extends Realm.Object {
   internal_distraction!: number;
   external_distraction!: number;
 
-  static generate( task_id: Realm.BSON.ObjectID) {
+  static generate( task_id?: Realm.BSON.ObjectID) {
     task_id = task_id ? task_id : new Realm.BSON.ObjectID(0);
     return {
       _id: new Realm.BSON.ObjectId(),
