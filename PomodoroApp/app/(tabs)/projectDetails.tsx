@@ -115,6 +115,8 @@ export default function ProjectDetails() {
             <Text>{item.name}</Text>
             <Text>Iniciado: {item.status}</Text>
             <Text>Pomodoros estimados: {item.estimated_effort}</Text>
+            <Text>Pomodoros realizados: {item.real_effort}</Text>
+            {/* <Text>Fecha de inicio: {item.started_at}</Text> */}
             <TouchableOpacity
               style={styles.deleteButton}
               onPress={() => handleDeleteTask(item._id)}

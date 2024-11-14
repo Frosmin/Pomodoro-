@@ -42,7 +42,7 @@ export default function TaskDetails() {
       if (selectedTask) {
         setEditedTask({
           name: selectedTask.name,
-          estimated_effort: selectedTask.estimated_effort,
+          estimated_effort: selectedTask.estimated_effort, 
         });
       }
     }
