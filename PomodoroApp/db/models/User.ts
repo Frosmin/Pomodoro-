@@ -19,7 +19,7 @@ class User extends Realm.Object {
     plan?: Realm.BSON.ObjectID;
     projects!: Realm.List<Project>;
     tasks!: Realm.Dictionary<Task>;
-    pomodoros!: Realm.List<Pomodoro>;
+    pomodoros!: Realm.Dictionary<Pomodoro>;
     createdAt!: Date;
     static generate(user_id: Realm.BSON.ObjectID,username: string, password: string,lists: List[],project: Project) {
         return {
@@ -31,7 +31,7 @@ class User extends Realm.Object {
             projects: [project],
             tasks : {},
             plan: undefined,
-            pomodoros: [],
+            pomodoros: {},
             createdAt: new Date(),
         };
     }
@@ -47,7 +47,7 @@ class User extends Realm.Object {
           lists: { type: 'list',objectType:'List' },
           projects: {type: 'list', objectType:'Project'},
           tasks: {type : 'dictionary', objectType: 'Task'},
-          pomodoros: {type: 'list', objectType: 'Pomodoro'},
+          pomodoros: {type: 'dictionary', objectType: 'Pomodoro'},
           plan: { type: "objectId", optional: true},
           createdAt: 'date',
         },

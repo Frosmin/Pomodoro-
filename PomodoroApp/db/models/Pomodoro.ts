@@ -2,7 +2,6 @@ import Realm, { ObjectSchema } from "realm";
 
 
 enum PomodoroStatus {
-    NOT_STARTED = "NOT_STARTED",
     IN_PROGRESS = "IN_PROGRESS",
     PAUSED = "PAUSED",
     FINISHED = "FINISHED",
@@ -18,12 +17,12 @@ class Pomodoro extends Realm.Object {
   internal_distraction!: number;
   external_distraction!: number;
 
-  static generate( task_id?: Realm.BSON.ObjectID) {
+  static generate( id: Realm.BSON.ObjectID,task_id?: Realm.BSON.ObjectID) {
     task_id = task_id ? task_id : new Realm.BSON.ObjectID(0);
     return {
-      _id: new Realm.BSON.ObjectId(),
+      _id: id,
       task_id,
-      status: PomodoroStatus.NOT_STARTED,
+      status: PomodoroStatus.IN_PROGRESS,
       started_at: new Date(),
       internal_distraction: 0,
       external_distraction: 0,

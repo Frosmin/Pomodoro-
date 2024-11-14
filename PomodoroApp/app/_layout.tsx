@@ -40,7 +40,7 @@ export default function RootLayout() {
   }
 
   return (
-    <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={5}
+    <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={6}
                             // sync={{
                             //   flexible: true,
                             //   initialSubscriptions: {
