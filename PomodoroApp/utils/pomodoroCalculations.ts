@@ -1,17 +1,29 @@
 import { Task } from "@/db/models/Task";
-
-interface PomodoroSettings {
-    focusTime: number;
-    breakTime: number;
-    longBreakTime: number;
-    intervals: number;
-}
+import { AppState,PomodoroState } from "@/context/reducer";
 
 
-const getPomodoroDuration = (tasks : Task[], pomodoro_settings : PomodoroSettings = { focusTime: 25, breakTime: 5, longBreakTime: 15, intervals: 4 }) => {
+const getPomodoroDuration = (tasks : Task[], pomodoro_state : AppState) => {
     const totalEffort = tasks.reduce((acc, task) => acc + task.estimated_effort - task.real_effort, 0);
-    const pomodoroDuration = pomodoro_settings.focusTime * pomodoro_settings.intervals + pomodoro_settings.breakTime * (pomodoro_settings.intervals - 1) + pomodoro_settings.longBreakTime;
-    Math.ceil(totalEffort / pomodoroDuration);
+    const {params, nIntervals, status} = pomodoro_state;
+
+    let intervalsLeft = nIntervals + totalEffort;
+    if(status === PomodoroState.FOCUS) {
+        intervalsLeft--;
+    }
+    let sessionsLeft = Math.floor((intervalsLeft) / params.intervals);
+    if(intervalsLeft % params.intervals !== 0) {
+        sessionsLeft++;
+    }
+    const longsBreaksLeft = sessionsLeft - 1;
+    const shortBreaksLeft = intervalsLeft - longsBreaksLeft - 1;
+    const durationLeftInSeconds = totalEffort * params.focusTime + shortBreaksLeft * params.breakTime + longsBreaksLeft * params.longBreakTime;
+    
+    const pomodoroEndTime = new Date(Date.now() - (4 * 60 * 60 * 1000) + durationLeftInSeconds * 1000 ).toISOString().split('T')[1].split('.')[0];
+    
+    return {
+        pomodorosLeft : totalEffort,
+        pomodoroEndTime}
+
 }
 
 export {getPomodoroDuration}
