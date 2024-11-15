@@ -94,10 +94,11 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
   };
 
   const incrementEffort = (taskId: string) => {
-    if (!realm || !user) {
+    if (!realm || !user || !taskId) {
       console.log("Error updating task");
       return;
     }
+
     const taskId_realm = new Realm.BSON.ObjectId(taskId);
     realm.write(() => {
       const task = user.tasks[taskId_realm.toString()];
