@@ -90,6 +90,21 @@ const taskList_styles = StyleSheet.create({
         justifyContent: 'space-between',
       },
 
+      //estimate
+
+      estimate_container: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        backgroundColor: colors.primary_500,
+        marginBottom: 10,
+        borderRadius: 10,
+      },
+
 })
 
 export default taskList_styles
