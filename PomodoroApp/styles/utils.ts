@@ -59,14 +59,13 @@ const util_styles = StyleSheet.create({
 
     //displays
 
-    d_flex:{
-        display: "flex",
-    },
     flex_column: {
         flexDirection: "column",
     },
     flex_row: {
+        display: "flex",
         flexDirection: "row",
+        alignItems: "flex-start",
     },
 
     //spacing
@@ -85,6 +84,66 @@ const util_styles = StyleSheet.create({
     },
     m_5: {
         margin: 25,
+    },
+    mb_1: {
+        marginBottom: 5,
+    },
+    mb_2: {
+        marginBottom: 10,
+    },
+    mb_3: {
+        marginBottom: 15,
+    },
+    mb_4: {
+        marginBottom: 20,
+    },
+    mb_5: {
+        marginBottom: 25,
+    },
+    mt_1: {
+        marginTop: 5,
+    },
+    mt_2: {
+        marginTop: 10,
+    },
+    mt_3: {
+        marginTop: 15,
+    },
+    mt_4: {
+        marginTop: 20,
+    },
+    mt_5: {
+        marginTop: 25,
+    },
+    me_1: {
+        marginEnd: 5,
+    },
+    me_2: {
+        marginEnd: 10,
+    },
+    me_3: {
+        marginEnd: 15,
+    },
+    me_4: {
+        marginEnd: 20,
+    },
+    me_5: {
+        marginEnd: 25,
+    },
+    ms_1: {
+        marginStart: 5,
+    },
+    ms_2: {
+        marginStart: 10,
+    },
+    ms_3: {
+        marginStart: 15,
+    },
+    ms_4: {
+        marginStart: 20,
+    },
+    ms_5: {
+        marginStart: 25,
     },
     g_1: {
         gap: 5,
@@ -118,6 +177,14 @@ const util_styles = StyleSheet.create({
     },
 
 
+    //others
+
+    hide: {
+      height: 0,
+      overflow: "hidden",
+      padding: 0,
+      margin: 0,
+    },
 
     title: {
         fontSize: 24,

@@ -16,11 +16,11 @@ export default function TabTwoScreen() {
   const navigation = useNavigation();
   const [projects, setProjects] = useState<string[]>([]);
   const [newProject, setNewProject] = useState("");
-  const { user, controllers: { ProjectController: { addProject, getDefaultProjectId, getProjects } } } = useGlobalContext();
+  const { user, controllers: { ProjectController: { addProject, getDefaultProjectId, getProjectList } } } = useGlobalContext();
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const projects = await getProjects();
+      const projects = await getProjectList();
       setProjects(projects.map(project => project.name));
     };
     fetchProjects();
