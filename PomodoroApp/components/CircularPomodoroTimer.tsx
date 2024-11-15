@@ -13,6 +13,7 @@ import { PomodoroState } from "@/context/reducer";
 import { PomodoroStatus } from "@/db/models/Pomodoro";
 import { DisctractionType } from "@/db/Controllers/PomodoroController";
 import Entypo from '@expo/vector-icons/Entypo';
+import util_styles from "@/styles/utils";
 
 enum TimerStatus {
   NOT_STARTED = "NOT_STARTED",
@@ -62,9 +63,12 @@ const CircularPomodoroTimer = () => {
   };
 
   const reset = () => {
-    setSeconds(state.timer);
-    setTimerStatus(TimerStatus.NOT_STARTED);
-    changePomodoroStatus(state.currentPomodoro, PomodoroStatus.CANCELED);
+    if(timerStatus === TimerStatus.IN_PROGRESS){
+      setSeconds(state.timer);
+      setTimerStatus(TimerStatus.NOT_STARTED);
+      changePomodoroStatus(state.currentPomodoro, PomodoroStatus.CANCELED);
+    }
+    
   };
 
   const formatTime = (seconds: number) => {
@@ -168,16 +172,15 @@ const CircularPomodoroTimer = () => {
             <Entypo name="emoji-neutral" size={24} color="black" />
           </TouchableOpacity>
         
-          <TouchableOpacity style={styles.button} onPress={toggle}>
-            <Text style={styles.textButton}>
-              {" "}
-              {timerStatus === TimerStatus.NOT_STARTED ? "    Iniciar" : 
-              timerStatus === TimerStatus.IN_PROGRESS ? "   Pausar" : "Reanudar"}{" "}
+          <TouchableOpacity style={[util_styles.btn,util_styles.btn_primary]} onPress={toggle}>
+            <Text style={util_styles.p}>
+              {timerStatus === TimerStatus.NOT_STARTED ? "Iniciar" : 
+              timerStatus === TimerStatus.IN_PROGRESS ? "Pausar" : "Reanudar"}
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={reset}>
-            <Text style={styles.textButton}>  Cancelar</Text>
+          <TouchableOpacity style={[util_styles.btn,util_styles.btn_outlined_primary]}  onPress={reset}>
+            <Text style={util_styles.p}> Cancelar</Text>
           </TouchableOpacity> 
 
           <TouchableOpacity onPress={() => {
@@ -217,29 +220,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "60%",
-    height: "15%",
+    display: "flex",
+    gap: 20,
+    // width: "60%",
+    // height: "15%",
   },
-  button: {
-    backgroundColor: "#ef6548",
-    marginHorizontal: 10,
-    borderRadius: 5,
-    marginBottom: 5,
-    flex: 1,
-    margin: 10,
-    color: "red",
-    alignContent: "center",
-    justifyContent: "center",
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-    opacity: 0.8,
-    shadowColor: "white",
-    elevation: 5,
-  },
-  textButton: {
-    color: "black", //texto Star Reset
-    fontSize: 15,
-  },
+  
 
   circle: {
     position: "absolute",

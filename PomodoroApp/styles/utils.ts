@@ -46,7 +46,8 @@ const util_styles = StyleSheet.create({
     //buttons
 
     btn : {
-      padding: 10,
+      paddingHorizontal:10,
+      paddingVertical: 6,
       borderRadius: 5,
     },
     btn_dark : {
@@ -54,6 +55,18 @@ const util_styles = StyleSheet.create({
     },
     btn_secondary : {
         backgroundColor: colors.neutral_100,
+    },
+    btn_primary : {
+        backgroundColor: colors.primary_300,
+    },
+
+    btn_outlined_primary: {
+        borderWidth: 1,
+        borderColor: colors.primary_300,
+    },
+
+    btn_primary_100:{
+        backgroundColor: colors.primary_100,
     },
 
 
