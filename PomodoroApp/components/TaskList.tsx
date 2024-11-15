@@ -7,6 +7,7 @@ import { Project } from '@/db/models/Project';
 import taskList_styles from "@/styles/taskList";
 import { getPomodoroDuration } from '@/utils/pomodoroCalculations';
 import TaskComponent from './TaskComponent';
+import util_styles from '@/styles/utils';
 
 interface NewTask {
     name: string;
@@ -85,7 +86,7 @@ const TaskList = () => {
                   placeholder="Nueva Tarea"
                   value={newTask.name}/>
                 <View style={taskList_styles.editTaskSection}>
-                    <Text>Pomodoros estimados</Text>
+                    <Text style={util_styles.h4}>Pomodoros estimados</Text>
 
                     <TextInput
                     //   style={taskList_styles.input}
@@ -105,15 +106,15 @@ const TaskList = () => {
                 </View> 
                 <View style={taskList_styles.editTaskSection} >
                     <View>
-                        <Text>Lista</Text>
+                        <Text style={util_styles.h4}>Lista</Text>
                             {listItems.map((item, index) => (
                             <TouchableOpacity key={index}>
-                                <Text>{item.label}</Text>
+                                <Text style={util_styles.p}>{item.label}</Text>
                             </TouchableOpacity>
                             ))}
                     </View>
                     <View>
-                        <Text>Proyecto</Text>
+                        <Text style={util_styles.h4}>Proyecto</Text>
                         {projectList.length > 0 && projectList.map((item, index) => (
                             <TouchableOpacity key={index}>
                                 <Text>{item.name}</Text>
@@ -123,10 +124,10 @@ const TaskList = () => {
                     
                 </View>
                 <View >
-                    <TouchableOpacity onPress={handleAddTask}>
-                        <Text>Añadir Tarea</Text>
+                    <TouchableOpacity onPress={handleAddTask} style={[util_styles.btn, util_styles.btn_dark]}>
+                        <Text style={[util_styles.t_white]}>Añadir Tarea</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity style={[util_styles.btn, util_styles.btn_secondary]}>
                         <Text>Cancelar</Text>
                     </TouchableOpacity>
                 </View>

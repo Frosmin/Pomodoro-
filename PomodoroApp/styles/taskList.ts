@@ -57,6 +57,7 @@ const taskList_styles = StyleSheet.create({
         backgroundColor: '#fff',
         flexDirection: 'column',
         borderRadius:10,      
+        padding: 10,
       },
       editTaskSection: {
         flexDirection: 'column',
