@@ -49,6 +49,7 @@ const util_styles = StyleSheet.create({
       paddingHorizontal:10,
       paddingVertical: 6,
       borderRadius: 5,
+      height: 40,
     },
     btn_dark : {
         backgroundColor: colors.black,
@@ -69,11 +70,26 @@ const util_styles = StyleSheet.create({
         backgroundColor: colors.primary_100,
     },
 
+    //chips
+
+    chip: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+
+        backgroundColor: colors.black,
+        borderRadius: 50,
+        height: 30,
+        width:30,
+    },
+
 
     //displays
 
     flex_column: {
         flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
     },
     flex_row: {
         display: "flex",

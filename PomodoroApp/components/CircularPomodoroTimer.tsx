@@ -10,7 +10,7 @@ import {
 import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
 import { PomodoroState } from "@/context/reducer";
-import { PomodoroStatus } from "@/db/models/Pomodoro";
+import { Pomodoro, PomodoroStatus } from "@/db/models/Pomodoro";
 import { DisctractionType } from "@/db/Controllers/PomodoroController";
 import Entypo from '@expo/vector-icons/Entypo';
 import util_styles from "@/styles/utils";
@@ -35,6 +35,7 @@ const CircularPomodoroTimer = () => {
       PomodoroController: { addPomodoro, changePomodoroStatus, scoreDistraccion },
     },
   } = useGlobalContext();
+  const [currentPomodoro,setCurrentPomodoro] = useState<Pomodoro|null>(null);
 
 
 
@@ -52,7 +53,6 @@ const CircularPomodoroTimer = () => {
       }else{
         const pomodoro_id = response.pomodoro_id;
         dispatch({ type: ActionKind.SET_POMODORO, payload: pomodoro_id.toString() });
-
       }
     }
     setTimerStatus(
@@ -109,6 +109,12 @@ const CircularPomodoroTimer = () => {
     setSeconds(state.timer);
   }, [state.timer]);
 
+  useEffect(() => {
+    if (user?.pomodoros && state.currentPomodoro) {
+      setCurrentPomodoro(user.pomodoros[state.currentPomodoro]);
+    }
+  },[user,state.currentPomodoro]);
+
   const radius = 120; // Nuevo radio
   const circumference = 2 * Math.PI * radius;
   const progress = (seconds / state.timer) * circumference;
@@ -162,15 +168,19 @@ const CircularPomodoroTimer = () => {
         {/* Contenedor de botones */}
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => {
-            if (state.currentPomodoro) {
-              scoreDistraccion(state.currentPomodoro, DisctractionType.INTERNAL);
-            } else {
-              console.warn("No active Pomodoro to record internal distraction.");
-            }
-            }}>
-            <Entypo name="emoji-neutral" size={24} color="black" />
-          </TouchableOpacity>
+          <View style={util_styles.flex_column}>
+            <Text style={[util_styles.p,{fontWeight: "bold"}]}>DI</Text>
+            <TouchableOpacity style={util_styles.chip} onPress={() => {
+              if (state.currentPomodoro) {
+                scoreDistraccion(state.currentPomodoro, DisctractionType.INTERNAL);
+              } else {
+                console.warn("No active Pomodoro to record internal distraction.");
+              }
+              }}>
+              <Text style={[util_styles.p,util_styles.t_white,{fontWeight: "bold"}]}>{currentPomodoro ? currentPomodoro.internal_distraction : 0}</Text>
+            </TouchableOpacity>
+          </View>
+          
         
           <TouchableOpacity style={[util_styles.btn,util_styles.btn_primary]} onPress={toggle}>
             <Text style={util_styles.p}>
@@ -183,15 +193,19 @@ const CircularPomodoroTimer = () => {
             <Text style={util_styles.p}> Cancelar</Text>
           </TouchableOpacity> 
 
-          <TouchableOpacity onPress={() => {
-            if (state.currentPomodoro) {
-              scoreDistraccion(state.currentPomodoro, DisctractionType.EXTERNAL);
-            } else {
-              console.warn("No active Pomodoro to record distraction.");
-            }
-            }}>
-            <Entypo name="emoji-sad" size={24} color="black" />
-          </TouchableOpacity>
+          <View style={util_styles.flex_column}>
+            <Text style={[util_styles.p,{fontWeight: "bold"}]}>DE</Text>
+            <TouchableOpacity style={util_styles.chip} onPress={() => {
+              if (state.currentPomodoro) {
+                scoreDistraccion(state.currentPomodoro, DisctractionType.EXTERNAL);
+              } else {
+                console.warn("No active Pomodoro to record distraction.");
+              }
+              }}>
+              <Text style={[util_styles.p,util_styles.t_white,{fontWeight: "bold"}]}>{currentPomodoro ? currentPomodoro.external_distraction : 0}</Text>
+            </TouchableOpacity>
+          </View>
+          
         </View>
       </View>
   );
