@@ -87,10 +87,11 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
     if(!user){    
       if(!newUser){
         console.log("creating User");
-        
+
         controllers.UserController.addUser("Mario","1234")
       }else{
         console.log("setting User");
+        console.log('Realm path:', realm.path);
         setUser(newUser)
       }  
     }

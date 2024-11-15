@@ -10,6 +10,7 @@ import {
   TextInput,
   ScrollView
 } from "react-native";
+import Realm from "realm"
 import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
 import { PomodoroState } from "@/context/reducer";
@@ -88,9 +89,18 @@ const CircularPomodoroTimer = () => {
 
   
   const toggle = () => {
-    // if(state.status === PomodoroState.FOCUS &&  ){
-    //   dispatch({ type: ActionKind.START_POMODORO });
-    // }
+    if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
+      const response = addPomodoro(state.activeTask);
+      console.log(response,"Response");
+      
+      if(response.status === "error"){
+        alert(response.message);
+      }else{
+        const pomodoro_id = response.pomodoro_id;
+        dispatch({ type: ActionKind.START_POMODORO, payload: pomodoro_id.toString() });
+
+      }
+    }
     setTimerStatus(
       timerStatus === TimerStatus.PAUSED || timerStatus === TimerStatus.NOT_STARTED
         ? TimerStatus.IN_PROGRESS
