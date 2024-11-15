@@ -15,23 +15,21 @@ const taskList_styles = StyleSheet.create({
     taskContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 10,
         paddingHorizontal: 20,
         marginBottom: 5,
         backgroundColor: '#ef6548', //color tareas
         borderRadius: 5,
       },
       taskCon: {
-        // height: 200, // Ajusta esta altura según lo necesario
-        width: "60%",
-        //backgroundColor: "white",
+        width: "70%",
         paddingTop: 20,
       },
-    //   list: {
-    //     flexGrow: 0,
-    //   },
-      taskScroll: {
-        height: 200, // Limitar el tamaño del área de scroll
+      taskInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: "70%",
+        paddingVertical: 10,
       },
       active_task:{
         backgroundColor: "#c53f27",

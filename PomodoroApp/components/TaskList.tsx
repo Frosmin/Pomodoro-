@@ -4,9 +4,8 @@ import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons'
 import {useGlobalContext} from "@/context/AppContext";
 import {Task,TaskStatus} from "@/db/models/Task";
 import taskList_styles from "@/styles/taskList";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { ActionKind } from '@/context/reducer';
 import { getPomodoroDuration } from '@/utils/pomodoroCalculations';
+import TaskComponent from './TaskComponent';
 
 
 interface NewTask {
@@ -25,7 +24,7 @@ const TaskList = () => {
         dispatch,
         user,
         controllers: {
-          TaskController: { getTasksByList, deleteTask, addTask,changeTaskStatus },
+          TaskController: { getTasksByList, deleteTask, addTask },
           ListController: { getMainListID },
         },
       } = useGlobalContext();
@@ -43,18 +42,9 @@ const TaskList = () => {
         }
       };
     
-      const handleDeleteTask = (taskId: Realm.BSON.ObjectID) => {
-        console.log(taskId.toString(), "Eliminando Tarea");
-        deleteTask(taskId);
-      };
+      
 
-  const handleToggleTaskCompletion = (taskId: Realm.BSON.ObjectID) => {
-    changeTaskStatus(taskId.toString());
-  };
-  const selectActiveTask = (task_id: Realm.BSON.ObjectID) => {
-    
-    dispatch({ type: ActionKind.SET_CURRENT, payload: task_id.toString() });
-  };
+ 
 
   useEffect(() => {
     if ((user?.tasks, tasks)) {
@@ -73,23 +63,9 @@ const TaskList = () => {
   return (
     <View style={taskList_styles.taskCon}>
             {tasks.length > 0 && tasks.map((task) => (
-                <View key={task._id.toString()} style={[taskList_styles.taskContainer,state.activeTask === task._id.toString() ? taskList_styles.active_task : null]} onStartShouldSetResponder={(event) => {selectActiveTask(task._id);return true;}}>
-                  <TouchableOpacity onPress={() => handleToggleTaskCompletion(task._id)}>
-                    <MaterialCommunityIcons name={task.status=== TaskStatus.FINISHED ? "checkbox-marked-circle-outline" : "checkbox-blank-circle-outline"}  size={24} color="black" />
-                  </TouchableOpacity>
-                
-                  <Text style={task.status=== TaskStatus.FINISHED ? { textDecorationLine: 'line-through' } : {}}>{task.name}</Text>
-                  <View style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", gap: 10 }}>
-                    <Text>
-                        {task.real_effort} / {task.estimated_effort}
-                      </Text>
-                    <TouchableOpacity onPress={() => handleDeleteTask(task._id)}>
-                      <Ionicons name="trash" size={16} color="black" />
-                    </TouchableOpacity>
-                    </View>      
-                </View>
-              ))}
-              <View style={taskList_styles.addBtnContainer}>
+                <TaskComponent task={task} />
+            ))}
+              <View style={taskList_styles.addBtnContainer} >
                 <TextInput
                   placeholder="Nueva Tarea"
                   value={newTask.name}
