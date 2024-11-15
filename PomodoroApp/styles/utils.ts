@@ -1,16 +1,14 @@
 import { StyleSheet } from "react-native"
+import { colors } from "./colors"
 
 const header_family = "sans-serif"
 const body_family = "Times New Roman"
 
 
-const black = "#11181C"
-const white = "#ECEDEE"
-const neutral_100 = "#CECECE"
-const neutral_200 = "#9E9E9E"
 
 const util_styles = StyleSheet.create({
-   h1:{
+  // Text 
+  h1:{
     fontSize: 24,
     fontWeight: "bold",
     fontFamily: header_family,
@@ -42,20 +40,8 @@ const util_styles = StyleSheet.create({
 
    //text-colors
    t_white: {
-    color: white,
+    color: colors.white,
    },
-
-   //colors
-
-    primary_300: {
-        color: "#0a7ea4",
-    },
-    black : {
-        color: black,
-    },
-    white: {
-        color: "#ECEDEE",
-    },
 
     //buttons
 
@@ -64,10 +50,10 @@ const util_styles = StyleSheet.create({
       borderRadius: 5,
     },
     btn_dark : {
-        backgroundColor: black,
+        backgroundColor: colors.black,
     },
     btn_secondary : {
-        backgroundColor: neutral_100,
+        backgroundColor: colors.neutral_100,
     },
 
 
