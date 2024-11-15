@@ -10,7 +10,7 @@ const getPomodoroDuration = (tasks : Task[], pomodoro_state : AppState) => {
     tasks.forEach(task => {
         if(task.status === TaskStatus.FINISHED) {
             totalEffort += 0;
-            realEffort += task.estimated_effort;
+            realEffort += task.real_effort;
         } else {
             totalEffort += task.estimated_effort - task.real_effort;
             realEffort += task.real_effort;
