@@ -3,7 +3,7 @@
 enum ActionKind {
     SWITCH = "SWITCH",
     SET_CURRENT = "SET_CURRENT",
-    START_POMODORO = "START_POMODORO",
+    SET_POMODORO = "START_POMODORO",
 }
 
 interface Action
@@ -62,7 +62,7 @@ const reducer = (state : AppState,action: Action
             }
         case ActionKind.SET_CURRENT:
             return {...state,activeTask: action.payload};
-        case ActionKind.START_POMODORO:
+        case ActionKind.SET_POMODORO:
             return {...state, currentPomodoro: action.payload};
     }
 }

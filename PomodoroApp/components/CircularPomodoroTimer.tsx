@@ -22,7 +22,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useObject } from "@realm/react";
 import { getPomodoroDuration } from "@/utils/pomodoroCalculations";
-
+import { PomodoroStatus } from "@/db/models/Pomodoro";
 interface NewTask {
   name: string;
   estimated_effort: number;
@@ -97,7 +97,7 @@ const CircularPomodoroTimer = () => {
         alert(response.message);
       }else{
         const pomodoro_id = response.pomodoro_id;
-        dispatch({ type: ActionKind.START_POMODORO, payload: pomodoro_id.toString() });
+        dispatch({ type: ActionKind.SET_POMODORO, payload: pomodoro_id.toString() });
 
       }
     }
@@ -111,6 +111,7 @@ const CircularPomodoroTimer = () => {
   const reset = () => {
     setSeconds(state.timer);
     setTimerStatus(TimerStatus.NOT_STARTED);
+    changePomodoroStatus(state.currentPomodoro, PomodoroStatus.CANCELED);
   };
 
   const formatTime = (seconds: number) => {
@@ -133,13 +134,15 @@ const CircularPomodoroTimer = () => {
     dispatch({ type: ActionKind.SET_CURRENT, payload: task_id.toString() });
   };
 
-
+  //UseEffect para manejar los intervalos de tiempo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (timerStatus === TimerStatus.IN_PROGRESS) {
       if (seconds === 0) {
         if (state.status !== PomodoroState.BREAK && state.status !== PomodoroState.LONG_BREAK) {
             incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
+            changePomodoroStatus(state.currentPomodoro, PomodoroStatus.FINISHED);
+            dispatch({ type: ActionKind.SET_POMODORO, payload: "" });
         }
         dispatch({ type: ActionKind.SWITCH });
         setTimerStatus(TimerStatus.NOT_STARTED);
