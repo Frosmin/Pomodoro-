@@ -17,9 +17,16 @@ const createListController = (user: User | null, realm: Realm | null) => {
             console.log("Error al obtener la lista principal");
             return undefined
         }
-    }
+        }
 
-    return {getMainListID}
+        const getActiveLists = () => {
+            if(realm && user && user.lists){
+                return Array.from(user.lists.filter(list => list.type === ListTypes.MAIN || list.type === ListTypes.OTHER))
+            }
+            return [];
+        }
+
+    return {getMainListID,getActiveLists}
 }
 
-export { createListController };
+export { createListController};

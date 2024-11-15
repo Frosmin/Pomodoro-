@@ -83,7 +83,12 @@ const taskList_styles = StyleSheet.create({
       },
       edit_list_item_active: {
         backgroundColor: colors.neutral_100,
-      }
+      },
+      edit_btn_container: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
 
 })
 
