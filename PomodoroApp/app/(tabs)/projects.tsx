@@ -19,12 +19,11 @@ export default function TabTwoScreen() {
   const { user, controllers: { ProjectController: { addProject, getDefaultProjectId, getProjectList } } } = useGlobalContext();
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const projects = await getProjectList();
-      setProjects(projects.map(project => project.name));
-    };
-    fetchProjects();
-  }, []);
+      if (user){
+        const projects = getProjectList();
+        setProjects(projects.map(project => project.name));
+      }   
+  }, [user]);
 
   const handleAddProject = async () => {  //al ser pulsado el boton de añadir proyecto añade un nuevo proyecto a la DB
     if (newProject.trim() !== "") {
