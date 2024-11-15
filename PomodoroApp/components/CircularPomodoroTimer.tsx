@@ -10,6 +10,7 @@ import {
   TextInput,
   ScrollView
 } from "react-native";
+import Realm from "realm"
 import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
 import { PomodoroState } from "@/context/reducer";
@@ -26,6 +27,12 @@ interface NewTask {
   name: string;
   estimated_effort: number;
 }
+
+enum TimerStatus {
+  NOT_STARTED = "NOT_STARTED",
+  IN_PROGRESS = "IN_PROGRESS",
+  PAUSED = "PAUSED",
+}
 //
 
 const CircularPomodoroTimer = () => {
@@ -37,7 +44,7 @@ const CircularPomodoroTimer = () => {
   });
 
 
-  const [isActive, setIsActive] = useState(false);
+  const [timerStatus, setTimerStatus] = useState<TimerStatus>(TimerStatus.NOT_STARTED);
   const {
     state,
     dispatch,
@@ -45,6 +52,7 @@ const CircularPomodoroTimer = () => {
     controllers: {
       TaskController: { getTasksByList, deleteTask, addTask,incrementEffort,changeTaskStatus },
       ListController: { getMainListID },
+      PomodoroController: { addPomodoro, changePomodoroStatus },
     },
   } = useGlobalContext();
 
@@ -81,12 +89,28 @@ const CircularPomodoroTimer = () => {
 
   
   const toggle = () => {
-    setIsActive(!isActive);
+    if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
+      const response = addPomodoro(state.activeTask);
+      console.log(response,"Response");
+      
+      if(response.status === "error"){
+        alert(response.message);
+      }else{
+        const pomodoro_id = response.pomodoro_id;
+        dispatch({ type: ActionKind.START_POMODORO, payload: pomodoro_id.toString() });
+
+      }
+    }
+    setTimerStatus(
+      timerStatus === TimerStatus.PAUSED || timerStatus === TimerStatus.NOT_STARTED
+        ? TimerStatus.IN_PROGRESS
+        : TimerStatus.PAUSED
+    );
   };
 
   const reset = () => {
     setSeconds(state.timer);
-    setIsActive(false);
+    setTimerStatus(TimerStatus.NOT_STARTED);
   };
 
   const formatTime = (seconds: number) => {
@@ -98,6 +122,7 @@ const CircularPomodoroTimer = () => {
   //--------------------------
   const incrementPomodoro = () => {
     incrementEffort(state.activeTask);
+
   }; 
   
   //--------------------------
@@ -111,23 +136,23 @@ const CircularPomodoroTimer = () => {
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    if (isActive) {
+    if (timerStatus === TimerStatus.IN_PROGRESS) {
       if (seconds === 0) {
         if (state.status !== PomodoroState.BREAK && state.status !== PomodoroState.LONG_BREAK) {
             incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
         }
         dispatch({ type: ActionKind.SWITCH });
-        setIsActive(false);
+        setTimerStatus(TimerStatus.NOT_STARTED);
       } else {
         interval = setInterval(() => {
           setSeconds((seconds) => seconds - 1);
         }, 1000);
       }
-    } else if (!isActive && seconds !== 0) {
+    } else if (timerStatus === TimerStatus.NOT_STARTED && seconds !== 0) {
       clearInterval(interval!);
     }
     return () => clearInterval(interval!);
-  }, [isActive, seconds]);
+  }, [timerStatus, seconds]);
 
   useEffect(() => {
     setSeconds(state.timer);
@@ -209,12 +234,13 @@ const CircularPomodoroTimer = () => {
           <TouchableOpacity style={styles.button} onPress={toggle}>
             <Text style={styles.textButton}>
               {" "}
-              {isActive ? " Pause" : "  Start"}{" "}
+              {timerStatus === TimerStatus.NOT_STARTED ? "Iniciar" : 
+              timerStatus === TimerStatus.IN_PROGRESS ? "Pausar" : "Reanudar"}{" "}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={reset}>
-            <Text style={styles.textButton}> Reset</Text>
+            <Text style={styles.textButton}> Cancelar</Text>
           </TouchableOpacity>
         </View>
         {/* vista de tareas */}
