@@ -4,7 +4,7 @@ import { Pomodoro ,PomodoroStatus} from "../models/Pomodoro";
 import { PomodoroState } from "@/context/reducer";
 
 
-enum DisctractionType {
+export enum DisctractionType {
     INTERNAL = "INTERNAL",
     EXTERNAL = "EXTERNAL",
 }
