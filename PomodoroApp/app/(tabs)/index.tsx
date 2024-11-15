@@ -20,7 +20,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.outer}>
+    <ScrollView contentContainerStyle={styles.outer} nestedScrollEnabled={true}>
         <CircularPomodoroTimer />
         <TaskList/>
     </ScrollView>

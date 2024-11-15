@@ -17,11 +17,11 @@ const createProjectController = (user: User | null, realm: Realm | null) => {
         }
     };
 
-    const getProjects = () => {
+    const getProjectList = () => {
         if (!realm || !user) {
             return [];
         }
-        return user.projects;
+        return Array.from(user.projects);
     };
 
     const addProject = (name: string) => {
@@ -43,7 +43,7 @@ const createProjectController = (user: User | null, realm: Realm | null) => {
 
     
 
-    return { getDefaultProjectId, addProject , getProjects};
+    return { getDefaultProjectId, addProject , getProjectList};
 };
 
 export { createProjectController };
