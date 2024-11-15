@@ -3,6 +3,7 @@ import Realm from "realm";
 import { Task, TaskStatus } from "../models/Task";
 import { createProjectController } from "./ProjectController";
 import { useObject } from "@realm/react";
+import { NewTask } from "../models/Task";
 
 const createTaskController = (user: User | null, realm: Realm | null) => {
   const addTask = (body: {
@@ -59,6 +60,21 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
       (task) => task.project_id.toString() === project_id.toString()
     );
   };
+
+  const editTask = (id: string ,newTask: NewTask) => {
+    if (!realm || !user) {
+      return { status: "error", message: "Missing user or realm",task:  newTask};
+    }
+
+    realm.write(() => {
+      const task = user.tasks[id];
+      if (task) {
+        task.name = newTask.name;
+        task.estimated_effort = newTask.estimated_effort;
+      }
+      return { status: "success", message: "Task edited successfully",task};
+    });
+  }
 
   const updateTask = (
     taskId: Realm.BSON.ObjectID,
@@ -128,6 +144,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     getTasksByList,
     deleteTask,
     updateTask,
+    editTask,
     incrementEffort,
     getTasksByProject,
     changeTaskStatus,

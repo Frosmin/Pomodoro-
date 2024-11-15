@@ -4,19 +4,10 @@ import { useGlobalContext } from '@/context/AppContext';
 import taskList_styles from '@/styles/taskList';
 import util_styles from '@/styles/utils';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Task } from '@/db/models/Task';
+import { Task,NewTask } from '@/db/models/Task';
 import { List } from '@/db/models/List';
 import { Project } from '@/db/models/Project';
-
-
-interface NewTask {
-    name: string;
-    estimated_effort: number;
-    list_id: string; 
-    project_id: string; 
-  }
-
-
+import Realm from 'realm';
 
 
   interface props {
@@ -40,13 +31,15 @@ const TaskEditer = ({...props}: props) => {
     const {
         user,
         controllers: {
-          TaskController: { addTask },
+          TaskController: { addTask,deleteTask,editTask },
           ListController: { getMainListID,getActiveLists },
           ProjectController: {getProjectList},
         },
       } = useGlobalContext();
 
     const editNewTask = (field : string, value: string | number) => {
+        console.log(field, value);
+        
         switch (field) {
             case "name":
                 setNewTask({ ...newTask, name: value.toString() });
@@ -75,6 +68,26 @@ const TaskEditer = ({...props}: props) => {
           list_id: getMainListID(),
         });
         setNewTask({ name: "", estimated_effort: 1, list_id: "", project_id: "0" });
+        setOpen(false);
+    }
+    };
+
+    const handleDeleteTask = () => {
+        if(task !== undefined){
+            deleteTask(task._id);
+            setOpen(false);
+        }
+        
+    }
+    
+
+    const handleEditTask = () => {
+      if (newTask.name.trim() !== "" && task !== undefined) {
+        console.log("Editando Tarea");
+        editTask(task._id.toString(), newTask);
+        setOpen(false);
+      }else{
+        console.log("Tarea no editada");
       }
     };
   
@@ -96,6 +109,7 @@ const TaskEditer = ({...props}: props) => {
         //   style={taskList_styles.input}
         placeholder="Nueva Tarea"
         value={newTask.name}
+        onChangeText={(value) => setNewTask({...newTask, name: value})}
       />
       <View style={taskList_styles.editTaskSection}>
         <Text style={util_styles.h4}>Pomodoros estimados</Text>
@@ -155,9 +169,11 @@ const TaskEditer = ({...props}: props) => {
           ))}
         </View>
       </View>
+      {/* Botones */}
+
       <View style={taskList_styles.edit_btn_container}>
         {task !== undefined && (
-            <TouchableOpacity  style={[util_styles.btn]}>
+            <TouchableOpacity  style={[util_styles.btn]} onPress={handleDeleteTask}>
                 <MaterialIcons name="delete" size={24} color="black" />
             </TouchableOpacity>
         )}
@@ -166,9 +182,16 @@ const TaskEditer = ({...props}: props) => {
             <TouchableOpacity style={[util_styles.btn, util_styles.btn_secondary]}>
                 <Text style={[util_styles.p]} onPress={() => setOpen(false)}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleAddTask} style={[util_styles.btn, util_styles.btn_dark]}>
-                <Text style={[util_styles.t_white, util_styles.p]}>Añadir</Text>
-            </TouchableOpacity>
+            {task === undefined ? (
+                <TouchableOpacity onPress={handleAddTask} style={[util_styles.btn, util_styles.btn_dark]}>
+                    <Text style={[util_styles.t_white, util_styles.p]}>Añadir</Text>
+                </TouchableOpacity>
+            ):
+                <TouchableOpacity onPress={handleEditTask} style={[util_styles.btn, util_styles.btn_dark]}>
+                    <Text style={[util_styles.t_white, util_styles.p]}>Guardar</Text>
+                </TouchableOpacity>
+            }
+            
         </View>
       </View>
       

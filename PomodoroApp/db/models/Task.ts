@@ -1,11 +1,18 @@
 import Realm from "realm";
 import { ObjectSchema } from "realm";
 
-export enum TaskStatus{
+enum TaskStatus{
     NOT_STARTED = "NOT_STARTED",
     IN_PROGRESS = "IN_PROGRESS",
     FINISHED = "FINISHED"
 }
+
+interface NewTask {
+    name: string;
+    estimated_effort: number;
+    list_id: string; 
+    project_id: string; 
+  }
 
 class Task extends Realm.Object {
     _id!: Realm.BSON.ObjectID;
@@ -46,5 +53,5 @@ class Task extends Realm.Object {
     };
 }
 
-export { Task };
+export { Task,NewTask,TaskStatus };
 
