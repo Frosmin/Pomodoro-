@@ -4,6 +4,11 @@ import { Pomodoro ,PomodoroStatus} from "../models/Pomodoro";
 import { PomodoroState } from "@/context/reducer";
 
 
+enum DisctractionType {
+    INTERNAL = "INTERNAL",
+    EXTERNAL = "EXTERNAL",
+}
+
 const createPomodoroController = (user: User | null, realm: Realm | null) => {
     const addPomodoro = (task_id: string) => {
         
@@ -45,9 +50,26 @@ const createPomodoroController = (user: User | null, realm: Realm | null) => {
         return {message:"Pomodoro updated successfully",type:"success",pomodoro_id};
     }
 
+    const scoreDistraccion = (pomodoro_id: string, type: DisctractionType) => {
+        if (!realm || !user) {
+            console.log("Error updating pomodoro");
+            return {message:"Error updating pomodoro",type:"error", pomodoro_id};
+        }
+        const pomodoro_id_realm = new Realm.BSON.ObjectId(pomodoro_id);
+        realm.write(() => {
+            const pomodoro = user.pomodoros[pomodoro_id];
+            if (type === DisctractionType.INTERNAL) {
+                pomodoro.internal_distraction++;
+            }else{
+                pomodoro.external_distraction++;
+            }
+        }); 
+        return {message:"Pomodoro updated successfully",type:"success",pomodoro_id};
+    }
 
 
-    return { addPomodoro, changePomodoroStatus };
+
+    return { addPomodoro, changePomodoroStatus,scoreDistraccion };
 };
 
 export {createPomodoroController};
