@@ -1,4 +1,3 @@
-import { useGlobalContext } from "@/context/AppContext";
 import { ListTypes } from "../models/List";
 import { User } from "../models/User";
 import Realm from "realm";

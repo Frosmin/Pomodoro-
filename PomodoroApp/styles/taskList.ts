@@ -38,16 +38,28 @@ const taskList_styles = StyleSheet.create({
         backgroundColor: "#ef6538",
         display: "flex",
         flexDirection: "row",
-        gap: 75,
+        gap: 10,
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
         borderStyle: "dashed",
-        borderColor:"#fff",
-        borderWidth: 1,
+        borderColor:"#c53f27",
+        borderWidth: 2,
       },
       addBtn: {
         backgroundColor: "transparent"
+      },
+
+    //   Para editar / agregar tareas
+    editTaskContainer: {
+        position: 'relative',
+        width: '100%',
+        backgroundColor: '#fff',
+        flexDirection: 'column',
+        borderRadius:10,      
+      },
+      editTaskSection: {
+        flexDirection: 'column',
       }
 })
 
