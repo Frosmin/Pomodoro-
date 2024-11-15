@@ -10,32 +10,48 @@ import { useEffect } from 'react';
 import { useObject, useQuery, useRealm } from '@realm/react';
 import { User } from '@/db/models/User';
 import { Realm } from '@realm/react';
+import TaskList from '@/components/TaskList';
+import { ImageBackground,View,ScrollView } from 'react-native';
 
 
 export default function HomeScreen() {
+  const imagenBackg = {
+    uri: "https://img.freepik.com/premium-photo/abstract-square-picture-form-glowing-red-circle-isolated-black-background_1028938-468836.jpg",
+  };
 
-  // const realm = useRealm();
-
-  
-  
   return (
-    <>
-      <CircularPomodoroTimer />
-    </>
+    <ScrollView contentContainerStyle={styles.outer}>
+        <CircularPomodoroTimer />
+        <TaskList/>
+    </ScrollView>
+
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outer:{
+    backgroundColor: "#fee8c8",
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 0,
+    paddingVertical: 50,
+  },
+  inner: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  container: {
+    flex: 1,
+    backgroundColor: "#fee8c8",
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap:0,
+  },
   image: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
+    flex: 1,
+    justifyContent: "center",
   },
   text: {
     fontSize: 20,
