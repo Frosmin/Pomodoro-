@@ -11,7 +11,8 @@ import { Svg, Circle } from "react-native-svg";
 import { ActionKind } from "@/context/reducer";
 import { PomodoroState } from "@/context/reducer";
 import { PomodoroStatus } from "@/db/models/Pomodoro";
-
+import { DisctractionType } from "@/db/Controllers/PomodoroController";
+import Entypo from '@expo/vector-icons/Entypo';
 
 enum TimerStatus {
   NOT_STARTED = "NOT_STARTED",
@@ -30,7 +31,7 @@ const CircularPomodoroTimer = () => {
     controllers: {
       TaskController: { getTasksByList, deleteTask, addTask,incrementEffort,changeTaskStatus },
       ListController: { getMainListID },
-      PomodoroController: { addPomodoro, changePomodoroStatus },
+      PomodoroController: { addPomodoro, changePomodoroStatus, scoreDistraccion },
     },
   } = useGlobalContext();
 
@@ -157,16 +158,36 @@ const CircularPomodoroTimer = () => {
         {/* Contenedor de botones */}
 
         <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => {
+            if (state.currentPomodoro) {
+              scoreDistraccion(state.currentPomodoro, DisctractionType.INTERNAL);
+            } else {
+              console.warn("No active Pomodoro to record internal distraction.");
+            }
+            }}>
+            <Entypo name="emoji-neutral" size={24} color="black" />
+          </TouchableOpacity>
+        
           <TouchableOpacity style={styles.button} onPress={toggle}>
             <Text style={styles.textButton}>
               {" "}
-              {timerStatus === TimerStatus.NOT_STARTED ? "Iniciar" : 
-              timerStatus === TimerStatus.IN_PROGRESS ? "Pausar" : "Reanudar"}{" "}
+              {timerStatus === TimerStatus.NOT_STARTED ? "    Iniciar" : 
+              timerStatus === TimerStatus.IN_PROGRESS ? "   Pausar" : "Reanudar"}{" "}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={reset}>
-            <Text style={styles.textButton}> Cancelar</Text>
+            <Text style={styles.textButton}>  Cancelar</Text>
+          </TouchableOpacity> 
+
+          <TouchableOpacity onPress={() => {
+            if (state.currentPomodoro) {
+              scoreDistraccion(state.currentPomodoro, DisctractionType.EXTERNAL);
+            } else {
+              console.warn("No active Pomodoro to record distraction.");
+            }
+            }}>
+            <Entypo name="emoji-sad" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </View>
@@ -196,8 +217,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "50%",
-    // height: "6%",
+    width: "60%",
+    height: "15%",
   },
   button: {
     backgroundColor: "#ef6548",
@@ -217,7 +238,7 @@ const styles = StyleSheet.create({
   },
   textButton: {
     color: "black", //texto Star Reset
-    fontSize: 25,
+    fontSize: 15,
   },
 
   circle: {
