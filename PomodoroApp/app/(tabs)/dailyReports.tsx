@@ -1,39 +1,47 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useGlobalContext } from "@/context/AppContext";
 import { Task } from "@/db/models/Task";
 import { BarChart } from "react-native-chart-kit";
-import { router } from "expo-router";
 
-type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports";
+export default function dailyReports() {
+  const {
+    user,
+    controllers: {
+      TaskController: { getTasksByList },
+      ListController: { getMainListID },
+    },
+  } = useGlobalContext();
 
-export default function Reports() {
-  const navegar = (route: AppRoutes) => {
-    router.push({
-      pathname: route,
-    });
+  const tasks = getTasksByList(getMainListID());
+
+  const completedTasks = tasks.filter(
+    (task) => task.status === "FINISHED"
+  ).length;
+  const totalTasks = tasks.length;
+  const completionRate =
+    totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+  const chartData = {
+    labels: ["Estimado", "Real"],
+    datasets: [
+      {
+        data: [
+          tasks.reduce((sum, task) => sum + task.estimated_effort, 0),
+          tasks.reduce((sum, task) => sum + task.real_effort, 0),
+        ],
+      },
+    ],
   };
 
-
   return (
-    <View>
-      <Text style={styles.title}>Reportes</Text>
-      <TouchableOpacity onPress={() => navegar("/(tabs)/generalReports")}>
-        <Text>Ver Reporte General</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navegar("/(tabs)/dailyReports")}>
-        <Text>Ver Reporte diario</Text>
-      </TouchableOpacity>
-    </View>
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Reporte Diario</Text>
+    </ScrollView>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

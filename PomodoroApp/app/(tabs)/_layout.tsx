@@ -145,6 +145,22 @@ export default function TabLayout() {
           //tabBarStyle: { display: "none" },
         }}
       />
+
+      <Tabs.Screen
+        name="generalReports"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="dailyReports"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
     </Tabs>
   );
 }
