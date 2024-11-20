@@ -15,12 +15,28 @@ export default function dailyReports() {
 
   const tasks = getTasksByList(getMainListID());
 
-  const completedTasks = tasks.filter(
+  const today = new Date();
+
+  const dailyTasks = tasks.filter((task) => {
+    if (!task.started_at) return false;
+    const taskDate = new Date(task.started_at);
+    return (
+      taskDate.getDate() === today.getDate() &&
+      taskDate.getMonth() === today.getMonth() &&
+      taskDate.getFullYear() === today.getFullYear()
+    );
+  });
+
+
+
+  const completedDailyTasks = dailyTasks.filter(
     (task) => task.status === "FINISHED"
   ).length;
-  const totalTasks = tasks.length;
+
+  const totalDailyTasks = dailyTasks.length;
+
   const completionRate =
-    totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    totalDailyTasks > 0 ? (completedDailyTasks / totalDailyTasks) * 100 : 0;
 
   const chartData = {
     labels: ["Estimado", "Real"],
@@ -36,12 +52,45 @@ export default function dailyReports() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Reporte Diario</Text>
-    </ScrollView>
+  <Text style={styles.title}>Reporte Diario</Text>
+  <View style={styles.statsContainer}>
+    <Text style={styles.statsText}>
+      Tareas Completadas: {completedDailyTasks}/{totalDailyTasks}
+    </Text>
+    <Text style={styles.statsText}>
+      Tasa de Finalización: {completionRate.toFixed(2)}%
+    </Text>
+  </View>
+  <View style={styles.chartContainer}>
+    <Text style={styles.subtitle}>Esfuerzo Estimado vs Real</Text>
+    <BarChart
+      data={chartData}
+      width={300}
+      height={200}
+      chartConfig={{
+        backgroundColor: "#ffffff",
+        backgroundGradientFrom: "#ffffff",
+        backgroundGradientTo: "#ffffff",
+        color: (opacity = 1) => `rgba(239, 101, 72, ${opacity})`,
+      }}
+      yAxisLabel=""
+      yAxisSuffix=" pomodoros"
+    />
+  </View>
+  <View style={styles.taskList}>
+    <Text style={styles.subtitle}>Detalle de Tareas</Text>
+    {dailyTasks.map((task) => (
+      <View key={task._id.toString()} style={styles.taskItem}>
+        <Text>Tarea: {task.name}</Text>
+        <Text>Estado: {task.status}</Text>
+        <Text>Pomodoros Estimados: {task.estimated_effort}</Text>
+        <Text>Pomodoros Realizados: {task.real_effort}</Text>
+      </View>
+    ))}
+  </View>
+</ScrollView>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
