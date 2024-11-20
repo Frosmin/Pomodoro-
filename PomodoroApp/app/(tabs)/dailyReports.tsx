@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useGlobalContext } from "@/context/AppContext";
-import { Task } from "@/db/models/Task";
 import { BarChart } from "react-native-chart-kit";
 
 export default function dailyReports() {
@@ -27,8 +26,6 @@ export default function dailyReports() {
     );
   });
 
-
-
   const completedDailyTasks = dailyTasks.filter(
     (task) => task.status === "FINISHED"
   ).length;
@@ -52,16 +49,18 @@ export default function dailyReports() {
 
   return (
     <ScrollView style={styles.container}>
-  <Text style={styles.title}>Reporte Diario</Text>
-  <View style={styles.statsContainer}>
-    <Text style={styles.statsText}>
-      Tareas Completadas: {completedDailyTasks}/{totalDailyTasks}
-    </Text>
-    <Text style={styles.statsText}>
-      Tasa de Finalización: {completionRate.toFixed(2)}%
-    </Text>
-  </View>
-  <View style={styles.chartContainer}>
+      <Text style={styles.title}>Reporte Diario</Text>
+      <View style={styles.statsContainer}>
+        <Text style={styles.statsText}>
+          Tareas Completadas: {completedDailyTasks}/{totalDailyTasks}
+        </Text>
+        <Text style={styles.statsText}>
+          Tasa de Finalización: {completionRate.toFixed(2)}%
+        </Text>
+      </View>
+
+
+      {/* <View style={styles.chartContainer}>
     <Text style={styles.subtitle}>Esfuerzo Estimado vs Real</Text>
     <BarChart
       data={chartData}
@@ -76,19 +75,21 @@ export default function dailyReports() {
       yAxisLabel=""
       yAxisSuffix=" pomodoros"
     />
-  </View>
-  <View style={styles.taskList}>
-    <Text style={styles.subtitle}>Detalle de Tareas</Text>
-    {dailyTasks.map((task) => (
-      <View key={task._id.toString()} style={styles.taskItem}>
-        <Text>Tarea: {task.name}</Text>
-        <Text>Estado: {task.status}</Text>
-        <Text>Pomodoros Estimados: {task.estimated_effort}</Text>
-        <Text>Pomodoros Realizados: {task.real_effort}</Text>
+  </View> */}
+
+
+      <View style={styles.taskList}>
+        <Text style={styles.subtitle}>Detalle de Tareas</Text>
+        {dailyTasks.map((task) => (
+          <View key={task._id.toString()} style={styles.taskItem}>
+            <Text>Tarea: {task.name}</Text>
+            <Text>Estado: {task.status}</Text>
+            <Text>Pomodoros Estimados: {task.estimated_effort}</Text>
+            <Text>Pomodoros Realizados: {task.real_effort}</Text>
+          </View>
+        ))}
       </View>
-    ))}
-  </View>
-</ScrollView>
+    </ScrollView>
   );
 }
 
