@@ -155,6 +155,8 @@ import { useGlobalContext } from "@/context/AppContext";
 import { BarChart } from "react-native-chart-kit";
 import { PieChart } from "react-native-chart-kit";
 
+import { Ionicons } from "@expo/vector-icons";
+
 export default function dailyReports() {
   const {
     controllers: {
@@ -240,11 +242,13 @@ export default function dailyReports() {
     legendFontSize: 12,
   }));
 
+  const formatTime = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return { hours, mins };
+  };
 
-
-
-
-
+  const timeStats = formatTime(totalRealEffort * 25);
 
   return (
     <ScrollView style={styles.container}>
@@ -287,9 +291,18 @@ export default function dailyReports() {
               paddingLeft="15"
               absolute // Mostrar números absolutos en lugar de porcentajes
             />
-            <Text style={styles.statsText}>
-              Tiempo de consentracion HOY: {totalRealEffort * 25} minutos
-            </Text>
+            <View style={styles.timeCard}>
+              <Ionicons name="time-outline" size={24} color="#ef6548" />
+              <View style={styles.timeInfo}>
+                <Text style={styles.timeTitle}>
+                  Tiempo de Concentración Hoy
+                </Text>
+                <Text style={styles.timeValue}>
+                  {timeStats.hours > 0 && `${timeStats.hours}h `}
+                  {timeStats.mins}min
+                </Text>
+              </View>
+            </View>
           </View>
 
           <View style={styles.taskList}>
@@ -394,5 +407,34 @@ const styles = StyleSheet.create({
     color: "#666",
     textAlign: "center",
     fontWeight: "500",
+  },
+  timeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 12,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  timeInfo: {
+    marginLeft: 15,
+  },
+  timeTitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  timeValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ef6548',
   },
 });
