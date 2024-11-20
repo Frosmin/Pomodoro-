@@ -22,14 +22,15 @@ export default function Reports() {
 
 
   return (
-    <View>
+    <View style={styles.container}>
+
       <Text style={styles.title}>Reportes</Text>
-      <TouchableOpacity onPress={() => navegar("/(tabs)/generalReports")}>
-        <Text>Ver Reporte General</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navegar("/(tabs)/generalReports")}>
+        <Text style={styles.buttonText} >Ver Reporte General</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navegar("/(tabs)/dailyReports")}>
-        <Text>Ver Reporte diario</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navegar("/(tabs)/dailyReports")}>
+        <Text style={styles.buttonText} >Ver Reporte diario</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,5 +80,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
     paddingVertical: 10,
+  },
+
+  button: {
+    backgroundColor: "#ef6548",
+    padding: 10,
+    borderRadius: 5,
+    justifyContent: "center",
+    marginVertical: 5,  //cochinada cambiar despues
+  },
+  buttonText: {
+    color: "white",
   },
 });
