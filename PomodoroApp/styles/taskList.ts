@@ -88,6 +88,8 @@ const taskList_styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        backgroundColor: colors.neutral_100,
+        paddingVertical: 5,
       },
 
       //estimate
@@ -103,6 +105,18 @@ const taskList_styles = StyleSheet.create({
         backgroundColor: colors.primary_500,
         marginBottom: 10,
         borderRadius: 10,
+      },
+      number_input: {
+        width: 50,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: colors.neutral_200,
+        borderWidth: 0.5,
       },
 
 })

@@ -46,8 +46,10 @@ const util_styles = StyleSheet.create({
     //buttons
 
     btn : {
-      padding: 10,
+      paddingHorizontal:10,
+      paddingVertical: 6,
       borderRadius: 5,
+      height: 40,
     },
     btn_dark : {
         backgroundColor: colors.black,
@@ -55,12 +57,39 @@ const util_styles = StyleSheet.create({
     btn_secondary : {
         backgroundColor: colors.neutral_100,
     },
+    btn_primary : {
+        backgroundColor: colors.primary_300,
+    },
+
+    btn_outlined_primary: {
+        borderWidth: 1,
+        borderColor: colors.primary_300,
+    },
+
+    btn_primary_100:{
+        backgroundColor: colors.primary_100,
+    },
+
+    //chips
+
+    chip: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+
+        backgroundColor: colors.black,
+        borderRadius: 50,
+        height: 30,
+        width:30,
+    },
 
 
     //displays
 
     flex_column: {
         flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
     },
     flex_row: {
         display: "flex",

@@ -115,7 +115,7 @@ const TaskEditer = ({...props}: props) => {
         <Text style={util_styles.h4}>Pomodoros estimados</Text>
         <View style={[util_styles.flex_row, util_styles.g_2]}>
           <TextInput
-            //   style={taskList_styles.input}
+            style={taskList_styles.number_input}
             placeholder="Pomodoros estimados"
             value={newTask.estimated_effort.toString()}
             onChangeText={(value) => setNewTask({...newTask, estimated_effort: parseInt(value)})}
@@ -171,7 +171,7 @@ const TaskEditer = ({...props}: props) => {
       </View>
       {/* Botones */}
 
-      <View style={taskList_styles.edit_btn_container}>
+      <View style={[taskList_styles.edit_btn_container]}>
         {task !== undefined && (
             <TouchableOpacity  style={[util_styles.btn]} onPress={handleDeleteTask}>
                 <MaterialIcons name="delete" size={24} color="black" />
