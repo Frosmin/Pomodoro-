@@ -133,10 +133,15 @@ export default function TaskDetails() {
         )}
       </View>
 
+      <View style={styles.container2}>
       <TouchableOpacity style={styles.button} onPress={Save}>
-        <Text style={styles.buttonText}>Guardar</Text>
+      <Text style={styles.buttonText}>Guardar</Text>
       </TouchableOpacity>
+      </View>
+
     </View>
+
+    
   );
 }
 
@@ -147,12 +152,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#fee8c8",
     width: "100%",
     color: "black",
+    
   },
   container2: {
     padding: 10,
     color: "red",
     width: "80%", // Ajusta el ancho del contenedor
     alignSelf: "center", // Centra el contenedor
+    
   },
   title: {
     fontSize: 24,

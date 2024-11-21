@@ -75,6 +75,22 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="reports" //settings
+        options={{
+          title: "reports",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "stats-chart" : "stats-chart-outline"}
+              color={color}
+            />
+          ),
+
+          // href: null,
+          // headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
         name="settings" //settings
         options={{
           title: "settings",
@@ -127,6 +143,22 @@ export default function TabLayout() {
           href: null,
           headerShown: false,
           //tabBarStyle: { display: "none" },
+        }}
+      />
+
+      <Tabs.Screen
+        name="generalReports"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="dailyReports"
+        options={{
+          href: null,
+          headerShown: false,
         }}
       />
     </Tabs>
