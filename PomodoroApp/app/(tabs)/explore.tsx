@@ -6,8 +6,43 @@ import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Button } from 'react-native';
+import { useQuery, useRealm } from '@realm/react';
+import { useEffect } from 'react';
+import { User } from '@/db/models/User';
+import { useGlobalContext } from '@/context/AppContext';
 
 export default function TabTwoScreen() {
+
+
+  const {user, controllers: {TaskController: {getTasksByList, addTask},ListController:{getMainListID}}} = useGlobalContext();
+
+  const users = useQuery(User);
+  
+
+  // Ejemplo de como obtener las tareas
+  const tasks = getTasksByList(getMainListID());
+  const onPressAddUser = () => {
+    // addUser(realm,{username:"Mario", password: "1234"})
+  }
+
+  // Ejemplo de como agregar una tarea
+  const onPressAddTask = () => {
+    addTask({name: `task${Math.round(Math.random()*100)}`, estimated_effort: 1, list_id: getMainListID()})
+  }
+
+
+
+  useEffect(() => {
+    console.log(users,"users");
+    tasks.forEach(task => {
+      console.log(task._id.toString(),task.name);
+    })
+    
+  })
+
+
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -84,6 +119,10 @@ export default function TabTwoScreen() {
           ),
         })}
       </Collapsible>
+      <ThemedText type='title'>Tests</ThemedText>
+      <Button title='Add User' onPress={onPressAddUser}></Button>
+      <Button title='Add Task' onPress={onPressAddTask}></Button>
+
     </ParallaxScrollView>
   );
 }

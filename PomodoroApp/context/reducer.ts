@@ -2,6 +2,8 @@
 // Reducer para realizar acciones referentes al pomodoro
 enum ActionKind {
     SWITCH = "SWITCH",
+    SET_CURRENT = "SET_CURRENT",
+    SET_POMODORO = "START_POMODORO",
 }
 
 interface Action
@@ -26,7 +28,9 @@ interface AppState{
     timer : number,
     nIntervals: number,
     status: PomodoroState,
-    params: Params
+    params: Params,
+    activeTask: string,
+    currentPomodoro: string
 }
 
 const reducer = (state : AppState,action: Action
@@ -56,6 +60,10 @@ const reducer = (state : AppState,action: Action
                 }
                 return {...state,timer : newTimer, status: newStatus}
             }
+        case ActionKind.SET_CURRENT:
+            return {...state,activeTask: action.payload};
+        case ActionKind.SET_POMODORO:
+            return {...state, currentPomodoro: action.payload};
     }
 }
 
