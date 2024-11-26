@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useGlobalContext } from "@/context/AppContext";
 import { Task } from "@/db/models/Task";
 import { BarChart } from "react-native-chart-kit";
+import { Dimensions } from "react-native";
+import { colors } from "@/styles/colors";
 
 export default function generalReports() {
   const {
@@ -22,17 +24,22 @@ export default function generalReports() {
   const completionRate =
     totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
-  const chartData = {
-    labels: ["Estimado", "Real"],
-    datasets: [
-      {
-        data: [
-          tasks.reduce((sum, task) => sum + task.estimated_effort, 0),
-          tasks.reduce((sum, task) => sum + task.real_effort, 0),
-        ],
-      },
-    ],
-  };
+    const chartData = {
+      labels: ["Estimado", "Real"],
+      datasets: [
+        {
+          data: [
+            tasks.reduce((sum, task) => sum + task.estimated_effort, 0),
+            tasks.reduce((sum, task) => sum + task.real_effort, 0),
+          ],
+          colors: [
+            //no funciona arreglar
+            (opacity = 1) => '#ef6548', // Color rojo para Estimado   
+            (opacity = 1) => '#4CAF50'  // Color verde para Real
+          ]
+        }
+      ]
+    };
 
   return (
     <ScrollView style={styles.container}>
@@ -59,16 +66,29 @@ export default function generalReports() {
         <Text style={styles.subtitle}>Esfuerzo Estimado vs Real</Text>
         <BarChart
           data={chartData}
-          width={300}
+          width={350}
           height={200}
-          yAxisLabel=""
-          yAxisSuffix=""
+          yAxisLabel="" // Agregado
+          yAxisSuffix="" // Agregado
           chartConfig={{
             backgroundColor: "#ffffff",
             backgroundGradientFrom: "#ffffff",
             backgroundGradientTo: "#ffffff",
-            color: (opacity = 1) => `rgba(239, 101, 72, ${opacity})`,
+            color: (opacity = 1) => `red`,
+
+            barPercentage: 2, //grosro de las barras
+            decimalPlaces: 0,
+            propsForVerticalLabels: {
+              fontSize: 15,
+            },
+            propsForHorizontalLabels: {
+              fontSize: 15,
+            },
           }}
+          showValuesOnTopOfBars={true}
+          fromZero={true}
+          withInnerLines={true}
+          segments={4}
         />
       </View>
 
