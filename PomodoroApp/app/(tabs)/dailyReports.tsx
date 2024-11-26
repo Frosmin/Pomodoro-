@@ -190,6 +190,7 @@ export default function dailyReports() {
       return {
         projectName: project.name,
         taskCount: projectTasks.length,
+        
         estimatedEffort: projectTasks.reduce(
           (sum, task) => sum + task.estimated_effort,
           0

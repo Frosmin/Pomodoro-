@@ -50,8 +50,8 @@ export default function generalReports() {
           {tasks.reduce((sum, task) => sum + task.real_effort, 0)}
         </Text>
         <Text style={styles.statsText}>
-            Tiempo de consentración:{" "}
-            {tasks.reduce((sum, task) => sum + task.real_effort, 0)*25} minutos
+          Tiempo de consentración:{" "}
+          {tasks.reduce((sum, task) => sum + task.real_effort, 0) * 25} minutos
         </Text>
       </View>
 
@@ -61,8 +61,8 @@ export default function generalReports() {
           data={chartData}
           width={300}
           height={200}
-          yAxisLabel="" 
-          yAxisSuffix="" 
+          yAxisLabel=""
+          yAxisSuffix=""
           chartConfig={{
             backgroundColor: "#ffffff",
             backgroundGradientFrom: "#ffffff",
@@ -80,14 +80,22 @@ export default function generalReports() {
             <Text>Estado: {task.status}</Text>
             <Text>Pomodoros Estimados: {task.estimated_effort}</Text>
             <Text>Pomodoros Realizados: {task.real_effort}</Text>
+            <Text>
+              Fecha de inicio:{" "}
+              {task.started_at
+                ? new Date(task.started_at).toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                : "Sin fecha"}
+            </Text>
           </View>
         ))}
       </View>
     </ScrollView>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
