@@ -11,7 +11,13 @@ import { Task } from "@/db/models/Task";
 import { BarChart } from "react-native-chart-kit";
 import { router } from "expo-router";
 
-type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports";
+// type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports" | "/(tabs)/monthlyReports";
+
+enum AppRoutes {
+  DailyReports = "/(tabs)/dailyReports",
+  GeneralReports = "/(tabs)/generalReports",
+  MonthlyReports = "/(tabs)/monthlyReports",
+}
 
 export default function Reports() {
   const navegar = (route: AppRoutes) => {
@@ -20,17 +26,28 @@ export default function Reports() {
     });
   };
 
-
   return (
     <View style={styles.container}>
-
       <Text style={styles.title}>Reportes</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navegar("/(tabs)/generalReports")}>
-        <Text style={styles.buttonText} >Ver Reporte General</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navegar(AppRoutes.GeneralReports)}
+      >
+        <Text style={styles.buttonText}>Ver Reporte General</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => navegar("/(tabs)/dailyReports")}>
-        <Text style={styles.buttonText} >Ver Reporte diario</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navegar(AppRoutes.DailyReports)}
+      >
+        <Text style={styles.buttonText}>Ver Reporte diario</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navegar(AppRoutes.MonthlyReports)}
+      >
+        <Text style={styles.buttonText}>Ver Reporte Mensual</Text>
       </TouchableOpacity>
     </View>
   );
@@ -87,7 +104,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     justifyContent: "center",
-    marginVertical: 5,  //cochinada cambiar despues
+    marginVertical: 5, //cochinada cambiar despues
   },
   buttonText: {
     color: "white",
