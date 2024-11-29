@@ -1,13 +1,17 @@
 import { colors } from '@/styles/colors'
 import util_styles from '@/styles/utils'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import React from 'react'
 import { Text ,TouchableOpacity} from 'react-native'
 import { StyleSheet } from 'react-native'
+import { itemType } from '@/app/(tabs)/pomoMenu'
 
-const LinkList = ({text = "", onPress = (params : any) => {}, arg = ""} : {text?: string, onPress?: (params : any) => void, arg? :string}) => {
+
+const LinkList = ({item, onPress = (params : any) => {}} : {item : itemType, onPress?: (params : any) => void}) => {
   return (
-    <TouchableOpacity onPress={() => onPress(arg)} style={[styles.container]} >
-        <Text style={[util_styles.h4, util_styles.t_white]}>{text}</Text>
+    <TouchableOpacity onPress={() => onPress(item.link)} style={[styles.container]} >
+        <MaterialCommunityIcons name={item.icon} size={24} color={colors.white} />
+        <Text style={[util_styles.h4, util_styles.t_white]}>{item.name}</Text>
     </TouchableOpacity>
   )
 }
@@ -19,6 +23,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderStyle: 'solid',
     width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 20,
+    borderColor: colors.neutral_200,
+    borderBottomWidth: 0.5
   }
 })
 

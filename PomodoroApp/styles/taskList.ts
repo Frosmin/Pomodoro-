@@ -16,6 +16,7 @@ const taskList_styles = StyleSheet.create({
     taskContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         width: "100%",
         paddingHorizontal: 20,
         marginBottom: 5,
