@@ -14,9 +14,9 @@ import { router } from "expo-router";
 // type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports" | "/(tabs)/monthlyReports";
 
 enum AppRoutes {
-  DailyReports = "/(tabs)/dailyReports",
-  GeneralReports = "/(tabs)/generalReports",
-  MonthlyReports = "/(tabs)/monthlyReports",
+  thems = "/(tabs)/thems",
+  time = "/(tabs)/time",
+  // MonthlyReports = "/(tabs)/monthlyReports",
 }
 
 export default function settings() {
@@ -31,24 +31,24 @@ export default function settings() {
       <Text style={styles.title}>Ajustes</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navegar(AppRoutes.GeneralReports)}
+        onPress={() => navegar(AppRoutes.time)}
       >
         <Text style={styles.buttonText}>Ajustar tiempo Pomodoro</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navegar(AppRoutes.DailyReports)}
+        onPress={() => navegar(AppRoutes.thems)}
       >
         <Text style={styles.buttonText}>Temas</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.button}
         onPress={() => navegar(AppRoutes.MonthlyReports)}
       >
         <Text style={styles.buttonText}>añadir algo :D</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
