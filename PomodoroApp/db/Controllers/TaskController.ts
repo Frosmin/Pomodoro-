@@ -4,13 +4,15 @@ import { Task, TaskStatus } from "../models/Task";
 import { createProjectController } from "./ProjectController";
 import { useObject } from "@realm/react";
 import { NewTask } from "../models/Task";
+import { createListController } from "./ListController";
+import { List, ListTypes } from "../models/List";
 
 const createTaskController = (user: User | null, realm: Realm | null) => {
   const addTask = (body: {
     name: string;
     estimated_effort: number;
-    list_id: Realm.BSON.ObjectID | undefined;
-    project_id?: Realm.BSON.ObjectID;
+    list_id: Realm.BSON.ObjectID ;
+    project_id: Realm.BSON.ObjectID;
   }) => {
     if (!realm || !user) {
       return { status: "error", message: "Missing user or realm" };
@@ -22,17 +24,17 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     }
 
     const { getDefaultProjectId } = createProjectController(user, realm);
-
-    project_id = project_id || getDefaultProjectId();
-
+    const {getMainListID} = createListController(user, realm);
+    const p_id : Realm.BSON.ObjectID = project_id ? project_id : getDefaultProjectId();
+    const l_id : Realm.BSON.ObjectID = list_id ? list_id : getMainListID();
     realm.write(() => {
       const taskId = new Realm.BSON.ObjectId();
       user.tasks[taskId.toString()] = Task.generate(
         taskId,
         name,
         estimated_effort,
-        project_id,
-        list_id
+        p_id,
+        l_id
       ) as Task;
     });
 
@@ -49,6 +51,24 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
       (task) => task.list_id.toString() === list_id.toString()
     );
   };
+
+  const getTaskByListType = (list_type: ListTypes) => {
+    if (!user) {
+      console.log("Error retrieving tasks");
+      return [];
+    }
+
+    const list_id : Realm.BSON.ObjectID  | undefined= user.lists.find((list) => list.type === list_type)?._id;
+    console.log("list_id",list_id);
+    const list_id_string = list_id ? list_id.toString() : "1";
+    if( !list_id) {
+      console.log("The list type doesn't exist");
+      return [];
+    }
+    return Object.values(user.tasks).filter(
+      (task) => task.list_id.toString() === list_id.toString()   
+    );
+  }
 
   const getTasksByProject = (project_id: Realm.BSON.ObjectID) => {
     if (!user) {
@@ -149,6 +169,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     incrementEffort,
     getTasksByProject,
     changeTaskStatus,
+    getTaskByListType
   };
 };
 

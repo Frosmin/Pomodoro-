@@ -12,10 +12,10 @@ const createListController = (user: User | null, realm: Realm | null) => {
         const getMainListID = () => {
         if(realm && user && user.lists){
             const list_id = user.lists.find(list => list.type === ListTypes.MAIN)?._id;
-            return list_id
+            return list_id ? list_id : new Realm.BSON.ObjectId(1);
         }else{
             console.log("Error al obtener la lista principal");
-            return undefined
+            return new Realm.BSON.ObjectId(1);
         }
         }
 

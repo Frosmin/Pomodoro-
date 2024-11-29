@@ -64,8 +64,9 @@ const TaskEditer = ({...props}: props) => {
         addTask(
           {
           name: newTask.name,
-          estimated_effort: 1,
-          list_id: getMainListID(),
+          estimated_effort: newTask.estimated_effort,
+          list_id: new Realm.BSON.ObjectId(newTask.list_id),
+          project_id: new Realm.BSON.ObjectId(newTask.project_id),
         });
         setNewTask({ name: "", estimated_effort: 1, list_id: "", project_id: "0" });
         setOpen(false);
@@ -105,94 +106,100 @@ const TaskEditer = ({...props}: props) => {
 
   return (
     <View style={[open ? taskList_styles.editTaskContainerOpen : taskList_styles.editTaskContainerClosed]}>
-      <TextInput
-        //   style={taskList_styles.input}
-        placeholder="Nueva Tarea"
-        value={newTask.name}
-        onChangeText={(value) => setNewTask({...newTask, name: value})}
-      />
-      <View style={taskList_styles.editTaskSection}>
-        <Text style={util_styles.h4}>Pomodoros estimados</Text>
-        <View style={[util_styles.flex_row, util_styles.g_2]}>
-          <TextInput
-            style={taskList_styles.number_input}
-            placeholder="Pomodoros estimados"
-            value={newTask.estimated_effort.toString()}
-            onChangeText={(value) => setNewTask({...newTask, estimated_effort: parseInt(value)})}
-            keyboardType="number-pad"
-          />
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity
-              onPress={() => setNewTask({...newTask, estimated_effort: newTask.estimated_effort - 1})}
-            >
-              <MaterialIcons name="remove-circle" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setNewTask({...newTask, estimated_effort: newTask.estimated_effort + 1})}
-            >
-              <MaterialIcons name="add-circle" size={24} color="black" />
-            </TouchableOpacity>
+      <View style={taskList_styles.edit_task_window}>
+        <TextInput
+          //   style={taskList_styles.input}
+          placeholder="Nueva Tarea"
+          value={newTask.name}
+          onChangeText={(value) => setNewTask({...newTask, name: value})}
+        />
+        <View style={taskList_styles.editTaskSection}>
+          <Text style={util_styles.h4}>Pomodoros estimados</Text>
+          <View style={[util_styles.flex_row, util_styles.g_2]}>
+            <TextInput
+              style={taskList_styles.number_input}
+              placeholder="Pomodoros estimados"
+              value={newTask.estimated_effort.toString()}
+              onChangeText={(value) => setNewTask({...newTask, estimated_effort: parseInt(value)})}
+              keyboardType="number-pad"
+            />
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                onPress={() => setNewTask({...newTask, estimated_effort: newTask.estimated_effort - 1})}
+              >
+                <MaterialIcons name="remove-circle" size={24} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setNewTask({...newTask, estimated_effort: newTask.estimated_effort + 1})}
+              >
+                <MaterialIcons name="add-circle" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View style={taskList_styles.editTaskSection}>
+          <View>
+            <Text style={[util_styles.h4, util_styles.mb_1]}>Lista</Text>
+            {listItems.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => editNewTask("list_id", item._id.toString())}
+                style={[
+                  taskList_styles.edit_list_item,
+                  index === 0 ? { borderTopWidth: 1 } : {},
+                  newTask.list_id === item._id.toString() ? taskList_styles.edit_list_item_active : {}
+                ]}
+              >
+                <Text style={util_styles.p}>{item.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <View>
+            <Text style={[util_styles.h4, util_styles.mb_1]}>Proyecto</Text>
+            {projects.length > 0 && projects.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => editNewTask("project_id", item._id.toString())}
+                style={[
+                  taskList_styles.edit_list_item,
+                  index === 0 ? { borderTopWidth: 1 } : {},
+                  (newTask.project_id === "0" && index === 0) || newTask.project_id === item._id.toString() ? taskList_styles.edit_list_item_active : {}
+                ]}
+              >
+                <Text>{item.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+        {/* Botones */}
+
+        <View style={[taskList_styles.edit_btn_container]}>
+          {task !== undefined && (
+              <TouchableOpacity  style={[util_styles.btn]} onPress={handleDeleteTask}>
+                  <MaterialIcons name="delete" size={24} color="black" />
+              </TouchableOpacity>
+          )}
+          
+          <View style={[util_styles.flex_row, util_styles.g_2]}>    
+              <TouchableOpacity style={[util_styles.btn, util_styles.btn_secondary]}>
+                  <Text style={[util_styles.p]} onPress={() => setOpen(false)}>Cancelar</Text>
+              </TouchableOpacity>
+              {task === undefined ? (
+                  <TouchableOpacity onPress={handleAddTask} style={[util_styles.btn, util_styles.btn_dark]}>
+                      <Text style={[util_styles.t_white, util_styles.p]}>Añadir</Text>
+                  </TouchableOpacity>
+              ):
+                  <TouchableOpacity onPress={handleEditTask} style={[util_styles.btn, util_styles.btn_dark]}>
+                      <Text style={[util_styles.t_white, util_styles.p]}>Guardar</Text>
+                  </TouchableOpacity>
+              }
+              
           </View>
         </View>
       </View>
-      <View style={taskList_styles.editTaskSection}>
-        <View>
-          <Text style={[util_styles.h4, util_styles.mb_1]}>Lista</Text>
-          {listItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => editNewTask("list_id", item._id.toString())}
-              style={[
-                taskList_styles.edit_list_item,
-                index === 0 ? { borderTopWidth: 1 } : {},
-                newTask.list_id === item._id.toString() ? taskList_styles.edit_list_item_active : {}
-              ]}
-            >
-              <Text style={util_styles.p}>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View>
-          <Text style={[util_styles.h4, util_styles.mb_1]}>Proyecto</Text>
-          {projects.length > 0 && projects.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => editNewTask("project_id", item._id.toString())}
-              style={[
-                taskList_styles.edit_list_item,
-                index === 0 ? { borderTopWidth: 1 } : {},
-                (newTask.project_id === "0" && index === 0) || newTask.project_id === item._id.toString() ? taskList_styles.edit_list_item_active : {}
-              ]}
-            >
-              <Text>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-      {/* Botones */}
-
-      <View style={[taskList_styles.edit_btn_container]}>
-        {task !== undefined && (
-            <TouchableOpacity  style={[util_styles.btn]} onPress={handleDeleteTask}>
-                <MaterialIcons name="delete" size={24} color="black" />
-            </TouchableOpacity>
-        )}
+      <View style={taskList_styles.edit_task_window}>
+        <Text>Inventariio de Actividades</Text>
         
-        <View style={[util_styles.flex_row, util_styles.g_2]}>    
-            <TouchableOpacity style={[util_styles.btn, util_styles.btn_secondary]}>
-                <Text style={[util_styles.p]} onPress={() => setOpen(false)}>Cancelar</Text>
-            </TouchableOpacity>
-            {task === undefined ? (
-                <TouchableOpacity onPress={handleAddTask} style={[util_styles.btn, util_styles.btn_dark]}>
-                    <Text style={[util_styles.t_white, util_styles.p]}>Añadir</Text>
-                </TouchableOpacity>
-            ):
-                <TouchableOpacity onPress={handleEditTask} style={[util_styles.btn, util_styles.btn_dark]}>
-                    <Text style={[util_styles.t_white, util_styles.p]}>Guardar</Text>
-                </TouchableOpacity>
-            }
-            
-        </View>
       </View>
       
     </View>

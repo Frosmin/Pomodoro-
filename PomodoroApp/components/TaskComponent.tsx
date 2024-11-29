@@ -6,8 +6,9 @@ import { MaterialCommunityIcons,Ionicons } from '@expo/vector-icons'
 import { ActionKind } from '@/context/reducer'
 import { useGlobalContext } from '@/context/AppContext'
 import TaskEditer from './TaskEditer'
+import { colors } from '@/styles/colors'
 
-const TaskComponent = ({ task }: { task: Task }) => {
+const TaskComponent = ({ task, backgroundColor = colors.primary_300 }: { task: Task, backgroundColor?: string }) => {
 
     const { state,dispatch,controllers:{TaskController:{changeTaskStatus,deleteTask}} } = useGlobalContext();
     const [open,setOpen] = useState<boolean>(false);
@@ -18,9 +19,6 @@ const TaskComponent = ({ task }: { task: Task }) => {
         dispatch({ type: ActionKind.SET_CURRENT, payload: task_id.toString() });
       };
 
-      const handleDeleteTask = (taskId: Realm.BSON.ObjectID) => {
-        deleteTask(taskId);
-      };
 
       if(open){
         return <TaskEditer task={task} open={open} setOpen={setOpen} />
@@ -31,6 +29,7 @@ const TaskComponent = ({ task }: { task: Task }) => {
               style={[
                 taskList_styles.taskContainer,
                 state.activeTask === task._id.toString() ? taskList_styles.active_task : null,
+                {backgroundColor}
               ]}
             >
                 <TouchableOpacity onPress={() => handleToggleTaskCompletion(task._id)} style={{alignSelf:'center'}}>
