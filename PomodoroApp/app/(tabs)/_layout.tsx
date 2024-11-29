@@ -92,17 +92,9 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name="settings" //settings
-        options={{
-          title: "settings",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "settings" : "settings-outline"}
-              color={color}
-            />
-          ),
-
-          // href: null,
-          // headerShown: false,
+        options={{         
+          href: null,
+          headerShown: false,
         }}
       />
 
@@ -180,6 +172,13 @@ export default function TabLayout() {
        options={{
          href: null,
          headerShown: false,  
+       }}
+      />
+      <Tabs.Screen
+       name="time"
+       options={{
+         href: null,
+         headerShown: false,
        }}
       />
 

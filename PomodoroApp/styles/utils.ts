@@ -55,7 +55,7 @@ const util_styles = StyleSheet.create({
       justifyContent: "center",
     },
     btn_text: {
-        fontWeight: "bold",
+        fontWeight: "semibold",
         padding: 0,
         margin:0,
     },
