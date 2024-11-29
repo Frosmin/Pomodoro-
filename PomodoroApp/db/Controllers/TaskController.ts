@@ -160,6 +160,28 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
       delete user.tasks[task_id.toString()];
     });
   };
+
+  const changeListType = (task_ids : Realm.BSON.ObjectID[], list_type : ListTypes) => {
+    if (!realm || !user) {
+      console.log("Error retrieving tasks");
+      return [];
+    }
+    const list_id : Realm.BSON.ObjectID  | undefined= user.lists.find((list) => list.type === list_type)?._id;
+    console.log("list_id",list_id);
+    if( !list_id) {
+      console.log("The list type doesn't exist");
+      return [];
+    }
+    realm.write(() => {
+      task_ids.forEach((task_id) => {
+        const task = user.tasks[task_id.toString()];
+        if (task) {
+          task.list_id = list_id!;
+        }
+      });
+    });
+  }
+
   return {
     addTask,
     getTasksByList,
@@ -169,7 +191,8 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     incrementEffort,
     getTasksByProject,
     changeTaskStatus,
-    getTaskByListType
+    getTaskByListType,
+    changeListType
   };
 };
 

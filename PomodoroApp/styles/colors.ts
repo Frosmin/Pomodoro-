@@ -6,4 +6,5 @@ export const colors = {
     white: "#ECEDEE",
     neutral_100: "#E0E0E0",
     neutral_200: "#9E9E9E",
+    secondary: "#fee8c8",
 }

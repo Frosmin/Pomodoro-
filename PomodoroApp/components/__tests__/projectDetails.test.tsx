@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import ProjectDetails from '../../app/(tabs)/menu/projectDetails';
+import ProjectDetails from '../../app/(tabs)/projectDetails';
 import { useLocalSearchParams } from 'expo-router';
 
 jest.mock('expo-router', () => ({
