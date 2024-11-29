@@ -16,6 +16,7 @@ const taskList_styles = StyleSheet.create({
     taskContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        width: "100%",
         paddingHorizontal: 20,
         marginBottom: 5,
         backgroundColor: '#ef6548', //color tareas
@@ -56,10 +57,11 @@ const taskList_styles = StyleSheet.create({
         position: 'relative',
         width: '100%',
         backgroundColor: '#fff',
-        flexDirection: 'column',
+        flexDirection: 'row',
         borderRadius:10,      
         padding: 10,
         gap:5,
+        overflow: 'hidden',
       },
 
       editTaskContainerClosed: {
@@ -68,6 +70,11 @@ const taskList_styles = StyleSheet.create({
         overflow: 'hidden',
       },
 
+      edit_task_window: {
+        position: 'relative',
+        // backgroundColor: '#5aaafa',
+        width: '100%',
+      },
       editTaskSection: {
         flexDirection: 'column',
         gap: 5,

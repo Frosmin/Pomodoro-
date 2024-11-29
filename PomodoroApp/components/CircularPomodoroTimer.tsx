@@ -163,6 +163,7 @@ const CircularPomodoroTimer = () => {
               transform="rotate(180 110 110)"
             />
           </Svg>
+          <Text style={[{ position: "absolute", top: "10%"}, util_styles.t_white]}>#{state.nIntervals}</Text>
           <Text style={styles.timer}>{formatTime(seconds)}</Text>
         </View>
         {/* Contenedor de botones */}

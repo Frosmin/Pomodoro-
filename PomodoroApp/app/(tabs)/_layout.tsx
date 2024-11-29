@@ -32,9 +32,9 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="projects" //tad de projescts
+        name="pomoMenu" //tad de projescts
         options={{
-          title: "Projects",
+          title: "Menu",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}
@@ -167,6 +167,20 @@ export default function TabLayout() {
           href: null,
           headerShown: false,
         }}
+      />
+      <Tabs.Screen
+        name="projects"
+        options={{
+          href: null,
+          headerShown: false,
+        }}/>
+  
+      <Tabs.Screen
+       name="activityInventory"
+       options={{
+         href: null,
+         headerShown: false,  
+       }}
       />
     </Tabs>
   );

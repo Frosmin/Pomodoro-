@@ -221,6 +221,16 @@ const util_styles = StyleSheet.create({
         marginBottom: 20,
         marginTop: 20,
     },
+    height_100vh: {
+        flex : 1,
+    },
+
+    container:{
+        flex: 1,
+        padding: 40,
+        backgroundColor: colors.black,
+        alignItems: "flex-start",
+    }
 })
 
 export default util_styles
