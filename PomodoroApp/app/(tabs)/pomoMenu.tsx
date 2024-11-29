@@ -4,14 +4,15 @@ import util_styles from '@/styles/utils'
 import { Link, router } from 'expo-router'
 import React from 'react'
 import { View, Text } from 'react-native'
-interface itemType {
+export interface itemType {
   name : string,
+  icon : "folder" | "clipboard-list",
   link : "./projects" | "./activityInventory"
 }
 
 const pomoMenu = () => {
 
-const items : itemType[] = [{name:"Proyectos",link:"./projects"},{name: "Inventario de Actividades", link: "./activityInventory"}]
+const items : itemType[] = [{name:"Proyectos",icon:"folder",link:"./projects"},{name: "Inventario de Actividades", icon:"clipboard-list",link: "./activityInventory"}]
   const handlePress = (link : "./projects" | "./activityInventory" ) => {
     router.push({pathname: link});
   }
@@ -19,9 +20,9 @@ const items : itemType[] = [{name:"Proyectos",link:"./projects"},{name: "Inventa
   return (
     <ThemedView style={util_styles.container}>
       <Text style={[util_styles.title,util_styles.t_white]}>Menu</Text>
-      <View>
+      <View style={{width:"100%"}}>
         {items.map((item, index) => (
-          <LinkList key={index} text={item.name} onPress={handlePress} arg={item.link} />
+          <LinkList key={index} item={item} onPress={handlePress}  />
         ))}
       </View>
     </ThemedView>
