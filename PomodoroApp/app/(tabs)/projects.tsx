@@ -11,6 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 import { router } from "expo-router";
 import util_styles from "@/styles/utils";
 import { useGlobalContext } from "@/context/AppContext";
+import SectionHeader from "@/components/UI/SectionHeader";
+import { colors } from "@/styles/colors";
 
 export default function TabTwoScreen() {
   const navigation = useNavigation();
@@ -46,9 +48,9 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={util_styles.title}>Proyectos</Text>
-      <View style={styles.inputContainer}>
+    <View style={[util_styles.container,{backgroundColor: colors.secondary}]}>
+      <SectionHeader text="Proyectos"/>
+      <View style={[styles.inputContainer, {marginTop: 30}]}>
         <TextInput
           style={styles.input}
           value={newProject}

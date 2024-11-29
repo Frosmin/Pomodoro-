@@ -10,7 +10,7 @@ import { itemType } from '@/app/(tabs)/pomoMenu'
 const LinkList = ({item, onPress = (params : any) => {}} : {item : itemType, onPress?: (params : any) => void}) => {
   return (
     <TouchableOpacity onPress={() => onPress(item.link)} style={[styles.container]} >
-        <MaterialCommunityIcons name={item.icon} size={24} color={colors.white} />
+        <MaterialCommunityIcons name={item.icon} size={24} color={item.color} />
         <Text style={[util_styles.h4, util_styles.t_white]}>{item.name}</Text>
     </TouchableOpacity>
   )

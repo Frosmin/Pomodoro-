@@ -9,6 +9,8 @@ import { colors } from '@/styles/colors'
 import ActivityTask from '@/components/ActivityInventory/ActivityTask'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import taskList_styles from '@/styles/taskList'
+import BackBtn from '@/components/UI/BackBtn'
+import SectionHeader from '@/components/UI/SectionHeader'
 const activityInventory = () => {
 
 const [tasks, setTasks] = useState<Task[]>([]);
@@ -63,9 +65,10 @@ const {
 
 
   return (
-    <View style={[util_styles.container, util_styles.g_5,{backgroundColor: colors.secondary}]}>
-      <Text style={[util_styles.title]}>Inventario de actividades</Text>
-
+    
+    <View style={[util_styles.container, util_styles.g_3,{backgroundColor: colors.secondary}]}>
+     
+      <SectionHeader text="Inventario de Actividades" />
       <View style={[util_styles.flex_column, util_styles.g_2]}>
         {tasksChecked?.length && tasks.length ? (tasks.map((task, index) => (
             <ActivityTask key={index} task={task}  index={index} isChecked={tasksChecked[index]} checkTask={checkTask} />
@@ -78,7 +81,7 @@ const {
       </View>
       
       <TouchableOpacity style={[util_styles.btn, util_styles.btn_primary]} onPress={sendToMain}>
-        <Text >Enviar a la lista</Text>
+        <Text style={[util_styles.btn_text]}>Enviar a la lista</Text>
       </TouchableOpacity>
     </View>
   )

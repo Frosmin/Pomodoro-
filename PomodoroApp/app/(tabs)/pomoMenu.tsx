@@ -6,13 +6,18 @@ import React from 'react'
 import { View, Text } from 'react-native'
 export interface itemType {
   name : string,
-  icon : "folder" | "clipboard-list",
-  link : "./projects" | "./activityInventory"
+  icon : "folder" | "clipboard-list" | "cog",
+  link : "./projects" | "./activityInventory" | "./settings",
+  color : string,
 }
 
 const pomoMenu = () => {
 
-const items : itemType[] = [{name:"Proyectos",icon:"folder",link:"./projects"},{name: "Inventario de Actividades", icon:"clipboard-list",link: "./activityInventory"}]
+const items : itemType[] = [
+  {name:"Proyectos",icon:"folder",link:"./projects", color: "#ffff00"},
+  {name: "Inventario de Actividades", icon:"clipboard-list",link: "./activityInventory", color: "#5fcf60"},
+  {name: "Ajustes", icon:"cog",link: "./settings", color: "#fff"},
+]
   const handlePress = (link : "./projects" | "./activityInventory" ) => {
     router.push({pathname: link});
   }
