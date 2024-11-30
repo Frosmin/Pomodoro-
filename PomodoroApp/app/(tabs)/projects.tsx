@@ -63,6 +63,7 @@ export default function TabTwoScreen() {
       </View>
 
       <FlatList
+        style={{width:"100%"}}
         data={projects}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -115,6 +116,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+    width: "100%",
   },
 
 });

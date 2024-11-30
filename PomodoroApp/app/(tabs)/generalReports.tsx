@@ -97,7 +97,7 @@ export default function generalReports() {
         {tasks.map((task) => (
           <View key={task._id.toString()} style={styles.taskItem}>
             <Text>Tarea: {task.name}</Text>
-            <Text>Estado: {task.status}</Text>
+            {/* <Text>Estado: {task.status}</Text> */}
             <Text>Pomodoros Estimados: {task.estimated_effort}</Text>
             <Text>Pomodoros Realizados: {task.real_effort}</Text>
             <Text>
