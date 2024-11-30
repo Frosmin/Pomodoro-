@@ -43,6 +43,22 @@ const CircularPomodoroTimer = () => {
   //const imagenBackg = {source: require("@/assets/images/cropped-pomodoro-solo.png")};
   
 
+  useEffect(() => {
+    if(timerStatus === TimerStatus.NOT_STARTED){
+      switch(state.status){
+        case PomodoroState.FOCUS:
+          setSeconds(state.params.focusTime);
+          break;
+        case PomodoroState.BREAK:
+          setSeconds(state.params.breakTime);
+          break;
+        case PomodoroState.LONG_BREAK:
+          setSeconds(state.params.longBreakTime);
+          break;
+      }
+    }
+  },[state])
+
   const toggle = () => {
     if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
       const response = addPomodoro(state.activeTask);

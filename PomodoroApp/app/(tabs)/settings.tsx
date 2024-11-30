@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
+  TextInput,
   TouchableOpacity,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
 } from "react-native";
 import { useGlobalContext } from "@/context/AppContext";
 import { Task } from "@/db/models/Task";
 import { BarChart } from "react-native-chart-kit";
 import { router } from "expo-router";
+import util_styles from "@/styles/utils";
+import { colors } from "@/styles/colors";
+import SectionHeader from "@/components/UI/SectionHeader";
+import { ActionKind, Params } from "@/context/reducer";
 
 // type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports" | "/(tabs)/monthlyReports";
 
@@ -19,36 +25,56 @@ enum AppRoutes {
   // MonthlyReports = "/(tabs)/monthlyReports",
 }
 
+interface timerItem {
+  name: string;
+  value: number;
+  reference: string;
+}
+
 export default function settings() {
-  const navegar = (route: AppRoutes) => {
-    router.push({
-      pathname: route,
-    });
+  
+  const {user,state,dispatch} = useGlobalContext();
+  const [timeItem,setTimeItems] = useState<timerItem[]>([]);
+  const [params, setParams] = useState<Params>();
+
+
+  const handleChange = (e: NativeSyntheticEvent<TextInputChangeEventData>, item: timerItem) => {
+    if (params === undefined) return;
+    setParams({ ...params, [item.reference]: Number(e.nativeEvent.text) });
+    setTimeItems(timeItem.map((i) => (i.name === item.name ? { ...i, value: Number(e.nativeEvent.text) } : i)));
   };
 
+  const onSubmit = () => {
+    if (params === undefined) return;
+    dispatch({type: ActionKind.SET_PARAMS, payload: params});
+  }
+
+  useEffect(() => {
+    setTimeItems([
+      {name: "Pomodoro", value: state.params.focusTime, reference: "focusTime"},
+      {name: "Descanso Corto", value: state.params.breakTime, reference: "breakTime"},
+      {name: "Descanso Largo", value: state.params.longBreakTime, reference: "longBreakTime"},
+    ]);
+    setParams(state.params);
+  },[state])
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Ajustes</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navegar(AppRoutes.time)}
-      >
-        <Text style={styles.buttonText}>Ajustar tiempo Pomodoro</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navegar(AppRoutes.thems)}
-      >
-        <Text style={styles.buttonText}>Temas</Text>
-      </TouchableOpacity>
-
-      {/* <TouchableOpacity
-        style={styles.button}
-        onPress={() => navegar(AppRoutes.MonthlyReports)}
-      >
-        <Text style={styles.buttonText}>añadir algo :D</Text>
-      </TouchableOpacity> */}
+    <View style={[util_styles.container, {backgroundColor: colors.secondary}]}>
+      <SectionHeader text="Ajustes"/>
+      <View style={styles.container}>
+        <Text style={util_styles.h4}>Tiempo(minutos)</Text>
+        <View style={styles.form}>
+          {timeItem.length >0 && params !== undefined && timeItem.map((item, index) => (
+            <View key={index} style={styles.input_item} >
+              <Text>{item.name}</Text>
+               <TextInput style={styles.input} keyboardType="numeric" value={item.value.toString()} onChange={(e) => handleChange(e,item)}/> 
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity style={[util_styles.btn, util_styles.btn_primary]} onPress={onSubmit}>
+          <Text style={util_styles.btn_text}>Aceptar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -56,57 +82,29 @@ export default function settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#fee8c8",
+    gap: 30,
+    marginTop: 30,
+    alignItems: "flex-start",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#ef6548",
+  form: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
   },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 10,
-    color: "#c53f27",
-  },
-  statsContainer: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  statsText: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  chartContainer: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
+  input_item: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
     alignItems: "center",
   },
-  taskList: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-  },
-  taskItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    paddingVertical: 10,
+  input: {
+    backgroundColor: colors.white,
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: colors.neutral_200,
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    textAlign: "center",
   },
 
-  button: {
-    backgroundColor: "#ef6548",
-    padding: 10,
-    borderRadius: 5,
-    justifyContent: "center",
-    marginVertical: 5, //cochinada cambiar despues
-  },
-  buttonText: {
-    color: "white",
-  },
 });

@@ -29,7 +29,6 @@ const TaskComponent = ({ task, backgroundColor = colors.primary_300 }: { task: T
               style={[
                 taskList_styles.taskContainer,
                 state.activeTask === task._id.toString() ? taskList_styles.active_task : null,
-                {backgroundColor}
               ]}
             >
                 <TouchableOpacity onPress={() => handleToggleTaskCompletion(task._id)} style={{alignSelf:'center'}}>

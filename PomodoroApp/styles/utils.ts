@@ -50,6 +50,14 @@ const util_styles = StyleSheet.create({
       paddingVertical: 6,
       borderRadius: 5,
       height: 40,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    btn_text: {
+        fontWeight: "semibold",
+        padding: 0,
+        margin:0,
     },
     btn_dark : {
         backgroundColor: colors.black,

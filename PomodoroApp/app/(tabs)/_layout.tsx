@@ -92,31 +92,15 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name="settings" //settings
-        options={{
-          title: "settings",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "settings" : "settings-outline"}
-              color={color}
-            />
-          ),
-
-          // href: null,
-          // headerShown: false,
+        options={{         
+          href: null,
+          headerShown: false,
         }}
       />
 
       <Tabs.Screen
         name="tareas" //nombre unico
         options={{
-          // title: "Tareas",
-          // tabBarIcon: ({ color, focused }) => (
-          //   <TabBarIcon
-          //    name={focused ? "settings" : "person-outline"} // icono tiene que ser unico
-          //    color={color}
-          //   />
-          // ),
-
           href: null,
           headerShown: false,
         }}
@@ -124,13 +108,6 @@ export default function TabLayout() {
       <Tabs.Screen
         name="projectDetails" //lista de tareas de un proyecto
         options={{
-          // title: "Task",
-          // tabBarIcon: ({ color, focused }) => (
-          //   <TabBarIcon
-          //     name={focused ? "code-slash" : "code-slash-outline"}
-          //     color={color}
-          //   />
-          // ),
 
           href: null,
           headerShown: false,
@@ -182,14 +159,11 @@ export default function TabLayout() {
          headerShown: false,  
        }}
       />
-
-
-
-<Tabs.Screen
-       name="thems"
+      <Tabs.Screen
+       name="time"
        options={{
          href: null,
-         headerShown: false,  
+         headerShown: false,
        }}
       />
     </Tabs>
