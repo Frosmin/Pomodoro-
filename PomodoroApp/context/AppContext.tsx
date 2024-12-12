@@ -9,6 +9,7 @@ import {  createUserController } from "../db/Controllers/UserController"; // Exa
 import {  createProjectController } from "../db/Controllers/ProjectController"; // Example
 import {createListController} from "../db/Controllers/ListController";
 import { createPomodoroController } from "@/db/Controllers/PomodoroController";
+import { createSettingController } from "@/db/Controllers/SettingController";
 interface AppContextType {
         state: AppState,
         dispatch : React.Dispatch<Action>
@@ -20,6 +21,7 @@ interface AppContextType {
           ProjectController: ReturnType<typeof createProjectController>;
           ListController: ReturnType<typeof createListController>;
           PomodoroController: ReturnType<typeof createPomodoroController>;
+          SettingController: ReturnType<typeof createSettingController>;
       };
   }
 
@@ -65,7 +67,8 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
       UserController: createUserController(realm),
       ProjectController: createProjectController(user, realm),
       ListController: createListController(user, realm),
-      PomodoroController: createPomodoroController(user, realm)
+      PomodoroController: createPomodoroController(user, realm),
+      SettingController: createSettingController(user, realm),
   }), [user, realm]);
 
   const users = realm.objects("User");
@@ -73,6 +76,7 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
   const onUserChange = () => {
     console.log("Change Detected");
     setUser(newUser);
+    
   };
 
   try{

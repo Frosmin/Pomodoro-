@@ -37,7 +37,7 @@ interface timerItem {
 
 export default function settings() {
   
-  const {user,state,dispatch} = useGlobalContext();
+  const {user,state,dispatch,controllers:{SettingController: {updateSettings}}} = useGlobalContext();
   const [timeItem,setTimeItems] = useState<timerItem[]>([]);
   const [settings, setSettings] = useState<Setting|undefined>(user?.settings);
   const [params, setParams] = useState<Params>();
@@ -65,9 +65,20 @@ export default function settings() {
   };
 
   const onSubmit = () => {
-    if (params === undefined) return;
-    dispatch({type: ActionKind.SET_PARAMS, payload: params});
+    if(settings === undefined) return;
+    const {focus,shortBreak,longBreak,intervals} = settings;
+    const newSettings = Setting.generate() as Setting;
+    newSettings.focus = focus ;
+    newSettings.shortBreak = shortBreak ;
+    newSettings.longBreak = longBreak ;
+    updateSettings(newSettings);
+    dispatch({type: ActionKind.SET_PARAMS, payload:  {
+      focusTime: focus,
+      breakTime : shortBreak,
+      longBreakTime: longBreak,
+      intervals}});
   }
+  
 
   useEffect(() => {
     setTimeItems([

@@ -66,7 +66,8 @@ const reducer = (state : AppState,action: Action
         case ActionKind.SET_POMODORO:
             return {...state, currentPomodoro: action.payload};
         case ActionKind.SET_PARAMS:
-            return {...state, params: action.payload};
+            console.log(action.payload);
+            return {...state, timer: action.payload.focusTime,params: action.payload};
     }
 }
 
