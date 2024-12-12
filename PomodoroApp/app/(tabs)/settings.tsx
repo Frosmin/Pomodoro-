@@ -18,6 +18,7 @@ import SectionHeader from "@/components/UI/SectionHeader";
 import { ActionKind, Params } from "@/context/reducer";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomCheckBox from "@/components/UI/CustomCheckBox";
+import Setting from "@/db/models/Setting";
 
 // type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports" | "/(tabs)/monthlyReports";
 
@@ -30,70 +31,37 @@ enum AppRoutes {
 interface timerItem {
   name: string;
   value: number;
-  reference: string;
+  reference: "focus" | "shortBreak" | "longBreak";
 }
 
-interface timerSettings {
-  focus: number;
-  shortBreak: number;
-  longBreak: number;
-  intervals: number;
-  [key : string] : any;
-}
-
-interface soundsSettings {
-  alarm: boolean;
-  alarmVolume: number;
-  tick: boolean;
-  tickVolume: number;
-}
-
-interface themeSettings{
-  focus: string;
-  shortBreak: string;
-  longBreak: string;
-}
-
-interface advancedPomodoro {
-  active: boolean;
-  firstReminder: number;
-  lastReminder: number;
-  remindersVolume: number;
-}
-
-interface settings {
-  timer: timerSettings;
-  sounds: soundsSettings;
-  [key : string] : any;
-}
 
 export default function settings() {
   
   const {user,state,dispatch} = useGlobalContext();
   const [timeItem,setTimeItems] = useState<timerItem[]>([]);
-  const [settings, setSettings] = useState<settings>({
-    timer: {
-      focus: 25,
-      shortBreak: 5,
-      longBreak: 15,
-      intervals: 4,
-    },
-    sounds: {
-      alarm: true,
-      alarmVolume: 0.5,
-      tick: true,
-      tickVolume: 0.5,
-    },
-  });
+  const [settings, setSettings] = useState<Setting|undefined>(user?.settings);
   const [params, setParams] = useState<Params>();
 
 
-  const handleChangeBooleans = (setting : string,field: string, value: boolean) => {
-    setSettings({...settings, [setting]: {...settings[setting], [field]: value}});
-  };
+  const handleChangeBooleans = (field: "alarm" | "tick", value: boolean) => {
+    if(settings === undefined) return;
+    const newSettings = Object.assign({}, settings);
+    newSettings[field] = value;
+    setSettings(newSettings);  };
 
-  const handleChangeStrings = (setting : string,field: string, value: string) => {
-    setSettings({...settings, [setting]: {...settings[setting], [field]: value}});
+  const handleChangeStrings = (field: "focus" | "shortBreak" | "longBreak" |"intervals", value: string) => {
+    if(settings === undefined || /[\D]+/g.test(value)) return;
+    const newSettings = Object.assign({}, settings);
+    console.log(value);
+    
+
+    if(field !== "intervals"){
+      newSettings[field] = Number(value) * 60;
+    }else{
+      newSettings[field] = Number(value);
+    }
+
+    setSettings(newSettings);
   };
 
   const onSubmit = () => {
@@ -110,6 +78,7 @@ export default function settings() {
     setParams(state.params);
   },[state])
 
+  if(settings === undefined) return null;
   return (
     <View style={[util_styles.container, {backgroundColor: colors.secondary}]}>
       <SectionHeader text="Ajustes"/>
@@ -125,15 +94,15 @@ export default function settings() {
                 {timeItem.length >0 && params !== undefined && timeItem.map((item, index) => (
                   <View key={index} style={styles.input_item} >
                     <Text style={util_styles.p}>{item.name}</Text>
-                    <TextInput style={styles.input} keyboardType="numeric" value={settings.timer[item.reference].toString()} onChange={(e) => handleChangeStrings("timer", item.reference, e.nativeEvent.text)}/> 
+                    <TextInput style={styles.input} keyboardType="numeric" value={(settings[item.reference] / 60).toString()} onChange={(e) => handleChangeStrings( item.reference, e.nativeEvent.text)}/> 
                   </View>
                 ))}
               </View>
             </View>
             
             <View style={styles.setting_item_row}>
-              <Text style={util_styles.h4}>Intervalo de tiempo largo</Text>
-              <TextInput style={styles.input} keyboardType="numeric" value={state.params.intervals.toString()}/>
+              <Text style={util_styles.h4}>Intervalo de descanso largo</Text>
+              <TextInput style={styles.input} keyboardType="numeric" value={settings.intervals.toString()} onChange={(e) => handleChangeStrings( "intervals", e.nativeEvent.text)}/>
             </View>
         </View>
         <View style={styles.setting_section}>
@@ -143,11 +112,11 @@ export default function settings() {
           </View>
           <View style={styles.setting_item_row}>
             <Text style={util_styles.h4}>Alarma</Text>
-            <CustomCheckBox state={settings.sounds.alarm} onPress={handleChangeBooleans} setting="sounds" field="alarm"/>
+            <CustomCheckBox state={settings.alarm} onPress={handleChangeBooleans}  field="alarm"/>
           </View>
           <View style={styles.setting_item_row}>
             <Text style={util_styles.h4}>Sonido Tick</Text>
-            <CustomCheckBox state={settings.sounds.tick} onPress={handleChangeBooleans} setting="sounds" field="tick"/>
+            <CustomCheckBox state={settings.tick} onPress={handleChangeBooleans}  field="tick"/>
           </View>
         </View>
         
