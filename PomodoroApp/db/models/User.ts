@@ -4,6 +4,8 @@ import { List } from "./List";
 import { Project } from "./Project";
 import { Task } from "./Task";
 import { Pomodoro } from "./Pomodoro";
+import Setting from "./Setting";
+import settings from "@/app/(tabs)/settings";
 
 enum UserStatus  {
     ACTIVE = "active",
@@ -20,9 +22,9 @@ class User extends Realm.Object {
     projects!: Realm.List<Project>;
     tasks!: Realm.Dictionary<Task>;
     pomodoros!: Realm.Dictionary<Pomodoro>;
-    // settings!:
+    settings!: Setting;
     createdAt!: Date;
-    static generate(user_id: Realm.BSON.ObjectID,username: string, password: string,lists: List[],project: Project) {
+    static generate(user_id: Realm.BSON.ObjectID,username: string, password: string,lists: List[],project: Project,settings: Setting) {
         return {
             _id: user_id,
             username,
@@ -33,6 +35,7 @@ class User extends Realm.Object {
             tasks : {},
             plan: undefined,
             pomodoros: {},
+            settings: settings,
             createdAt: new Date(),
         };
     }
@@ -50,6 +53,7 @@ class User extends Realm.Object {
           tasks: {type : 'dictionary', objectType: 'Task'},
           pomodoros: {type: 'dictionary', objectType: 'Pomodoro'},
           plan: { type: "objectId", optional: true},
+          settings: { type: 'object', objectType: 'Setting'},
           createdAt: 'date',
         },
         

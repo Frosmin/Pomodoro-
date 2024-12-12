@@ -15,6 +15,7 @@ import { AppContext, AppContextProvider } from '@/context/AppContext';
 import 'react-native-get-random-values';
 import { schemaVersion } from 'realm';
 import 'react-native-get-random-values'
+import Setting from '@/db/models/Setting';
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -40,7 +41,7 @@ export default function RootLayout() {
   }
 
   return (
-    <RealmProvider schema={[User,List,Project,Pomodoro,Task]} schemaVersion={6}
+    <RealmProvider schema={[User,List,Project,Pomodoro,Task,Setting]} schemaVersion={8}
                             // sync={{
                             //   flexible: true,
                             //   initialSubscriptions: {

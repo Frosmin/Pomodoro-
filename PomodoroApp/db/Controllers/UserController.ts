@@ -2,6 +2,7 @@ import Realm from "realm"
 import { User } from "../models/User";
 import { List, ListTypes } from "../models/List";
 import { Project } from "../models/Project";
+import Setting from "../models/Setting";
 
 
 const createUserController = (realm : Realm|null) => {
@@ -16,7 +17,8 @@ const createUserController = (realm : Realm|null) => {
             const activities = List.generate("Activity Inventory", ListTypes.OTHER) as List;
             const record = List.generate("Record", ListTypes.RECORD) as List;
             const defaultProject = Project.generate("No Project") as Project;
-            const newUser = realm.create('User', User.generate(user_id,username,password,[mainList,activities,record],defaultProject));
+            const settings = Setting.generate() as Setting;
+            const newUser = realm.create('User', User.generate(user_id,username,password,[mainList,activities,record],defaultProject,settings));
             return newUser 
         })
     }

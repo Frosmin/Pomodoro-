@@ -31,7 +31,7 @@ const CircularPomodoroTimer = () => {
     user,
     controllers: {
       TaskController: { getTasksByList, deleteTask, addTask,incrementEffort,changeTaskStatus },
-      ListController: { getMainListID },
+      ListController: { getListIdByType},
       PomodoroController: { addPomodoro, changePomodoroStatus, scoreDistraccion },
     },
   } = useGlobalContext();
@@ -44,6 +44,7 @@ const CircularPomodoroTimer = () => {
   
 
   useEffect(() => {
+    console.log(state,"State...");
     if(timerStatus === TimerStatus.NOT_STARTED){
       switch(state.status){
         case PomodoroState.FOCUS:
