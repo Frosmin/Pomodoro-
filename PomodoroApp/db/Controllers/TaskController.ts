@@ -150,19 +150,52 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
       console.log("Error removing completed tasks");
       return;
     }
+
+    const {getListIdByType} = createListController(user, realm);
+
+    const mainListId = getListIdByType(ListTypes.MAIN);
+    const recordListId = getListIdByType(ListTypes.RECORD);
+
       const completedTasks = Object.values(user.tasks).filter(
-        (task) => task.status === TaskStatus.FINISHED
+        (task) => task.status === TaskStatus.FINISHED && task.list_id.toString() === mainListId.toString()
       );
-      const recordListId : Realm.BSON.ObjectID | undefined= user.lists.find((list) => list.type === ListTypes.RECORD)?._id;
 
       if(recordListId !== undefined) { 
+        realm.write(() => {
         completedTasks.forEach((task) => {
-          realm.write(() => {
            user.tasks[task._id.toString()].list_id = recordListId;
           });
         })
       }
   };
+
+  const removeAllTasks = () => {
+    if (!realm || !user) {
+      console.log("Error removing all tasks");
+      return;
+    }
+
+    const {getListIdByType} = createListController(user, realm);
+
+    const mainListId = getListIdByType(ListTypes.MAIN);
+    const recordListId = getListIdByType(ListTypes.RECORD);
+
+    const mainListTasks = Object.values(user.tasks).filter(
+      (task) =>  task.list_id.toString() === mainListId.toString()
+    );
+    realm.write(() => {
+      if(recordListId !== undefined) { 
+        mainListTasks.forEach((task) => {
+          if(task.status === TaskStatus.FINISHED){
+            user.tasks[task._id.toString()].list_id = recordListId;
+          }else{
+            delete user.tasks[task._id.toString()];
+          }
+        });
+      }
+    });
+
+  }
 
   /**
    * Elimina una tarea del diccionario de tareas del usuario.
@@ -213,6 +246,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     getTaskByListType,
     changeListType,
     removeCompletedTasks,
+    removeAllTasks,
   };
 };
 

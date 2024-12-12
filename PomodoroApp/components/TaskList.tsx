@@ -29,7 +29,7 @@ const TaskList = () => {
     const [pomosLeft, setPomosLeft] = useState<PomodorosLeft>({pomodoroEndTime: "", totalPomodoros: 0,donePomodoros: 0});
     const [openOptions, setOpenOptions] = useState<boolean>(false);
     const [open,setOpen] = useState<boolean>(false);
-    const {controllers: {TaskController : {removeCompletedTasks}}} = useGlobalContext();
+    const {controllers: {TaskController : {removeCompletedTasks,removeAllTasks}}} = useGlobalContext();
 
 
     const handleDeleteCompleted = () => {
@@ -48,7 +48,7 @@ const TaskList = () => {
       },
       {
         name: "Eliminar Todas",
-        onPress: () => console.log("Eliminar Todas"),
+        onPress: () => removeAllTasks(),
         icon: "trash-can-outline",
       },
     ];

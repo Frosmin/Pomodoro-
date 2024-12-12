@@ -41,6 +41,7 @@ const taskList_styles = StyleSheet.create({
         paddingBottom: 5,
         borderColor: colors.neutral_200,
         borderBottomWidth: 2,
+        marginBottom: 10
       },
       active_task:{
         backgroundColor: "#c53f27",
