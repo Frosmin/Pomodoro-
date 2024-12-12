@@ -14,6 +14,7 @@ import { Pomodoro, PomodoroStatus } from "@/db/models/Pomodoro";
 import { DisctractionType } from "@/db/Controllers/PomodoroController";
 import Entypo from '@expo/vector-icons/Entypo';
 import util_styles from "@/styles/utils";
+import { showNotification,showPersistentNotification } from "@/utils/NotificationService";
 
 enum TimerStatus {
   NOT_STARTED = "NOT_STARTED",
@@ -43,6 +44,7 @@ const CircularPomodoroTimer = () => {
   //const imagenBackg = {source: require("@/assets/images/cropped-pomodoro-solo.png")};
   
 
+
   useEffect(() => {
     console.log(state,"State...");
     if(timerStatus === TimerStatus.NOT_STARTED){
@@ -61,6 +63,7 @@ const CircularPomodoroTimer = () => {
   },[state])
 
   const toggle = () => {
+
     if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
       const response = addPomodoro(state.activeTask);
       console.log(response,"Response");
@@ -103,6 +106,8 @@ const CircularPomodoroTimer = () => {
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (timerStatus === TimerStatus.IN_PROGRESS) {
+      showPersistentNotification(formatTime(seconds),state.status);
+
       if (seconds === 0) {
         if (state.status !== PomodoroState.BREAK && state.status !== PomodoroState.LONG_BREAK) {
             incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
