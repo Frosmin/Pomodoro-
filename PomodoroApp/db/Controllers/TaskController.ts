@@ -24,9 +24,9 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     }
 
     const { getDefaultProjectId } = createProjectController(user, realm);
-    const {getMainListID} = createListController(user, realm);
+    const {getListIdByType} = createListController(user, realm);
     const p_id : Realm.BSON.ObjectID = project_id ? project_id : getDefaultProjectId();
-    const l_id : Realm.BSON.ObjectID = list_id ? list_id : getMainListID();
+    const l_id : Realm.BSON.ObjectID = list_id ? list_id : getListIdByType(ListTypes.MAIN);
     realm.write(() => {
       const taskId = new Realm.BSON.ObjectId();
       user.tasks[taskId.toString()] = Task.generate(
@@ -145,6 +145,25 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     });
   };
 
+  const removeCompletedTasks = () => {
+    if (!realm || !user) {
+      console.log("Error removing completed tasks");
+      return;
+    }
+      const completedTasks = Object.values(user.tasks).filter(
+        (task) => task.status === TaskStatus.FINISHED
+      );
+      const recordListId : Realm.BSON.ObjectID | undefined= user.lists.find((list) => list.type === ListTypes.RECORD)?._id;
+
+      if(recordListId !== undefined) { 
+        completedTasks.forEach((task) => {
+          realm.write(() => {
+           user.tasks[task._id.toString()].list_id = recordListId;
+          });
+        })
+      }
+  };
+
   /**
    * Elimina una tarea del diccionario de tareas del usuario.
    *
@@ -192,7 +211,8 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     getTasksByProject,
     changeTaskStatus,
     getTaskByListType,
-    changeListType
+    changeListType,
+    removeCompletedTasks,
   };
 };
 

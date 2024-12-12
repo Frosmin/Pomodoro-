@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, ScrollView, TouchableOpacity, TextInput} from 'r
 import {MaterialCommunityIcons, MaterialIcons} from '@expo/vector-icons'
 import {useGlobalContext} from "@/context/AppContext";
 import {Task} from "@/db/models/Task";
+import { ListTypes } from '@/db/models/List';
 
 import taskList_styles from "@/styles/taskList";
 import { getPomodoroDuration } from '@/utils/pomodoroCalculations';
@@ -18,7 +19,8 @@ interface PomodorosLeft{
 
 interface OptionInterface{
   name: string,
-  onPress: () => void
+  onPress: () => void,
+  icon: "selection-ellipse-remove" | "trash-can-outline"
 }
 
 
@@ -26,12 +28,14 @@ const TaskList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [pomosLeft, setPomosLeft] = useState<PomodorosLeft>({pomodoroEndTime: "", totalPomodoros: 0,donePomodoros: 0});
     const [openOptions, setOpenOptions] = useState<boolean>(false);
+    const [open,setOpen] = useState<boolean>(false);
+    const {controllers: {TaskController : {removeCompletedTasks}}} = useGlobalContext();
 
 
     const handleDeleteCompleted = () => {
-      getTasksByList(getMainListID()).forEach((task) => {
+      getTasksByList(getListIdByType(ListTypes.MAIN)).forEach((task) => {
         if (task.status === "FINISHED") {
-          // deleteTask(task._id);
+          removeCompletedTasks();
         }
       });
     };
@@ -39,11 +43,13 @@ const TaskList = () => {
     const options: OptionInterface[] = [
       {
         name: "Eliminar Completadas",
-        onPress: () => setOpen(true),
+        onPress: () => removeCompletedTasks(),
+        icon: "selection-ellipse-remove",
       },
       {
-        name: "EliminarTodas",
-        onPress: () => setOpenOptions(!openOptions),
+        name: "Eliminar Todas",
+        onPress: () => console.log("Eliminar Todas"),
+        icon: "trash-can-outline",
       },
     ];
 
@@ -52,18 +58,17 @@ const TaskList = () => {
         user,
         controllers: {
           TaskController: { getTasksByList},
-          ListController: { getMainListID, getActiveLists },
+          ListController: { getListIdByType, getActiveLists },
           ProjectController: {getProjectList}
         },
       } = useGlobalContext();
 
 
-      const [open,setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if ((user?.tasks, tasks)) {
       // Only update tasks if there's a change in user.tasks
-      setTasks(getTasksByList(getMainListID()));
+      setTasks(getTasksByList(getListIdByType(ListTypes.MAIN)));
     }
   }, [user]); // Watch for changes in user.tasks
 
@@ -77,13 +82,21 @@ const TaskList = () => {
       
       <View style={taskList_styles.tasks_header}>
         <Text style={[{ fontWeight: 'bold' },util_styles.h4]}>Lista de Tareas</Text>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={() => setOpenOptions(!openOptions)}>
           <MaterialCommunityIcons name="format-list-bulleted" size={24} color="black" />
         </TouchableOpacity>
       </View>
+      {openOptions && 
       <View style={taskList_styles.options_container}>
-
+            {options.map((option) => (
+              <TouchableOpacity key={option.name} onPress={option.onPress} style={taskList_styles.option}>
+                <MaterialCommunityIcons name={option.icon} size={24} color="black" />
+                <Text style={util_styles.p}>{option.name}</Text>
+              </TouchableOpacity>
+            ))}
       </View>
+ }
+
       {tasks.length > 0 && tasks.map((task) => (
           <TaskComponent key={task._id.toString()} task={task} />
       ))}

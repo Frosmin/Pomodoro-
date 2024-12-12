@@ -20,6 +20,7 @@ class User extends Realm.Object {
     projects!: Realm.List<Project>;
     tasks!: Realm.Dictionary<Task>;
     pomodoros!: Realm.Dictionary<Pomodoro>;
+    // settings!:
     createdAt!: Date;
     static generate(user_id: Realm.BSON.ObjectID,username: string, password: string,lists: List[],project: Project) {
         return {

@@ -135,16 +135,26 @@ const taskList_styles = StyleSheet.create({
       },
 
       options_container: {
+        position: "absolute",
+        zIndex:1,
+        width: '100%',
+        top: 50,
+        paddingVertical: 5,
+        marginBottom: 10,
+        borderRadius: 10,
+        backgroundColor: colors.white,
+      },
+      options: {
+
+      },
+      option:{
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 5,
-        backgroundColor: 'transparent',
-        marginBottom: 10,
-        borderRadius: 10,
-      },
+        gap: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+      }
 
 })
 
