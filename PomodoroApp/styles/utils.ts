@@ -78,6 +78,28 @@ const util_styles = StyleSheet.create({
         backgroundColor: colors.primary_100,
     },
 
+    custom_checkbox:{
+        width: 60,
+        height: 30,
+        backgroundColor: colors.neutral_200,
+        borderRadius: 50,
+        display: "flex",
+        flexDirection: "row",
+        padding: 2,
+    },
+
+    custom_checkbox_checked: {
+        backgroundColor: colors.primary_300,
+        justifyContent: "flex-end",
+    },
+
+    custom_checkbox_inside: {
+        height: "100%",
+        width: "46%",
+        backgroundColor: colors.white,
+        borderRadius: 50,
+    },
+
     //chips
 
     chip: {

@@ -16,6 +16,8 @@ import util_styles from "@/styles/utils";
 import { colors } from "@/styles/colors";
 import SectionHeader from "@/components/UI/SectionHeader";
 import { ActionKind, Params } from "@/context/reducer";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import CustomCheckBox from "@/components/UI/CustomCheckBox";
 
 // type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports" | "/(tabs)/monthlyReports";
 
@@ -31,17 +33,67 @@ interface timerItem {
   reference: string;
 }
 
+interface timerSettings {
+  focus: number;
+  shortBreak: number;
+  longBreak: number;
+  intervals: number;
+  [key : string] : any;
+}
+
+interface soundsSettings {
+  alarm: boolean;
+  alarmVolume: number;
+  tick: boolean;
+  tickVolume: number;
+}
+
+interface themeSettings{
+  focus: string;
+  shortBreak: string;
+  longBreak: string;
+}
+
+interface advancedPomodoro {
+  active: boolean;
+  firstReminder: number;
+  lastReminder: number;
+  remindersVolume: number;
+}
+
+interface settings {
+  timer: timerSettings;
+  sounds: soundsSettings;
+  [key : string] : any;
+}
+
 export default function settings() {
   
   const {user,state,dispatch} = useGlobalContext();
   const [timeItem,setTimeItems] = useState<timerItem[]>([]);
+  const [settings, setSettings] = useState<settings>({
+    timer: {
+      focus: 25,
+      shortBreak: 5,
+      longBreak: 15,
+      intervals: 4,
+    },
+    sounds: {
+      alarm: true,
+      alarmVolume: 0.5,
+      tick: true,
+      tickVolume: 0.5,
+    },
+  });
   const [params, setParams] = useState<Params>();
 
 
-  const handleChange = (e: NativeSyntheticEvent<TextInputChangeEventData>, item: timerItem) => {
-    if (params === undefined) return;
-    setParams({ ...params, [item.reference]: Number(e.nativeEvent.text) });
-    setTimeItems(timeItem.map((i) => (i.name === item.name ? { ...i, value: Number(e.nativeEvent.text) } : i)));
+  const handleChangeBooleans = (setting : string,field: string, value: boolean) => {
+    setSettings({...settings, [setting]: {...settings[setting], [field]: value}});
+  };
+
+  const handleChangeStrings = (setting : string,field: string, value: string) => {
+    setSettings({...settings, [setting]: {...settings[setting], [field]: value}});
   };
 
   const onSubmit = () => {
@@ -51,9 +103,9 @@ export default function settings() {
 
   useEffect(() => {
     setTimeItems([
-      {name: "Pomodoro", value: state.params.focusTime, reference: "focusTime"},
-      {name: "Descanso Corto", value: state.params.breakTime, reference: "breakTime"},
-      {name: "Descanso Largo", value: state.params.longBreakTime, reference: "longBreakTime"},
+      {name: "Pomodoro", value: state.params.focusTime, reference: "focus"},
+      {name: "Descanso Corto", value: state.params.breakTime, reference: "shortBreak"},
+      {name: "Descanso Largo", value: state.params.longBreakTime, reference: "longBreak"},
     ]);
     setParams(state.params);
   },[state])
@@ -61,16 +113,44 @@ export default function settings() {
   return (
     <View style={[util_styles.container, {backgroundColor: colors.secondary}]}>
       <SectionHeader text="Ajustes"/>
-      <View style={styles.container}>
-        <Text style={util_styles.h4}>Tiempo(minutos)</Text>
-        <View style={styles.form}>
-          {timeItem.length >0 && params !== undefined && timeItem.map((item, index) => (
-            <View key={index} style={styles.input_item} >
-              <Text>{item.name}</Text>
-               <TextInput style={styles.input} keyboardType="numeric" value={item.value.toString()} onChange={(e) => handleChange(e,item)}/> 
+        <View style={styles.container}>
+          <View style={styles.setting_section}>
+            <View style={styles.setting_section_header}>
+              <MaterialCommunityIcons name="timer-cog-outline" size={24} color={colors.neutral_200} />
+              <Text style={styles.setting_section_header_text}>TIMER</Text>
             </View>
-          ))}
+            <View style={styles.setting_item_column}>
+              <Text style={util_styles.h4}>Tiempo(minutos)</Text>
+              <View style={styles.form}>
+                {timeItem.length >0 && params !== undefined && timeItem.map((item, index) => (
+                  <View key={index} style={styles.input_item} >
+                    <Text style={util_styles.p}>{item.name}</Text>
+                    <TextInput style={styles.input} keyboardType="numeric" value={settings.timer[item.reference].toString()} onChange={(e) => handleChangeStrings("timer", item.reference, e.nativeEvent.text)}/> 
+                  </View>
+                ))}
+              </View>
+            </View>
+            
+            <View style={styles.setting_item_row}>
+              <Text style={util_styles.h4}>Intervalo de tiempo largo</Text>
+              <TextInput style={styles.input} keyboardType="numeric" value={state.params.intervals.toString()}/>
+            </View>
         </View>
+        <View style={styles.setting_section}>
+          <View style={styles.setting_section_header}>
+            <MaterialCommunityIcons name="bullhorn-outline" size={24} color={colors.neutral_200} />
+            <Text style={styles.setting_section_header_text}>Sonidos</Text>
+          </View>
+          <View style={styles.setting_item_row}>
+            <Text style={util_styles.h4}>Alarma</Text>
+            <CustomCheckBox state={settings.sounds.alarm} onPress={handleChangeBooleans} setting="sounds" field="alarm"/>
+          </View>
+          <View style={styles.setting_item_row}>
+            <Text style={util_styles.h4}>Sonido Tick</Text>
+            <CustomCheckBox state={settings.sounds.tick} onPress={handleChangeBooleans} setting="sounds" field="tick"/>
+          </View>
+        </View>
+        
         <TouchableOpacity style={[util_styles.btn, util_styles.btn_primary]} onPress={onSubmit}>
           <Text style={util_styles.btn_text}>Aceptar</Text>
         </TouchableOpacity>
@@ -90,6 +170,35 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 10,
+  },
+  setting_section: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+  setting_section_header: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 16,
+  },
+
+  setting_section_header_text: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colors.neutral_200,
+  },
+  setting_item_column: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+  },
+  setting_item_row: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   input_item: {
     display: "flex",
