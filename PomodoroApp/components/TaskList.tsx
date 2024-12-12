@@ -16,11 +16,37 @@ interface PomodorosLeft{
   pomodoroEndTime : string,
 }
 
+interface OptionInterface{
+  name: string,
+  onPress: () => void
+}
+
 
 const TaskList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [pomosLeft, setPomosLeft] = useState<PomodorosLeft>({pomodoroEndTime: "", totalPomodoros: 0,donePomodoros: 0});
-    
+    const [openOptions, setOpenOptions] = useState<boolean>(false);
+
+
+    const handleDeleteCompleted = () => {
+      getTasksByList(getMainListID()).forEach((task) => {
+        if (task.status === "FINISHED") {
+          // deleteTask(task._id);
+        }
+      });
+    };
+
+    const options: OptionInterface[] = [
+      {
+        name: "Eliminar Completadas",
+        onPress: () => setOpen(true),
+      },
+      {
+        name: "EliminarTodas",
+        onPress: () => setOpenOptions(!openOptions),
+      },
+    ];
+
     const {
         state,
         user,
@@ -48,6 +74,26 @@ const TaskList = () => {
 
   return (
     <View style={taskList_styles.taskCon}>
+      
+      <View style={taskList_styles.tasks_header}>
+        <Text style={[{ fontWeight: 'bold' },util_styles.h4]}>Lista de Tareas</Text>
+        <TouchableOpacity >
+          <MaterialCommunityIcons name="format-list-bulleted" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      <View style={taskList_styles.options_container}>
+
+      </View>
+      {tasks.length > 0 && tasks.map((task) => (
+          <TaskComponent key={task._id.toString()} task={task} />
+      ))}
+      <TouchableOpacity style={[ open ? util_styles.hide : taskList_styles.addBtnContainer]} onPress={() => setOpen(true)} >
+        <View style={taskList_styles.addBtn}  >
+            <MaterialIcons name="add-circle" size={24} color="black" />
+        </View>
+            <Text>Agregar Tarea</Text>
+      </TouchableOpacity>
+      <TaskEditer open={open} setOpen={setOpen} />
       <View style={taskList_styles.estimate_container}>
         <View>
           <Text style={[{ fontWeight: 'bold' },util_styles.p]}>Pomodoros:</Text>
@@ -59,17 +105,6 @@ const TaskList = () => {
         </View>
         
       </View>
-
-      {tasks.length > 0 && tasks.map((task) => (
-          <TaskComponent key={task._id.toString()} task={task} />
-      ))}
-      <TouchableOpacity style={[ open ? util_styles.hide : taskList_styles.addBtnContainer]} onPress={() => setOpen(true)} >
-        <View style={taskList_styles.addBtn}  >
-            <MaterialIcons name="add-circle" size={24} color="black" />
-        </View>
-            <Text>Agregar Tarea</Text>
-      </TouchableOpacity>
-      <TaskEditer open={open} setOpen={setOpen} />
     </View>
               
   )
