@@ -33,7 +33,7 @@ class List extends Realm.Object {
 
     //   Metodo para validar el tipo de lista
       static validateListType(list_type: string) {
-        return list_type === ListTypes.MAIN || list_type === ListTypes.OTHER;
+        return list_type === ListTypes.MAIN || list_type === ListTypes.OTHER || list_type === ListTypes.RECORD;
       }
   }
 

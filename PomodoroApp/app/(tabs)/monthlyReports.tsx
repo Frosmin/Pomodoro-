@@ -5,17 +5,18 @@ import { BarChart } from "react-native-chart-kit";
 import { PieChart } from "react-native-chart-kit";
 
 import { Ionicons } from "@expo/vector-icons";
+import { ListTypes } from "@/db/models/List";
 
 export default function monthlyReport() {
   const {
     controllers: {
       TaskController: { getTasksByList },
-      ListController: { getMainListID },
+      ListController: { getListIdByType },
       ProjectController: { getProjectList },
     },
   } = useGlobalContext();
 
-  const tasks = getTasksByList(getMainListID());
+  const tasks = getTasksByList(getListIdByType(ListTypes.RECORD));
   const projects = getProjectList();
 
   // Filtrar tareas de hoy

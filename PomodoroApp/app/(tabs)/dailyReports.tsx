@@ -154,19 +154,19 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useGlobalContext } from "@/context/AppContext";
 import { BarChart } from "react-native-chart-kit";
 import { PieChart } from "react-native-chart-kit";
-
+import { ListTypes } from "@/db/models/List";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function dailyReports() {
   const {
     controllers: {
       TaskController: { getTasksByList },
-      ListController: { getMainListID },
+      ListController: { getListIdByType},
       ProjectController: { getProjectList },
     },
   } = useGlobalContext();
 
-  const tasks = getTasksByList(getMainListID());
+  const tasks = getTasksByList(getListIdByType(ListTypes.RECORD));
   const projects = getProjectList();
 
   // Filtrar tareas de hoy

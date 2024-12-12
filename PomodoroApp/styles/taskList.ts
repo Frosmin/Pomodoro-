@@ -34,6 +34,15 @@ const taskList_styles = StyleSheet.create({
         width: "70%",
         paddingVertical: 10,
       },
+      tasks_header:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingBottom: 5,
+        borderColor: colors.neutral_200,
+        borderBottomWidth: 2,
+        marginBottom: 10
+      },
       active_task:{
         backgroundColor: "#c53f27",
       },
@@ -109,8 +118,7 @@ const taskList_styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 5,
-        paddingHorizontal: 10,
-        backgroundColor: colors.primary_500,
+        backgroundColor: 'transparent',
         marginBottom: 10,
         borderRadius: 10,
       },
@@ -126,6 +134,28 @@ const taskList_styles = StyleSheet.create({
         borderColor: colors.neutral_200,
         borderWidth: 0.5,
       },
+
+      options_container: {
+        position: "absolute",
+        zIndex:1,
+        width: '100%',
+        top: 50,
+        paddingVertical: 5,
+        marginBottom: 10,
+        borderRadius: 10,
+        backgroundColor: colors.white,
+      },
+      options: {
+
+      },
+      option:{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+      }
 
 })
 

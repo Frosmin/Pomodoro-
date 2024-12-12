@@ -5,17 +5,18 @@ import { Task } from "@/db/models/Task";
 import { BarChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 import { colors } from "@/styles/colors";
+import { ListTypes } from "@/db/models/List";
 
 export default function generalReports() {
   const {
     user,
     controllers: {
       TaskController: { getTasksByList },
-      ListController: { getMainListID },
+      ListController: { getListIdByType },
     },
   } = useGlobalContext();
 
-  const tasks = getTasksByList(getMainListID());
+  const tasks = getTasksByList(getListIdByType(ListTypes.RECORD));
 
   const completedTasks = tasks.filter(
     (task) => task.status === "FINISHED"

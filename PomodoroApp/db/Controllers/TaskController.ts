@@ -24,9 +24,9 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     }
 
     const { getDefaultProjectId } = createProjectController(user, realm);
-    const {getMainListID} = createListController(user, realm);
+    const {getListIdByType} = createListController(user, realm);
     const p_id : Realm.BSON.ObjectID = project_id ? project_id : getDefaultProjectId();
-    const l_id : Realm.BSON.ObjectID = list_id ? list_id : getMainListID();
+    const l_id : Realm.BSON.ObjectID = list_id ? list_id : getListIdByType(ListTypes.MAIN);
     realm.write(() => {
       const taskId = new Realm.BSON.ObjectId();
       user.tasks[taskId.toString()] = Task.generate(
@@ -145,6 +145,58 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     });
   };
 
+  const removeCompletedTasks = () => {
+    if (!realm || !user) {
+      console.log("Error removing completed tasks");
+      return;
+    }
+
+    const {getListIdByType} = createListController(user, realm);
+
+    const mainListId = getListIdByType(ListTypes.MAIN);
+    const recordListId = getListIdByType(ListTypes.RECORD);
+
+      const completedTasks = Object.values(user.tasks).filter(
+        (task) => task.status === TaskStatus.FINISHED && task.list_id.toString() === mainListId.toString()
+      );
+
+      if(recordListId !== undefined) { 
+        realm.write(() => {
+        completedTasks.forEach((task) => {
+           user.tasks[task._id.toString()].list_id = recordListId;
+          });
+        })
+      }
+  };
+
+  const removeAllTasks = () => {
+    if (!realm || !user) {
+      console.log("Error removing all tasks");
+      return;
+    }
+
+    const {getListIdByType} = createListController(user, realm);
+
+    const mainListId = getListIdByType(ListTypes.MAIN);
+    const recordListId = getListIdByType(ListTypes.RECORD);
+
+    const mainListTasks = Object.values(user.tasks).filter(
+      (task) =>  task.list_id.toString() === mainListId.toString()
+    );
+    realm.write(() => {
+      if(recordListId !== undefined) { 
+        mainListTasks.forEach((task) => {
+          if(task.status === TaskStatus.FINISHED){
+            user.tasks[task._id.toString()].list_id = recordListId;
+          }else{
+            delete user.tasks[task._id.toString()];
+          }
+        });
+      }
+    });
+
+  }
+
   /**
    * Elimina una tarea del diccionario de tareas del usuario.
    *
@@ -192,7 +244,9 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     getTasksByProject,
     changeTaskStatus,
     getTaskByListType,
-    changeListType
+    changeListType,
+    removeCompletedTasks,
+    removeAllTasks,
   };
 };
 

@@ -14,8 +14,6 @@ interface AppContextType {
         dispatch : React.Dispatch<Action>
         user: User | null,
         setUser: Dispatch<SetStateAction<User | null>>,
-        render: boolean,
-        setRender: Dispatch<SetStateAction<boolean>>,
         controllers: {
           TaskController: ReturnType<typeof createTaskController>;
           UserController:  ReturnType<typeof createUserController>
@@ -51,7 +49,6 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
     const [user,setUser] = useState<User|null>(null);
     const [state,dispatch] = useReducer(reducer,initialState);
     const realm = useRealm();
-    const [render,setRender] = useState<boolean>(false)
 
     // Use useMemo to avoid recreating controllers on every render
     const controllers = useMemo(() => ({
@@ -98,10 +95,7 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
   },[user,realm])
 
 
-  useEffect(() => {
-    console.log(render);
-    
-  },[render])
+
 
     return (
         <AppContext.Provider value={
@@ -110,8 +104,6 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
             user,
             setUser,
             controllers,
-            render,
-            setRender
           }}>{children}</AppContext.Provider>
     );
 }
