@@ -11,7 +11,7 @@ const LinkList = ({item, onPress = (params : any) => {}} : {item : itemType, onP
   return (
     <TouchableOpacity onPress={() => onPress(item.link)} style={[styles.container]} >
         <MaterialCommunityIcons name={item.icon} size={24} color={item.color} />
-        <Text style={[util_styles.h4, util_styles.t_white]}>{item.name}</Text>
+        <Text style={[util_styles.h4,styles.text ]}>{item.name}</Text>
     </TouchableOpacity>
   )
 }
@@ -29,7 +29,11 @@ const styles = StyleSheet.create({
     gap: 20,
     borderColor: colors.neutral_200,
     borderBottomWidth: 0.5
-  }
+  },
+  text: {
+    color: 'black',
+  },
+
 })
 
 export default LinkList
