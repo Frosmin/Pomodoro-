@@ -99,12 +99,8 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
     
     if(!user){    
       if(!newUser){
-        console.log("creating User");
-
         controllers.UserController.addUser("Mario","1234")
       }else{
-        console.log("setting User");
-        console.log(newUser);
         setUser(newUser)
       }  
     }
@@ -167,6 +163,8 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
           return savedTimer
         }
       });
+
+      console.log(savedTimer,savedSeconds);
 
       AsyncStorage.setItem("seconds",savedSeconds.toString());
       AsyncStorage.setItem("timer",savedTimer.toString());
