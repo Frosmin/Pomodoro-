@@ -113,9 +113,7 @@ const CircularPomodoroTimer = () => {
   const playSound = async (type: 'tick' | 'alarm') => {
     try {
       const { sound: newSound } = await Audio.Sound.createAsync(
-        type === 'tick' 
-          ? require('@/assets/sounds/tick.wav')
-          : require('@/assets/sounds/alarm.wav'),
+          require('@/assets/sounds/alarm2.wav'),
         { shouldPlay: true }
       );
       setSound(newSound);
