@@ -15,10 +15,7 @@ import { DisctractionType } from "@/db/Controllers/PomodoroController";
 import Entypo from '@expo/vector-icons/Entypo';
 import util_styles from "@/styles/utils";
 import { showNotification,showPersistentNotification } from "@/utils/NotificationService";
-import * as TaskManager from 'expo-task-manager';
-import * as BackgroundFetch from 'expo-background-fetch';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from "expo-notifications";
 
 enum TimerStatus {
   NOT_STARTED = "NOT_STARTED",
@@ -35,13 +32,11 @@ const CircularPomodoroTimer = () => {
     dispatch,
     user,
     controllers: {
-      TaskController: { getTasksByList, deleteTask, addTask,incrementEffort,changeTaskStatus },
-      ListController: { getListIdByType},
+      TaskController: {incrementEffort },
       PomodoroController: { addPomodoro, changePomodoroStatus, scoreDistraccion },
     },
   } = useGlobalContext();
   const [currentPomodoro,setCurrentPomodoro] = useState<Pomodoro|null>(null);
-  const BACKGROUND_TIMER_TASK = "background-timer-task";
 
 
 
@@ -67,6 +62,7 @@ const CircularPomodoroTimer = () => {
     }
   },[state])
 
+
   const toggle = () => {
 
     if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
@@ -90,6 +86,7 @@ const CircularPomodoroTimer = () => {
   const reset = () => {
     if(timerStatus === TimerStatus.IN_PROGRESS){
       setSeconds(state.timer);
+      AsyncStorage.setItem("seconds", state.timer.toString());
       setTimerStatus(TimerStatus.NOT_STARTED);
       changePomodoroStatus(state.currentPomodoro, PomodoroStatus.CANCELED);
     }
@@ -124,6 +121,7 @@ const CircularPomodoroTimer = () => {
       } else {
         interval = setInterval(() => {
           setSeconds((seconds) => seconds - 1);
+          AsyncStorage.setItem("seconds", (seconds - 1).toString());
         }, 1000);
       }
     } else if (timerStatus === TimerStatus.NOT_STARTED && seconds !== 0) {
@@ -133,42 +131,7 @@ const CircularPomodoroTimer = () => {
     
   }, [timerStatus, seconds]);
   
-  // TaskManager.defineTask(BACKGROUND_TIMER_TASK, async () => {
-  //   try {
-  //     const seconds = parseInt(await AsyncStorage.getItem("remainingTime") || "0", 10);
-  
-  //     if (seconds > 0) {
-  //       const updatedSeconds = seconds - 1;
-  //       await AsyncStorage.setItem("remainingTime", updatedSeconds.toString());
-  
-  //       // Update persistent notification
-  //       await Notifications.scheduleNotificationAsync({
-  //         content: {
-  //           title: "Pomodoro Timer",
-  //           body: `Time remaining: ${Math.floor(updatedSeconds / 60)}:${updatedSeconds % 60}`,
-  //           sticky: true,
-  //         },
-  //         trigger: null,
-  //       });
-  
-  //       return BackgroundFetch.BackgroundFetchResult.NewData;
-  //     } else {
-  //       // Timer completed
-  //       await Notifications.scheduleNotificationAsync({
-  //         content: {
-  //           title: "Pomodoro Complete",
-  //           body: "Time's up! Take a break.",
-  //         },
-  //         trigger: null,
-  //       });
-  
-  //       return BackgroundFetch.BackgroundFetchResult.NoData;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error in background task:", error);
-  //     return BackgroundFetch.BackgroundFetchResult.Failed;
-  //   }
-  // });
+ 
   useEffect(() => {
     setSeconds(state.timer);
   }, [state.timer]);
@@ -178,6 +141,20 @@ const CircularPomodoroTimer = () => {
       setCurrentPomodoro(user.pomodoros[state.currentPomodoro]);
     }
   },[user,state.currentPomodoro]);
+
+  useEffect(() => {
+    const loadSeconds = async () => {
+      const savedSeconds = await AsyncStorage.getItem("seconds").then((res) => res);  
+      if (savedSeconds !== null) {
+        setSeconds(parseInt(savedSeconds));
+      }
+    }
+    loadSeconds();
+
+  }, []);
+ 
+
+
 
   const radius = 120; // Nuevo radio
   const circumference = 2 * Math.PI * radius;
