@@ -17,6 +17,10 @@ import util_styles from "@/styles/utils";
 import { showNotification,showPersistentNotification } from "@/utils/NotificationService";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import * as Notifications from "expo-notifications";
+import { Audio } from 'expo-av';
+
+
 enum TimerStatus {
   NOT_STARTED = "NOT_STARTED",
   IN_PROGRESS = "IN_PROGRESS",
@@ -25,6 +29,8 @@ enum TimerStatus {
 //
 
 const CircularPomodoroTimer = () => {
+
+
 
   const [timerStatus, setTimerStatus] = useState<TimerStatus>(TimerStatus.NOT_STARTED);
   const {
@@ -103,14 +109,43 @@ const CircularPomodoroTimer = () => {
     incrementEffort(state.activeTask);
 
   }; 
+
+  //Sonidos :D
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const playSound = async (type: 'tick' | 'alarm') => {
+    try {
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        type === 'tick' 
+          ? require('@/assets/sounds/tick.wav')
+          : require('@/assets/sounds/alarm.wav'),
+        { shouldPlay: true }
+      );
+      setSound(newSound);
+      await newSound.playAsync();
+    } catch (error) {
+      console.error('Error reproduciendo sonido:', error);
+    }
+  };
+  // Limpieza del sonido
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
   
+
   // UseEffect para manejar los intervalos de tiempo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (timerStatus === TimerStatus.IN_PROGRESS) {
+      
       showPersistentNotification(formatTime(seconds),state.status);
 
       if (seconds === 0) {
+        playSound('alarm'); // Reproducir sonido de alarma
+
         if (state.status !== PomodoroState.BREAK && state.status !== PomodoroState.LONG_BREAK) {
             incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
             changePomodoroStatus(state.currentPomodoro, PomodoroStatus.FINISHED);
@@ -123,14 +158,14 @@ const CircularPomodoroTimer = () => {
           setSeconds((seconds) => seconds - 1);
           AsyncStorage.setItem("seconds", (seconds - 1).toString());
         }, 1000);
+        
       }
     } else if (timerStatus === TimerStatus.NOT_STARTED && seconds !== 0) {
       clearInterval(interval!);
     }
     return () => clearInterval(interval!);
-    
+
   }, [timerStatus, seconds]);
-  
  
   useEffect(() => {
     setSeconds(state.timer);
