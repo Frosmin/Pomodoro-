@@ -30,6 +30,8 @@ enum TimerStatus {
 
 const CircularPomodoroTimer = () => {
 
+
+
   const [timerStatus, setTimerStatus] = useState<TimerStatus>(TimerStatus.NOT_STARTED);
   const {
     state,
@@ -107,15 +109,43 @@ const CircularPomodoroTimer = () => {
     incrementEffort(state.activeTask);
 
   }; 
+
+  //Sonidos :D
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const playSound = async (type: 'tick' | 'alarm') => {
+    try {
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        type === 'tick' 
+          ? require('@/assets/sounds/tick.wav')
+          : require('@/assets/sounds/alarm.wav'),
+        { shouldPlay: true }
+      );
+      setSound(newSound);
+      await newSound.playAsync();
+    } catch (error) {
+      console.error('Error reproduciendo sonido:', error);
+    }
+  };
+  // Limpieza del sonido
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
   
+
   // UseEffect para manejar los intervalos de tiempo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (timerStatus === TimerStatus.IN_PROGRESS) {
+      
       showPersistentNotification(formatTime(seconds),state.status);
 
       if (seconds === 0) {
-        playSound('alarm');
+        playSound('alarm'); // Reproducir sonido de alarma
+
         if (state.status !== PomodoroState.BREAK && state.status !== PomodoroState.LONG_BREAK) {
             incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
             changePomodoroStatus(state.currentPomodoro, PomodoroStatus.FINISHED);
@@ -125,82 +155,25 @@ const CircularPomodoroTimer = () => {
         setTimerStatus(TimerStatus.NOT_STARTED);
       } else {
         interval = setInterval(() => {
-          if (user?.settings?.tick) { // Verificar si el tick está habilitado en configuración
-            playSound('tick');
-          }
           setSeconds((seconds) => seconds - 1);
         }, 1000);
+        
       }
     } else if (timerStatus === TimerStatus.NOT_STARTED && seconds !== 0) {
       clearInterval(interval!);
     }
     return () => clearInterval(interval!);
-    
+
   }, [timerStatus, seconds]);
   
-  // TaskManager.defineTask(BACKGROUND_TIMER_TASK, async () => {
-  //   try {
-  //     const seconds = parseInt(await AsyncStorage.getItem("remainingTime") || "0", 10);
   
-  //     if (seconds > 0) {
-  //       const updatedSeconds = seconds - 1;
-  //       await AsyncStorage.setItem("remainingTime", updatedSeconds.toString());
-  
-  //       // Update persistent notification
-  //       await Notifications.scheduleNotificationAsync({
-  //         content: {
-  //           title: "Pomodoro Timer",
-  //           body: `Time remaining: ${Math.floor(updatedSeconds / 60)}:${updatedSeconds % 60}`,
-  //           sticky: true,
-  //         },
-  //         trigger: null,
-  //       });
-  
-  //       return BackgroundFetch.BackgroundFetchResult.NewData;
-  //     } else {
-  //       // Timer completed
-  //       await Notifications.scheduleNotificationAsync({
-  //         content: {
-  //           title: "Pomodoro Complete",
-  //           body: "Time's up! Take a break.",
-  //         },
-  //         trigger: null,
-  //       });
-  
-  //       return BackgroundFetch.BackgroundFetchResult.NoData;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error in background task:", error);
-  //     return BackgroundFetch.BackgroundFetchResult.Failed;
-  //   }
-  // });
 
-  //Sonidos :D
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  
 
-  const playSound = async (type: 'tick' | 'alarm') => {
-    try {
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        type === 'tick' 
-          ? require('@/assets/sounds/sound.wav')
-          : require('@/assets/sounds/sound.wav'),
-        { shouldPlay: true }
-      );
-      setSound(newSound);
-      await newSound.playAsync();
-    } catch (error) {
-      console.error('Error reproduciendo sonido:', error);
-    }
-  };
 
-  // Limpieza del sonido
-  useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+
+
+
 
 
   useEffect(() => {
