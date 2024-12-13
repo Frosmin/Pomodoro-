@@ -16,8 +16,9 @@ class Pomodoro extends Realm.Object {
   ended_at?: Date;
   internal_distraction!: number;
   external_distraction!: number;
+  minutes!: number;
 
-  static generate( id: Realm.BSON.ObjectID,task_id?: Realm.BSON.ObjectID) {
+  static generate( id: Realm.BSON.ObjectID,minutes: number,task_id?: Realm.BSON.ObjectID) {
     task_id = task_id ? task_id : new Realm.BSON.ObjectID(0);
     return {
       _id: id,
@@ -26,6 +27,7 @@ class Pomodoro extends Realm.Object {
       started_at: new Date(),
       internal_distraction: 0,
       external_distraction: 0,
+      minutes,
     };
   }
 
@@ -40,6 +42,7 @@ class Pomodoro extends Realm.Object {
       ended_at: { type: 'date' , optional: true},
       internal_distraction: { type: 'int', default: 0 },
       external_distraction: { type: 'int', default: 0 },
+      minutes: 'int',
     },
   };
 

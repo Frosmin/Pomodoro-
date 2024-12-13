@@ -189,7 +189,11 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
           if(task.status === TaskStatus.FINISHED){
             user.tasks[task._id.toString()].list_id = recordListId;
           }else{
-            delete user.tasks[task._id.toString()];
+            if(task.real_effort > 0){
+              user.tasks[task._id.toString()].list_id = recordListId;
+            }else{
+              delete user.tasks[task._id.toString()];
+            }
           }
         });
       }
@@ -209,7 +213,13 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
       return [];
     }
     realm.write(() => {
-      delete user.tasks[task_id.toString()];
+      const task = user.tasks[task_id.toString()];
+      if(task.real_effort > 0){ 
+        const recordListId = user.lists.find((list) => list.type === ListTypes.RECORD)?._id;
+        user.tasks[task_id.toString()].list_id = recordListId!;
+      }else{
+        delete user.tasks[task_id.toString()];
+      }
     });
   };
 
@@ -219,9 +229,8 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
       return [];
     }
     const list_id : Realm.BSON.ObjectID  | undefined= user.lists.find((list) => list.type === list_type)?._id;
-    console.log("list_id",list_id);
     if( !list_id) {
-      console.log("The list type doesn't exist");
+      console.error("The list type doesn't exist");
       return [];
     }
     realm.write(() => {
@@ -242,8 +251,9 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     const mainListId = user.lists.find((list) => list.type === ListTypes.MAIN)?._id;
     const recordListId = user.lists.find((list) => list.type === ListTypes.RECORD)?._id;
 
-    return Object.values(user.tasks).filter((task) =>task.list_id.toString() === mainListId?.toString() && task.list_id.toString() === recordListId?.toString());
+    const tasks =Object.values(user.tasks).filter((task) =>task.list_id.toString() === mainListId?.toString() || task.list_id.toString() === recordListId?.toString());
 
+    return tasks; 
   };
   return {
     addTask,

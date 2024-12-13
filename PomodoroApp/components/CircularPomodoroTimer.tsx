@@ -46,34 +46,32 @@ const CircularPomodoroTimer = () => {
 
 
 
-  const [seconds, setSeconds] = useState(state.timer);
+  const [seconds, setSeconds] = useState(0);
   //const imagenBackg = {source: require("@/assets/images/cropped-pomodoro-solo.png")};
   
 
 
-  useEffect(() => {
-    console.log(state,"State...");
-    if(timerStatus === TimerStatus.NOT_STARTED){
-      switch(state.status){
-        case PomodoroState.FOCUS:
-          setSeconds(state.params.focusTime);
-          break;
-        case PomodoroState.BREAK:
-          setSeconds(state.params.breakTime);
-          break;
-        case PomodoroState.LONG_BREAK:
-          setSeconds(state.params.longBreakTime);
-          break;
-      }
-    }
-  },[state])
+  // useEffect(() => {
+  //   if(timerStatus === TimerStatus.NOT_STARTED){
+  //     switch(state.status){
+  //       case PomodoroState.FOCUS:
+  //         setSeconds(state.params.focusTime);
+  //         break;
+  //       case PomodoroState.BREAK:
+  //         setSeconds(state.params.breakTime);
+  //         break;
+  //       case PomodoroState.LONG_BREAK:
+  //         setSeconds(state.params.longBreakTime);
+  //         break;
+  //     }
+  //   }
+  // },[state])
 
 
   const toggle = () => {
 
     if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
-      const response = addPomodoro(state.activeTask);
-      console.log(response,"Response");
+      const response = addPomodoro(state.activeTask,state.timer);
       
       if(response.status === "error"){
         alert(response.message);
@@ -181,17 +179,20 @@ const CircularPomodoroTimer = () => {
       if (savedSeconds !== null) {
         setSeconds(parseInt(savedSeconds));
       }
+
     }
     loadSeconds();
 
   }, []);
+
+
  
 
 
 
   const radius = 120; // Nuevo radio
   const circumference = 2 * Math.PI * radius;
-  const progress = (seconds / state.timer) * circumference;
+  const progress = (seconds / state.timer ) * circumference;
 
   return (
     
