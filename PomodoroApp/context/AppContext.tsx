@@ -10,6 +10,9 @@ import {  createProjectController } from "../db/Controllers/ProjectController"; 
 import {createListController} from "../db/Controllers/ListController";
 import { createPomodoroController } from "@/db/Controllers/PomodoroController";
 import { createSettingController } from "@/db/Controllers/SettingController";
+// import { configureNotifications } from "@/utils/NotificationService";
+import * as Notifications from 'expo-notifications';
+
 interface AppContextType {
         state: AppState,
         dispatch : React.Dispatch<Action>
@@ -106,6 +109,17 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
     }
   },[user,realm])
 
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+  });
+
+//   useEffect(() => {
+//     configureNotifications();
+//   },[])
 
 
 
