@@ -6,6 +6,8 @@ import { useGlobalContext } from "@/context/AppContext";
 import { BarChart } from "react-native-chart-kit";
 import { PieChart } from "react-native-chart-kit";
 import { Ionicons } from "@expo/vector-icons";
+import util_styles from "@/styles/utils";
+import { TaskStatus } from "@/db/models/Task";
 
 export default function dailyReports() {
   const {
@@ -16,47 +18,30 @@ export default function dailyReports() {
     },
   } = useGlobalContext();
 
-  const tasks = getTaskForReports();
-  const projects = getProjectList();
+
+  const tasks = getDailyPomodoros(new Date()).data;
 
 
   useEffect(() => {
      getDailyPomodoros(new Date());
   },[])
-  // Filtrar tareas de hoy
-  const today = new Date();
-  const dailyTasks = tasks.filter((task) => {
-    if (!task.started_at) return false;
-    const taskDate = new Date(task.started_at);
-    return (
-      taskDate.getDate() === today.getDate() &&
-      taskDate.getMonth() === today.getMonth() &&
-      taskDate.getFullYear() === today.getFullYear()
-    );
-  });
+  
 
   /// Filtrar y agrupar solo los proyectos que tienen tareas hoy
-  const tasksByProject = projects
-    .map((project) => {
-      const projectTasks = dailyTasks.filter(
-        (task) => task.project_id.toString() === project._id.toString()
-      );
-      return {
-        projectName: project.name,
-        taskCount: projectTasks.length,
-        
-        estimatedEffort: projectTasks.reduce(
-          (sum, task) => sum + task.estimated_effort,
-          0
-        ),
-        realEffort: projectTasks.reduce(
-          (sum, task) => sum + task.real_effort,
-          0
-        ),
-      };
-    })
-    .filter((project) => project.taskCount > 0); // Solo proyectos con tareas
+  const tasksByProject: { projectName: string; taskCount: number }[] = [{projectName: "Sin Proyecto", taskCount: 0}];
+   // Solo proyectos con tareas
 
+
+  tasks.forEach((task) => {
+    const projectIndex = tasksByProject.findIndex(
+      (p) => p.projectName === task.project
+    )
+    if (projectIndex !== -1) {
+      tasksByProject[projectIndex].taskCount += 1;
+    }else{
+      tasksByProject.push({ projectName: task.project, taskCount: 1 });
+    }
+  });
   const chartHeight = Math.max(200, tasksByProject.length * 50);
 
   // Datos para la gráfica de proyectos
@@ -69,14 +54,8 @@ export default function dailyReports() {
     ],
   };
 
-  const totalEstimatedEffort = dailyTasks.reduce(
-    (sum, task) => sum + task.estimated_effort,
-    0
-  );
-  const totalRealEffort = dailyTasks.reduce(
-    (sum, task) => sum + task.real_effort,
-    0
-  );
+
+  const totalRealEffort = tasks.reduce((total, task) => total + task.minutes, 0);
 
   const chartColors = [
     "#FF6B6B", // rojo
@@ -163,21 +142,60 @@ export default function dailyReports() {
           </View>
 
           <View style={styles.taskList}>
-            <Text style={styles.subtitle}>Detalle por Proyecto</Text>
-            {tasksByProject.map((project, index) => (
-              <View key={index} style={styles.projectItem}>
-                <Text style={styles.projectName}>{project.projectName}</Text>
-                <Text style={styles.statsText}>
-                  Número de tareas: {project.taskCount}
-                </Text>
-                <Text style={styles.statsText}>
-                  Pomodoros estimados: {project.estimatedEffort}
-                </Text>
-                <Text style={styles.statsText}>
-                  Pomodoros realizados: {project.realEffort}
-                </Text>
-              </View>
-            ))}
+            <Text style={styles.subtitle}>Reporte de Tareas</Text>
+            <View style={styles.taskListContainer}>
+              {tasks.map((task, index) => {
+                const {project,minutes,di,de,status,estimated_effort,real_effort} = task
+                return (
+                  <View key={index} style={styles.projectItem}>
+                    <Text style={styles.projectName}>{task.name}</Text>
+                    <View style={styles.statsContainer}>
+                      <Text style={util_styles.bold}>
+                        Proyecto:
+                      </Text>
+                      <Text style={util_styles.p}>{project}</Text>
+                    </View>
+                    <View style={styles.statsContainer}>
+                      <Text style={util_styles.bold}>
+                        Minutos:
+                      </Text>
+                      <Text style={util_styles.p}>{minutes}</Text>
+                    </View>
+                    <View style={styles.statsContainer}>
+                      <Text style={util_styles.bold}>
+                        Pomodoros Estimados:
+                      </Text>
+                      <Text style={util_styles.p}>{estimated_effort}</Text>
+                    </View>
+                    <View style={styles.statsContainer}>
+                      <Text style={util_styles.bold}>
+                        Pomodoros Realizados:
+                      </Text>
+                      <Text style={util_styles.p}>{real_effort}</Text>
+                    </View>
+                    <View style={styles.statsContainer}>
+                      <Text style={util_styles.bold}>
+                        Distracciones Internas
+                      </Text>
+                      <Text style={util_styles.p}>{di}</Text>
+                    </View>
+                    <View style={styles.statsContainer}>
+                      <Text style={util_styles.bold}>
+                        Distracciones Externas
+                      </Text>
+                      <Text style={util_styles.p}>{de}</Text>
+                    </View>
+                    <View style={styles.statsContainer}>
+                      <Text style={util_styles.bold}>
+                        Estado:
+                      </Text>
+                      <Text style={util_styles.p}>{status === TaskStatus.FINISHED ? "Terminada": "En Progreso"}</Text>
+                    </View>
+                  </View>
+                )
+              })}
+            </View>
+            
           </View>
         </>
       ) : (
@@ -197,7 +215,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
-    marginBottom: 10,
   },
   projectName: {
     fontSize: 16,
@@ -208,6 +225,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    
     backgroundColor: "#fee8c8",
   },
   title: {
@@ -222,15 +240,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: "#c53f27",
   },
-  statsContainer: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
+  taskListContainer: {
+    display: "flex",
+    flexDirection: "column",
   },
-  statsText: {
-    fontSize: 16,
-    marginBottom: 5,
+  statsContainer: {
+    display : "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   chartContainer: {
     backgroundColor: "#fff",
@@ -243,6 +261,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
+    marginBottom: 50,
   },
   taskItem: {
     borderBottomWidth: 1,

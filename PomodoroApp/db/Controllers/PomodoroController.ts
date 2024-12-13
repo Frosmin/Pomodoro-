@@ -69,7 +69,7 @@ const createPomodoroController = (user: User | null, realm: Realm | null) => {
 
     const getDailyPomodoros = (date: Date) => {
         if(!realm || !user || Object(user?.pomodoros).length === 0){
-            return {message: "Error during getting pomodoros", type: "error", data: {}}
+            return {message: "Error during getting pomodoros", type: "error", data: []}
         }
 
         
@@ -99,7 +99,7 @@ const createPomodoroController = (user: User | null, realm: Realm | null) => {
         });
         
         const tasks = [];
-        const task_without_name = {name:"Tareas Sin Nombre",estimated_effort: 0,real_effort: 0,status: PomodoroStatus.FINISHED,di:0,de:0,minutes:0};
+        const task_without_name = {name:"Tareas Sin Nombre",estimated_effort: 0,real_effort: 0,project: "Sin Proyecto",status: PomodoroStatus.FINISHED,di:0,de:0,minutes:0};
         for ( const [key, value] of Object.entries(task_ids)) {
             const {n,di,de,minutes} = value;
 
@@ -110,14 +110,15 @@ const createPomodoroController = (user: User | null, realm: Realm | null) => {
                 task_without_name.minutes = minutes + task_without_name.minutes;
             }else{
             const {name,estimated_effort,status,project_id} = user.tasks[key];
-            tasks.push({name,estimated_effort,real_effort: n,status,di,de,minutes});
+            const project = user.projects.find(project => project._id.toString() === project_id.toString())?.name;
+            tasks.push({name,estimated_effort,real_effort: n,project: project ? project : "Sin Proyecto",status,di,de,minutes});
             }
         }
         if(task_without_name.real_effort > 0){
             tasks.push(task_without_name);
         }        
             
-        return {message: "Pomodoros retrieved successfully", type: "success", data: pomodoros};
+        return {message: "Pomodoros retrieved successfully", type: "success", data: tasks};
     }
 
 
