@@ -15,6 +15,10 @@ import { DisctractionType } from "@/db/Controllers/PomodoroController";
 import Entypo from '@expo/vector-icons/Entypo';
 import util_styles from "@/styles/utils";
 import { showNotification,showPersistentNotification } from "@/utils/NotificationService";
+import * as TaskManager from 'expo-task-manager';
+import * as BackgroundFetch from 'expo-background-fetch';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from "expo-notifications";
 
 enum TimerStatus {
   NOT_STARTED = "NOT_STARTED",
@@ -37,6 +41,7 @@ const CircularPomodoroTimer = () => {
     },
   } = useGlobalContext();
   const [currentPomodoro,setCurrentPomodoro] = useState<Pomodoro|null>(null);
+  const BACKGROUND_TIMER_TASK = "background-timer-task";
 
 
 
@@ -102,7 +107,7 @@ const CircularPomodoroTimer = () => {
 
   }; 
   
-  //UseEffect para manejar los intervalos de tiempo
+  // UseEffect para manejar los intervalos de tiempo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (timerStatus === TimerStatus.IN_PROGRESS) {
@@ -125,8 +130,45 @@ const CircularPomodoroTimer = () => {
       clearInterval(interval!);
     }
     return () => clearInterval(interval!);
+    
   }, [timerStatus, seconds]);
-
+  
+  // TaskManager.defineTask(BACKGROUND_TIMER_TASK, async () => {
+  //   try {
+  //     const seconds = parseInt(await AsyncStorage.getItem("remainingTime") || "0", 10);
+  
+  //     if (seconds > 0) {
+  //       const updatedSeconds = seconds - 1;
+  //       await AsyncStorage.setItem("remainingTime", updatedSeconds.toString());
+  
+  //       // Update persistent notification
+  //       await Notifications.scheduleNotificationAsync({
+  //         content: {
+  //           title: "Pomodoro Timer",
+  //           body: `Time remaining: ${Math.floor(updatedSeconds / 60)}:${updatedSeconds % 60}`,
+  //           sticky: true,
+  //         },
+  //         trigger: null,
+  //       });
+  
+  //       return BackgroundFetch.BackgroundFetchResult.NewData;
+  //     } else {
+  //       // Timer completed
+  //       await Notifications.scheduleNotificationAsync({
+  //         content: {
+  //           title: "Pomodoro Complete",
+  //           body: "Time's up! Take a break.",
+  //         },
+  //         trigger: null,
+  //       });
+  
+  //       return BackgroundFetch.BackgroundFetchResult.NoData;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in background task:", error);
+  //     return BackgroundFetch.BackgroundFetchResult.Failed;
+  //   }
+  // });
   useEffect(() => {
     setSeconds(state.timer);
   }, [state.timer]);
