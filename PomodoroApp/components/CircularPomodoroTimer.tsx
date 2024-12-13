@@ -71,7 +71,7 @@ const CircularPomodoroTimer = () => {
   const toggle = () => {
 
     if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
-      const response = addPomodoro(state.activeTask);
+      const response = addPomodoro(state.activeTask,state.timer);
       
       if(response.status === "error"){
         alert(response.message);

@@ -242,8 +242,9 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     const mainListId = user.lists.find((list) => list.type === ListTypes.MAIN)?._id;
     const recordListId = user.lists.find((list) => list.type === ListTypes.RECORD)?._id;
 
-    return Object.values(user.tasks).filter((task) =>task.list_id.toString() === mainListId?.toString() && task.list_id.toString() === recordListId?.toString());
+    const tasks =Object.values(user.tasks).filter((task) =>task.list_id.toString() === mainListId?.toString() || task.list_id.toString() === recordListId?.toString());
 
+    return tasks; 
   };
   return {
     addTask,
