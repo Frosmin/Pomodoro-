@@ -10,13 +10,12 @@ import { ListTypes } from "@/db/models/List";
 export default function monthlyReport() {
   const {
     controllers: {
-      TaskController: { getTasksByList },
-      ListController: { getListIdByType },
+      TaskController: { getTaskForReports },
       ProjectController: { getProjectList },
     },
   } = useGlobalContext();
 
-  const tasks = getTasksByList(getListIdByType(ListTypes.RECORD));
+  const tasks = getTaskForReports();
   const projects = getProjectList();
 
   // Filtrar tareas de hoy

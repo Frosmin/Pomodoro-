@@ -232,8 +232,19 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
         }
       });
     });
-  }
+  };
 
+  const getTaskForReports = () => {
+    if (!realm || !user) {
+      console.log("Error retrieving tasks");
+      return [];
+    }
+    const mainListId = user.lists.find((list) => list.type === ListTypes.MAIN)?._id;
+    const recordListId = user.lists.find((list) => list.type === ListTypes.RECORD)?._id;
+
+    return Object.values(user.tasks).filter((task) =>task.list_id.toString() === mainListId?.toString() && task.list_id.toString() === recordListId?.toString());
+
+  };
   return {
     addTask,
     getTasksByList,
@@ -247,6 +258,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
     changeListType,
     removeCompletedTasks,
     removeAllTasks,
+    getTaskForReports
   };
 };
 

@@ -11,12 +11,11 @@ export default function generalReports() {
   const {
     user,
     controllers: {
-      TaskController: { getTasksByList },
-      ListController: { getListIdByType },
+      TaskController: {  getTaskForReports },
     },
   } = useGlobalContext();
 
-  const tasks = getTasksByList(getListIdByType(ListTypes.RECORD));
+  const tasks = getTaskForReports();
 
   const completedTasks = tasks.filter(
     (task) => task.status === "FINISHED"

@@ -160,13 +160,12 @@ import { Ionicons } from "@expo/vector-icons";
 export default function dailyReports() {
   const {
     controllers: {
-      TaskController: { getTasksByList },
-      ListController: { getListIdByType},
+      TaskController: { getTaskForReports},
       ProjectController: { getProjectList },
     },
   } = useGlobalContext();
 
-  const tasks = getTasksByList(getListIdByType(ListTypes.RECORD));
+  const tasks = getTaskForReports();
   const projects = getProjectList();
 
   // Filtrar tareas de hoy
