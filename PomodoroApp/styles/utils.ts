@@ -38,6 +38,10 @@ const util_styles = StyleSheet.create({
     fontFamily: body_family,
    },
 
+   bold:{
+    fontWeight: "bold",
+   },
+
    //text-colors
    t_white: {
     color: colors.white,
