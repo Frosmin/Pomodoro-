@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useReducer, useEffect, useState,Dispatch,SetStateAction, useMemo } from "react";
-import { reducer,AppState,PomodoroState,Action
+import { reducer,AppState,PomodoroState,Action, ActionKind
  } from "./reducer";
 import { useObject, useQuery, useRealm } from "@realm/react";
 import { User } from "@/db/models/User";
@@ -12,6 +12,8 @@ import { createPomodoroController } from "@/db/Controllers/PomodoroController";
 import { createSettingController } from "@/db/Controllers/SettingController";
 // import { configureNotifications } from "@/utils/NotificationService";
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 interface AppContextType {
         state: AppState,
@@ -77,7 +79,6 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
   const users = realm.objects("User");
 
   const onUserChange = () => {
-    console.log("Change Detected");
     setUser(newUser);
     
   };
@@ -117,9 +118,79 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
     }),
   });
 
-//   useEffect(() => {
-//     configureNotifications();
-//   },[])
+  useEffect(() => {
+    const loadSavedStatus = async () => {
+
+      
+
+      let savedTimer = await AsyncStorage.getItem("timer").then((res) => {
+        if (res) {
+          return parseInt(res);
+        }else{
+          return state.timer
+        }
+      });
+      let savedStatus = await AsyncStorage.getItem("status").then((res) => {
+        if (res !== null && res !== "NaN") {
+          return res;
+        }else{
+          return state.status
+        }
+      });
+      let savedNIntervals = await AsyncStorage.getItem("nIntervals").then((res) => {
+        if (res) {
+          return parseInt(res);
+        }else{
+          return state.nIntervals
+        }
+      });
+      let savedActiveTask = await AsyncStorage.getItem("activeTask").then((res) => {
+        if (res) {
+          return res;
+        }else{
+          return state.activeTask
+        }
+      });
+      let savedCurrentPomodoro = await AsyncStorage.getItem("currentPomodoro").then((res) => {
+        if (res) {
+          return res;
+        }else{
+          return state.currentPomodoro
+        }
+
+      });
+
+      let savedSeconds = await AsyncStorage.getItem("seconds").then((res) => {
+        if (res) {
+          return parseInt(res);
+        }else{
+          return savedTimer
+        }
+      });
+
+      AsyncStorage.setItem("seconds",savedSeconds.toString());
+      AsyncStorage.setItem("timer",savedTimer.toString());
+      AsyncStorage.setItem("status",savedStatus.toString());
+      AsyncStorage.setItem("nIntervals",savedNIntervals.toString());
+      AsyncStorage.setItem("activeTask",savedActiveTask.toString());
+      AsyncStorage.setItem("currentPomodoro",savedCurrentPomodoro.toString());
+
+      if(savedTimer && savedStatus && savedNIntervals && savedActiveTask !== null && savedCurrentPomodoro !== null){
+        dispatch({
+          type: ActionKind.SET_INITIAL,
+          payload: {
+            timer: parseInt(savedTimer),
+            status: savedStatus,
+            nIntervals: parseInt(savedNIntervals),
+            activeTask: savedActiveTask,
+            currentPomodoro: savedCurrentPomodoro
+          },
+        });
+      }
+      
+    }
+    loadSavedStatus();
+  },[])
 
 
 
