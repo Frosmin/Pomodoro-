@@ -1,3 +1,4 @@
+import Setting from "@/db/models/Setting";
 
 // Reducer para realizar acciones referentes al pomodoro
 enum ActionKind {
@@ -31,7 +32,8 @@ interface AppState{
     status: PomodoroState,
     params: Params,
     activeTask: string,
-    currentPomodoro: string
+    currentPomodoro: string,
+    settings?: Setting,
 }
 
 const reducer = (state : AppState,action: Action

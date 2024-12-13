@@ -19,6 +19,7 @@ import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from "expo-notifications";
+import { Audio } from 'expo-av';
 
 enum TimerStatus {
   NOT_STARTED = "NOT_STARTED",
@@ -114,6 +115,7 @@ const CircularPomodoroTimer = () => {
       showPersistentNotification(formatTime(seconds),state.status);
 
       if (seconds === 0) {
+        playSound('alarm');
         if (state.status !== PomodoroState.BREAK && state.status !== PomodoroState.LONG_BREAK) {
             incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
             changePomodoroStatus(state.currentPomodoro, PomodoroStatus.FINISHED);
@@ -123,6 +125,9 @@ const CircularPomodoroTimer = () => {
         setTimerStatus(TimerStatus.NOT_STARTED);
       } else {
         interval = setInterval(() => {
+          if (user?.settings?.tick) { // Verificar si el tick está habilitado en configuración
+            playSound('tick');
+          }
           setSeconds((seconds) => seconds - 1);
         }, 1000);
       }
@@ -169,6 +174,35 @@ const CircularPomodoroTimer = () => {
   //     return BackgroundFetch.BackgroundFetchResult.Failed;
   //   }
   // });
+
+  //Sonidos :D
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+
+  const playSound = async (type: 'tick' | 'alarm') => {
+    try {
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        type === 'tick' 
+          ? require('@/assets/sounds/sound.wav')
+          : require('@/assets/sounds/sound.wav'),
+        { shouldPlay: true }
+      );
+      setSound(newSound);
+      await newSound.playAsync();
+    } catch (error) {
+      console.error('Error reproduciendo sonido:', error);
+    }
+  };
+
+  // Limpieza del sonido
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
+
   useEffect(() => {
     setSeconds(state.timer);
   }, [state.timer]);
