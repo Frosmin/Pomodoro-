@@ -1,7 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Setting from "@/db/models/Setting";
+
 
 // Reducer para realizar acciones referentes al pomodoro
 enum ActionKind {
     SWITCH = "SWITCH",
+    SET_CURRENT = "SET_CURRENT",
+    SET_POMODORO = "START_POMODORO",
+    SET_PARAMS = "SET_PARAMS",
+    SET_INITIAL = "SET_INITIAL"
 }
 
 interface Action
@@ -26,7 +33,10 @@ interface AppState{
     timer : number,
     nIntervals: number,
     status: PomodoroState,
-    params: Params
+    params: Params,
+    activeTask: string,
+    currentPomodoro: string,
+    settings?: Setting,
 }
 
 const reducer = (state : AppState,action: Action
@@ -37,6 +47,9 @@ const reducer = (state : AppState,action: Action
             
             // Si el estado actual es diferente al de concentracion (Tiempo de descanso)
             if(state.status !== PomodoroState.FOCUS){
+                AsyncStorage.setItem("timer", state.timer.toString());
+                AsyncStorage.setItem("status",PomodoroState.FOCUS);
+                AsyncStorage.setItem("nIntervals", (state.nIntervals + 1).toString());
                 return {
                     ...state,
                     timer: state.params.focusTime, 
@@ -54,10 +67,31 @@ const reducer = (state : AppState,action: Action
                     newTimer = state.params.longBreakTime
                     newStatus = PomodoroState.LONG_BREAK;
                 }
+                console.log(newTimer,newStatus,"Switghing");
+                AsyncStorage.setItem("timer", newTimer.toString());
+                AsyncStorage.setItem("status", newStatus);
+                
                 return {...state,timer : newTimer, status: newStatus}
             }
-    }
+        case ActionKind.SET_CURRENT:
+            AsyncStorage.setItem("activeTask",action.payload);
+            return {...state,activeTask: action.payload};
+        case ActionKind.SET_POMODORO:
+            AsyncStorage.setItem("currentPomodoro",action.payload);
+            return {...state, currentPomodoro: action.payload};
+        case ActionKind.SET_PARAMS:
+            let newTimer = action.payload.focusTime;
+            if(state.status === PomodoroState.BREAK){
+                newTimer = action.payload.breakTime;
+            }else if(state.status === PomodoroState.LONG_BREAK){
+                newTimer = action.payload.longBreakTime;
+            }
+
+            return {...state, timer: newTimer,params: action.payload};
+        case ActionKind.SET_INITIAL:
+            return {...state, ...action.payload};
+        }
 }
 
 export {reducer,AppState,PomodoroState,Action
-,ActionKind}
+,ActionKind, Params}
