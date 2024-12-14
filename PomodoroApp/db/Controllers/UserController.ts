@@ -13,10 +13,10 @@ const createUserController = (realm : Realm|null) => {
     }
         realm.write(() => {
             const user_id = new Realm.BSON.ObjectId();
-            const mainList = List.generate("Today", ListTypes.MAIN) as List;
-            const activities = List.generate("Activity Inventory", ListTypes.OTHER) as List;
+            const mainList = List.generate("Hoy", ListTypes.MAIN) as List;
+            const activities = List.generate("Inventario de Actividades", ListTypes.OTHER) as List;
             const record = List.generate("Record", ListTypes.RECORD) as List;
-            const defaultProject = Project.generate("No Project") as Project;
+            const defaultProject = Project.generate("Sin Proyecto") as Project;
             const settings = Setting.generate() as Setting;
             const newUser = realm.create('User', User.generate(user_id,username,password,[mainList,activities,record],defaultProject,settings));
             return newUser 

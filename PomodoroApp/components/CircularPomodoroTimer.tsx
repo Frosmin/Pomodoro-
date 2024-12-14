@@ -69,7 +69,7 @@ const CircularPomodoroTimer = () => {
   const toggle = () => {
 
     if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
-      const response = addPomodoro(state.activeTask,state.timer);
+      const response = addPomodoro(state.activeTask,state.timer / 60);
 
       
       if(response.status === "error"){
@@ -149,6 +149,8 @@ const CircularPomodoroTimer = () => {
             incrementPomodoro(); // Incrementa el contador solo al final de un ciclo completo
             changePomodoroStatus(state.currentPomodoro, PomodoroStatus.FINISHED);
             dispatch({ type: ActionKind.SET_POMODORO, payload: "" });
+            setCurrentPomodoro(null);
+            AsyncStorage.setItem("currentPomodoro", "");
         }
         dispatch({ type: ActionKind.SWITCH });
         setTimerStatus(TimerStatus.NOT_STARTED);

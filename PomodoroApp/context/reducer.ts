@@ -67,6 +67,7 @@ const reducer = (state : AppState,action: Action
                     newTimer = state.params.longBreakTime
                     newStatus = PomodoroState.LONG_BREAK;
                 }
+                console.log(newTimer,newStatus,"Switghing");
                 AsyncStorage.setItem("timer", newTimer.toString());
                 AsyncStorage.setItem("status", newStatus);
                 
