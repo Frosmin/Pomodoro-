@@ -117,8 +117,7 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadSavedStatus = async () => {
 
-      
-
+      console.log(state,"State...")
       let savedTimer = await AsyncStorage.getItem("timer").then((res) => {
         if (res) {
           return parseInt(res);

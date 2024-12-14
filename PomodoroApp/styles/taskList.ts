@@ -88,6 +88,7 @@ const taskList_styles = StyleSheet.create({
       editTaskSection: {
         flexDirection: 'column',
         gap: 5,
+        marginBottom: 10,
       },
       edit_list : {
 

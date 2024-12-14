@@ -49,21 +49,21 @@ const CircularPomodoroTimer = () => {
   
 
 
-  // useEffect(() => {
-  //   if(timerStatus === TimerStatus.NOT_STARTED){
-  //     switch(state.status){
-  //       case PomodoroState.FOCUS:
-  //         setSeconds(state.params.focusTime);
-  //         break;
-  //       case PomodoroState.BREAK:
-  //         setSeconds(state.params.breakTime);
-  //         break;
-  //       case PomodoroState.LONG_BREAK:
-  //         setSeconds(state.params.longBreakTime);
-  //         break;
-  //     }
-  //   }
-  // },[state])
+  useEffect(() => {
+    if(timerStatus === TimerStatus.NOT_STARTED && seconds === 0){
+      switch(state.status){
+        case PomodoroState.FOCUS:
+          setSeconds(state.params.focusTime);
+          break;
+        case PomodoroState.BREAK:
+          setSeconds(state.params.breakTime);
+          break;
+        case PomodoroState.LONG_BREAK:
+          setSeconds(state.params.longBreakTime);
+          break;
+      }
+    }
+  },[state])
 
 
   const toggle = () => {

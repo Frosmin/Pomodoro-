@@ -208,7 +208,7 @@ const TaskEditer = ({...props}: props) => {
         </View>
       </View>
       <View style={taskList_styles.edit_task_window}>
-        <Text>Inventariio de Actividades</Text>
+        <Text>Inventario de Actividades</Text>
         
       </View>
       
