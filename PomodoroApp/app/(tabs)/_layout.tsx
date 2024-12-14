@@ -97,6 +97,13 @@ export default function TabLayout() {
           headerShown: false,
         }}
       />
+      <Tabs.Screen
+        name="SummaryScreen" //pomodoro
+        options={{         
+          href: null,
+          headerShown: false,
+        }}
+      />
 
       <Tabs.Screen
         name="tareas" //nombre unico
