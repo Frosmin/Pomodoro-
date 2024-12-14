@@ -32,7 +32,7 @@ const TaskEditer = ({...props}: props) => {
         user,
         controllers: {
           TaskController: { addTask,deleteTask,editTask },
-          ListController: { getMainListID,getActiveLists },
+          ListController: { getActiveLists },
           ProjectController: {getProjectList},
         },
       } = useGlobalContext();
@@ -91,6 +91,16 @@ const TaskEditer = ({...props}: props) => {
         console.log("Tarea no editada");
       }
     };
+
+    const handleEditEstimatedEffort = (value : string) => {
+      if(value === undefined || /[\D]+/g.test(value)) return;
+      setNewTask({ ...newTask, estimated_effort: Number(value) });
+    };
+
+    const handleBtnEstimatedEffort = (value : number) => {
+      if(newTask.estimated_effort == 0 && value < 0) return;
+      setNewTask({ ...newTask, estimated_effort: newTask.estimated_effort + value });
+    };
   
     useEffect(() => {
         setProjects(getProjectList());      
@@ -120,17 +130,17 @@ const TaskEditer = ({...props}: props) => {
               style={taskList_styles.number_input}
               placeholder="Pomodoros estimados"
               value={newTask.estimated_effort.toString()}
-              onChangeText={(value) => setNewTask({...newTask, estimated_effort: parseInt(value)})}
-              keyboardType="number-pad"
+              onChange={(e) => handleEditEstimatedEffort(e.nativeEvent.text)}
+              keyboardType="numeric"
             />
             <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
-                onPress={() => setNewTask({...newTask, estimated_effort: newTask.estimated_effort - 1})}
+                onPress={() => handleBtnEstimatedEffort(-1)}
               >
                 <MaterialIcons name="remove-circle" size={24} color="black" />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setNewTask({...newTask, estimated_effort: newTask.estimated_effort + 1})}
+                onPress={() => handleBtnEstimatedEffort(1)}
               >
                 <MaterialIcons name="add-circle" size={24} color="black" />
               </TouchableOpacity>

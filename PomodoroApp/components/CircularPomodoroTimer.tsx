@@ -30,8 +30,6 @@ enum TimerStatus {
 
 const CircularPomodoroTimer = () => {
 
-
-
   const [timerStatus, setTimerStatus] = useState<TimerStatus>(TimerStatus.NOT_STARTED);
   const {
     state,
@@ -72,12 +70,14 @@ const CircularPomodoroTimer = () => {
 
     if(state.status === PomodoroState.FOCUS &&  timerStatus === TimerStatus.NOT_STARTED){
       const response = addPomodoro(state.activeTask,state.timer);
+
       
       if(response.status === "error"){
         alert(response.message);
       }else{
         const pomodoro_id = response.pomodoro_id;
         dispatch({ type: ActionKind.SET_POMODORO, payload: pomodoro_id.toString() });
+        AsyncStorage.setItem("currentPomodoro", pomodoro_id.toString());
       }
     }
     setTimerStatus(
@@ -88,11 +88,14 @@ const CircularPomodoroTimer = () => {
   };
 
   const reset = () => {
-    if(timerStatus === TimerStatus.IN_PROGRESS){
+    if(timerStatus === TimerStatus.IN_PROGRESS ){
       setSeconds(state.timer);
       AsyncStorage.setItem("seconds", state.timer.toString());
       setTimerStatus(TimerStatus.NOT_STARTED);
-      changePomodoroStatus(state.currentPomodoro, PomodoroStatus.CANCELED);
+      console.log(state.currentPomodoro);
+      if(state.status === PomodoroState.FOCUS){
+        changePomodoroStatus(state.currentPomodoro, PomodoroStatus.CANCELED);
+      }
     }
     
   };
