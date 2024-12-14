@@ -121,9 +121,33 @@ const createPomodoroController = (user: User | null, realm: Realm | null) => {
         return {message: "Pomodoros retrieved successfully", type: "success", data: tasks};
     }
 
+    const getLastSevenDaysPomodoros = () => {
+        if(!realm || !user || Object(user?.pomodoros).length === 0){
+            return {message: "Error during getting pomodoros", type: "error", data: {[0]:0,[1]:0,[2]:0,[3]:0,[4]:0,[5]:0,[6]:0}}
+        }
+
+        const pomodoros = Object.values(user.pomodoros).filter((pomodoro) => {
+            const pomodoroDate = new Date(pomodoro.started_at);
+            const today = new Date();
+            return pomodoroDate.getDate() >= today.getDate() - 6 && pomodoroDate.getMonth() === today.getMonth() && pomodoroDate.getFullYear() === today.getFullYear()
+            && pomodoro.status === PomodoroStatus.FINISHED;
+        });
+
+        const pomodoros_by_day = {[0]:0,[1]:0,[2]:0,[3]:0,[4]:0,[5]:0,[6]:0} as {[key: number]: number};
+        const today = new Date();
+        pomodoros.forEach((pomodoro) => {
+            const pomodoroDate = new Date(pomodoro.started_at);
+            const day = (pomodoroDate.getDate() - today.getDate()) * -1 ;
+            console.log(day);
+            pomodoros_by_day[day] = pomodoros_by_day[day] + pomodoro.minutes;
+        });
+
+        return {message: "Pomodoros retrieved successfully", type: "success", data: pomodoros_by_day};
+    }
 
 
-    return { addPomodoro, changePomodoroStatus,scoreDistraccion,getDailyPomodoros };
+
+    return { addPomodoro, changePomodoroStatus,scoreDistraccion,getDailyPomodoros,getLastSevenDaysPomodoros };
 };
 
 export {createPomodoroController};
