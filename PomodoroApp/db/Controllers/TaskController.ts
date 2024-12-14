@@ -43,7 +43,7 @@ const createTaskController = (user: User | null, realm: Realm | null) => {
 
   const getTasksByList = (list_id: Realm.BSON.ObjectID | undefined) => {
     if (!user || !list_id) {
-      console.log("Error retrieving tasks");
+      console.log("Error retrieving tasks,list");
       return [];
     }
 
