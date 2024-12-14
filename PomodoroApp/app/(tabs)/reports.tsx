@@ -10,6 +10,8 @@ import { useGlobalContext } from "@/context/AppContext";
 import { Task } from "@/db/models/Task";
 import { BarChart } from "react-native-chart-kit";
 import { router } from "expo-router";
+import util_styles from "@/styles/utils";
+import { colors } from "@/styles/colors";
 
 // type AppRoutes = "/(tabs)/dailyReports" | "/(tabs)/generalReports" | "/(tabs)/monthlyReports";
 
@@ -27,7 +29,7 @@ export default function Reports() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[util_styles.container,{backgroundColor: colors.secondary}]}>
       <Text style={styles.title}>Reportes</Text>
       <TouchableOpacity
         style={styles.button}
