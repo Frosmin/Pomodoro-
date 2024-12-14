@@ -1,30 +1,26 @@
 
 
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { useGlobalContext } from "@/context/AppContext";
-import { BarChart } from "react-native-chart-kit";
 import { PieChart } from "react-native-chart-kit";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import util_styles from "@/styles/utils";
 import { TaskStatus } from "@/db/models/Task";
+import { colors } from "@/styles/colors";
 
 export default function dailyReports() {
   const {
     controllers: {
-      TaskController: { getTaskForReports},
-      ProjectController: { getProjectList },
       PomodoroController: {getDailyPomodoros},
     },
   } = useGlobalContext();
 
+  const [date, setDate] = React.useState(new Date());
 
-  const tasks = getDailyPomodoros(new Date()).data;
 
+  const tasks = getDailyPomodoros(date).data;
 
-  useEffect(() => {
-     getDailyPomodoros(new Date());
-  },[])
   
 
   /// Filtrar y agrupar solo los proyectos que tienen tareas hoy
@@ -84,31 +80,29 @@ export default function dailyReports() {
 
   const timeStats = formatTime(totalRealEffort);
 
-  
+
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Reporte Diario por Proyecto</Text>
+      <Text style={[styles.title, {marginTop: 20}]}>Reporte Diario</Text>
 
+      <View style={styles.dateContainer}>
+        <View style={styles.dateBtnContainer}>
+          <TouchableOpacity style={styles.dateBtn} onPress={() => setDate((prevDate) => new Date(prevDate.setDate(prevDate.getDate() - 1)))}>
+            <MaterialCommunityIcons  name="arrow-left-bold" size={24} color={colors.primary_300} />
+          </TouchableOpacity>
+          <View style={[styles.dateBtn,{borderLeftWidth: 3, borderColor: colors.primary_300,borderRightWidth: 3}]}>
+           <Text style={styles.dateText}>{date.toLocaleDateString('es-ES', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</Text>
+          </View>
+          <TouchableOpacity style={styles.dateBtn} onPress={() => setDate((prevDate) => new Date(prevDate.setDate(prevDate.getDate() + 1)))}>
+            <MaterialCommunityIcons name="arrow-right-bold" size={24} color={colors.primary_300} />
+          </TouchableOpacity>
+        </View>
+      </View>
       {tasksByProject.length > 0 ? (
         <>
           <View style={styles.chartContainer}>
             <Text style={styles.subtitle}>Tareas por Proyecto</Text>
-            {/* <BarChart
-              data={projectChartData}
-              width={300}
-              height={chartHeight}
-              chartConfig={{
-                backgroundColor: "#ffffff",
-                backgroundGradientFrom: "#ffffff",
-                backgroundGradientTo: "#ffffff",
-                color: (opacity = 1) => `rgba(239, 101, 72, ${opacity})`,
-                barPercentage: 0.5,
-              }}
-              yAxisLabel=""
-              yAxisSuffix=" tareas"
-              verticalLabelRotation={30}
-            /> */}
             <PieChart
               data={pieChartData}
               width={300}
@@ -215,6 +209,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
+    borderColor: colors.neutral_200,
+    borderBottomWidth: 0.5,
   },
   projectName: {
     fontSize: 16,
@@ -256,6 +252,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     alignItems: "center",
+  },
+  dateContainer: {
+    flexDirection: "row",
+    justifyContent:"center",
+    marginBottom: 10
+  },
+  dateBtnContainer: {
+    flexDirection: "row",
+    borderColor: colors.primary_300,
+    borderWidth: 2,
+    borderRadius: 10,
+    width: "auto",
+    
+  },
+  dateBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+  },
+  dateText: {
+    color: colors.primary_300,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   taskList: {
     backgroundColor: "#fff",
