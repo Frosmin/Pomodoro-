@@ -6,7 +6,7 @@ import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 export interface itemType {
   name : string,
-  icon : "folder" | "clipboard-list" | "cog",
+  icon : "folder" | "clipboard-list" | "cog" | "book-account",
   link : "./projects" | "./activityInventory" | "./settings" | "./SummaryScreen",
   color : string,
 }
@@ -17,7 +17,7 @@ const pomoMenu = () => {
     {name:"Proyectos",icon:"folder",link:"./projects", color: "red"},
     {name: "Inventario de Actividades", icon:"clipboard-list",link: "./activityInventory", color: "#5fcf60"},
     {name: "Ajustes", icon:"cog",link: "./settings", color: "black"},
-    {name: "Pomodoro", icon:"cog",link: "./SummaryScreen", color: "black"},
+    {name: "Manual de Uso", icon:"book-account",link: "./SummaryScreen", color: "blue"},
   ]
   const handlePress = (link : "./projects" | "./activityInventory" ) => {
     router.push({pathname: link});

@@ -117,8 +117,7 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadSavedStatus = async () => {
 
-      
-
+      console.log(state,"State...")
       let savedTimer = await AsyncStorage.getItem("timer").then((res) => {
         if (res) {
           return parseInt(res);
@@ -128,14 +127,14 @@ const AppContextProvider : React.FC<AppProviderProps> = ({ children }) => {
       });
       let savedStatus = await AsyncStorage.getItem("status").then((res) => {
         if (res !== null && res !== "NaN") {
-          return res;
+          return res
         }else{
           return state.status
         }
       });
       let savedNIntervals = await AsyncStorage.getItem("nIntervals").then((res) => {
         if (res) {
-          return parseInt(res);
+          return parseInt(res) ;
         }else{
           return state.nIntervals
         }

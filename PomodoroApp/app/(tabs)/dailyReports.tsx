@@ -82,7 +82,7 @@ export default function dailyReports() {
     return { hours, mins };
   };
 
-  const timeStats = formatTime(totalRealEffort * 25);
+  const timeStats = formatTime(totalRealEffort);
 
   
 
