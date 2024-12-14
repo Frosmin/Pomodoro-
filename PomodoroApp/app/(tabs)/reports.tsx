@@ -49,7 +49,7 @@ export default function Reports() {
         style={styles.button}
         onPress={() => navegar(AppRoutes.MonthlyReports)}
       >
-        <Text style={styles.buttonText}>Ver Reporte Mensual</Text>
+        <Text style={styles.buttonText}>Ver Reporte Semanal</Text>
       </TouchableOpacity>
     </View>
   );

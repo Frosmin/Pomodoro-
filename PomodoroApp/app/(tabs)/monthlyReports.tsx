@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView,Dimensions } from "react-native";
 import { useGlobalContext } from "@/context/AppContext";
 import { BarChart } from "react-native-chart-kit";
 import { PieChart } from "react-native-chart-kit";
@@ -12,170 +12,78 @@ export default function monthlyReport() {
     controllers: {
       TaskController: { getTaskForReports },
       ProjectController: { getProjectList },
+      PomodoroController: { getLastSevenDaysPomodoros },
     },
   } = useGlobalContext();
 
-  const tasks = getTaskForReports();
-  const projects = getProjectList();
-
-  // Filtrar tareas de hoy
+  const pomodoros = Object.values(getLastSevenDaysPomodoros().data).reverse();
   const today = new Date();
-  const monthlyTasks = tasks.filter((task) => {
-    if (!task.started_at) return false;
-    const taskDate = new Date(task.started_at);
-    return (
-      taskDate.getMonth() === today.getMonth() &&
-      taskDate.getFullYear() === today.getFullYear()
-    );
-  });
+  const labels = Array.from({ length: 7 }).map((_, i) => {
+    const date = new Date(today.getTime() - 1000 * 60 * 60 * 24 * i);
+    const days = [
+      "dom",
+      "lun",
+      "mar",
+      "mie",
+      "jue",
+      "vie",
+      "sab",
+    ];
+    return `${days[date.getDay()]}`;
+  }).reverse();
 
-  // 2. Luego agrupamos las tareas mensuales por proyecto tambien saca totalEfort y realEffort
-  const tasksByProject = Object.values(
-    monthlyTasks.reduce((acc, task) => {
-      const project = projects.find(p => p._id.toString() === task.project_id.toString());
-      const projectName = project?.name || "Sin Proyecto";
-      if (!acc[projectName]) {
-        acc[projectName] = {
-          projectName,
-          taskCount: 0,
-          totalEstimatedEffort: 0,
-          realEffort: 0
-        };
-      }
-      acc[projectName].taskCount++;
-      acc[projectName].totalEstimatedEffort += task.estimated_effort;
-      acc[projectName].realEffort += task.real_effort;
-      return acc;
-    }, {} as Record<string, { 
-      projectName: string; 
-      taskCount: number;
-      totalEstimatedEffort: number;
-      realEffort: number;
-    }>)
-  );
-
- 
-  const chartHeight = Math.max(200, tasksByProject.length * 50);
-
+  const timerStats = Object.values(getLastSevenDaysPomodoros().data).reduce((acc, pomodoro) => acc + pomodoro, 0);
   
-  const projectChartData = {
-    labels: tasksByProject.map((p) => p.projectName),
-    datasets: [
-      {
-        data: tasksByProject.map((p) => p.taskCount),
-      },
-    ],
-  };
-
-  const totalEstimatedEffort = monthlyTasks.reduce(
-    (sum, task) => sum + task.estimated_effort,
-    0
-  );
-  
-  const totalRealEffort = monthlyTasks.reduce(
-    (sum, task) => sum + task.real_effort,
-    0
-  );
-
-  const chartColors = [
-    "#FF6B6B", // rojo
-    "#4ECDC4", // turquesa
-    "#45B7D1", // azul claro
-    "#96CEB4", // verde menta
-    "#FFEEAD", // amarillo claro
-    "#D4A5A5", // rosa pálido
-    "#9EA1D4", // violeta
-    "#A8E6CF", // verde claro
-  ];
-
-  const pieChartData = tasksByProject.map((project, index) => ({
-    name: project.projectName,
-    population: project.taskCount,
-    color: chartColors[index % chartColors.length],
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 12,
-  }));
-
-  const formatTime = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return { hours, mins };
-  };
-
-  const timeStats = formatTime(totalRealEffort * 25);
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Reporte Diario por Proyecto</Text>
+      <Text style={[styles.title,{marginTop:20}]}>Reporte Semanal</Text>
 
-      {tasksByProject.length > 0 ? (
+      {Object.values(pomodoros).length > 0 ? (
         <>
           <View style={styles.chartContainer}>
-            <Text style={styles.subtitle}>Tareas por Proyecto</Text>
-            {/* <BarChart
-              data={projectChartData}
-              width={300}
-              height={chartHeight}
-              chartConfig={{
-                backgroundColor: "#ffffff",
-                backgroundGradientFrom: "#ffffff",
-                backgroundGradientTo: "#ffffff",
-                color: (opacity = 1) => `rgba(239, 101, 72, ${opacity})`,
-                barPercentage: 0.5,
-              }}
-              yAxisLabel=""
-              yAxisSuffix=" tareas"
-              verticalLabelRotation={30}
-            /> */}
-            <PieChart
-              data={pieChartData}
-              width={300}
-              height={200}
-              chartConfig={{
-                backgroundColor: "#ffffff",
-                backgroundGradientFrom: "#ffffff",
-                backgroundGradientTo: "#ffffff",
-                color: (opacity = 1) => `rgba(239, 101, 72, ${opacity})`,
-                style: {
-                  borderRadius: 16,
-                },
-              }}
-              accessor="population"
-              backgroundColor="transparent"
-              paddingLeft="15"
-              absolute // Mostrar números absolutos en lugar de porcentajes
+            <Text style={styles.subtitle}>Minutos de Concentración</Text>
+            <BarChart
+                data={{
+                    labels: labels,
+                    datasets: [
+                        {
+                            data: pomodoros,
+                        },
+                    ],
+                }}
+                width={Dimensions.get('window').width - 20 } // Ancho del gráfico
+                height={300} // Alto del gráfico
+                
+                
+                yAxisLabel=""
+                yAxisSuffix="m"
+                chartConfig={{
+                    backgroundColor: '#f2f2f2',
+                    barPercentage: 0.7,
+                    backgroundGradientFrom: '#ffffff',
+                    backgroundGradientTo: '#f2f2f2',
+                    decimalPlaces: 0, // Mostrar valores enteros
+                    color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                }}
+                fromZero={true}
+                verticalLabelRotation={90} // Rotar etiquetas si son largas
             />
             <View style={styles.timeCard}>
-              <Ionicons name="time-outline" size={24} color="#ef6548" />
+              
               <View style={styles.timeInfo}>
                 <Text style={styles.timeTitle}>
-                  Tiempo de Concentración del Mes
+                  Tiempo de Concentración de los ultimos 7 dias
                 </Text>
                 <Text style={styles.timeValue}>
-                  {timeStats.hours > 0 && `${timeStats.hours}h `}
-                  {timeStats.mins}min
+                  {timerStats} minutos
                 </Text>
               </View>
             </View>
           </View>
 
-          <View style={styles.taskList}>
-            <Text style={styles.subtitle}>Detalle por Proyecto</Text>
-            {tasksByProject.map((project, index) => (
-              <View key={index} style={styles.projectItem}>
-                <Text style={styles.projectName}>{project.projectName}</Text>
-                <Text style={styles.statsText}>
-                  Número de tareas: {project.taskCount}
-                </Text>
-                <Text style={styles.statsText}>
-                  Pomodoros estimados: {project.totalEstimatedEffort}
-                </Text>
-                <Text style={styles.statsText}>
-                  Pomodoros realizados: {project.realEffort}
-                </Text>
-              </View>
-            ))}
-          </View>
+          
         </>
       ) : (
         <View style={styles.noDataContainer}>
@@ -204,7 +112,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     backgroundColor: "#fee8c8",
   },
   title: {
@@ -231,7 +139,7 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     backgroundColor: "#fff",
-    padding: 15,
+    // padding: 15,
     borderRadius: 10,
     marginBottom: 20,
     alignItems: "center",
@@ -268,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 12,
-    marginVertical: 10,
+    marginVertical: 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
