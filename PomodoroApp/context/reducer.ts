@@ -80,8 +80,14 @@ const reducer = (state : AppState,action: Action
             AsyncStorage.setItem("currentPomodoro",action.payload);
             return {...state, currentPomodoro: action.payload};
         case ActionKind.SET_PARAMS:
-            console.log(action.payload);
-            return {...state, timer: action.payload.focusTime,params: action.payload};
+            let newTimer = action.payload.focusTime;
+            if(state.status === PomodoroState.BREAK){
+                newTimer = action.payload.breakTime;
+            }else if(state.status === PomodoroState.LONG_BREAK){
+                newTimer = action.payload.longBreakTime;
+            }
+
+            return {...state, timer: newTimer,params: action.payload};
         case ActionKind.SET_INITIAL:
             return {...state, ...action.payload};
         }

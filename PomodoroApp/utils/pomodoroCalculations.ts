@@ -10,7 +10,7 @@ const getPomodoroDuration = (tasks : Task[], pomodoro_state : AppState) => {
     tasks.forEach(task => {
         if(task.status === TaskStatus.FINISHED) {
             totalEffort += 0;
-            realEffort += task.real_effort;
+            realEffort += task.estimated_effort;
         } else {
             totalEffort += task.estimated_effort - task.real_effort;
             realEffort += task.real_effort;
@@ -19,19 +19,20 @@ const getPomodoroDuration = (tasks : Task[], pomodoro_state : AppState) => {
 
     });
     const {params, nIntervals, status} = pomodoro_state;
+    console.log(nIntervals,totalEffort,status);
 
-    let intervalsLeft = nIntervals + totalEffort;
+    let intervalsLeft = totalEffort;
     if(status === PomodoroState.FOCUS) {
         intervalsLeft--;
     }
-    let sessionsLeft = Math.floor((intervalsLeft) / params.intervals);
-    if(intervalsLeft % params.intervals !== 0) {
+    let sessionsLeft = Math.floor((nIntervals%params.intervals + intervalsLeft) / params.intervals);
+    if(nIntervals % params.intervals === 0) {
         sessionsLeft++;
     }
-    const longsBreaksLeft = sessionsLeft - 1;
-    const shortBreaksLeft = intervalsLeft - longsBreaksLeft - 1;
+    const longsBreaksLeft = sessionsLeft ;
+    const shortBreaksLeft = intervalsLeft - longsBreaksLeft ;
     const durationLeftInSeconds = totalEffort * params.focusTime + shortBreaksLeft * params.breakTime + longsBreaksLeft * params.longBreakTime;
-    
+    console.log(durationLeftInSeconds,"Duration Left",longsBreaksLeft,shortBreaksLeft,intervalsLeft);
     const pomodoroEndTime = new Date(Date.now() - (4 * 60 * 60 * 1000) + durationLeftInSeconds * 1000 ).toISOString().split('T')[1].split('.')[0];
     
     return {
